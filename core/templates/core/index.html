@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Fixcode</title>
+</head>
+<body>
+
+<p>Logado como {{ user.username }}</p>
+<a href="{% url 'core:logout_user' %}">Deslogar</a>
+
+{% if fixies %}
+	<h2>Fixies: </h2>
+	{% for fixie in fixies %}
+		<p>----------------</p>
+		<p>{{ fixie.titulo }}</p>
+		<p>{{ fixie.user }}</p>
+		<p>-----------------</p>
+	{% endfor %}
+{% else %}
+	<h2>Nao ha nenhum fixie</h2>
+{% endif %}
+
+</body>
+</html>
