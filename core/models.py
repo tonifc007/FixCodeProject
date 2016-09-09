@@ -13,3 +13,11 @@ class Fixies(models.Model):
 	def __str__(self):
 		return self.titulo
 
+class ComentFixies(models.Model):
+	user = models.ForeignKey(User, default=1)
+	fixie = models.ForeignKey(Fixies)
+	coment = models.TextField()
+	data = models.DateTimeField(default=timezone.now)
+
+	def __str__(self):
+		return '~' + self.coment + '~ em ~' + self.fixie.titulo + '~'

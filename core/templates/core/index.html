@@ -4,7 +4,7 @@
 	<title>Fixcode</title>
 </head>
 <body>
-
+{% load aux_tags %}
 <p>Logado como {{ user.username }}</p>
 <a href="{% url 'core:logout_user' %}">Deslogar</a><br>
 <a href="{% url 'core:create_fix' %}">Criar fix</a>
@@ -15,7 +15,10 @@
 		<p>----------------</p>
 		<p>{{ fixie.titulo }}</p>
 		<p>{{ fixie.user }}</p>
+		<p>{{ fixie.pk|quant_coment }} comentários neste fixie</p>
+		<a href="{% url 'core:fix_detail' fixie.pk %}">Responder fix</a>
 		<p>-----------------</p>
+		
 	{% endfor %}
 {% else %}
 	<h2>Nao ha nenhum fixie</h2>

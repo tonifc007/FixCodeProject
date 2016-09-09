@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Fixies
+from .models import Fixies, ComentFixies
 from django.contrib.auth import authenticate, login, logout
 from .forms import UserForm, FixiesForm
 
@@ -63,3 +63,12 @@ def create_fix(request):
 			return redirect('/')
 		return render(request, 'core/createfix.html', {'form':form})
 
+def fix_detail(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixie = get_object_or_404(Fixies, pk=pk)
+		if fixie:
+			coments = ComentFixies.objects.filter(pk=fixie.pk)
+			return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments})
+		return render(request, 'core/fixdetail.html', {'fixie': fixie})
