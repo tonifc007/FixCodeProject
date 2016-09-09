@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Fixies
 from django.contrib.auth import authenticate, login, logout
-from .forms import UserForm
+from .forms import UserForm, FixiesForm
 
 # Create your views here.
 
@@ -28,7 +28,7 @@ def register(request):
 				login(request, user)
 				fixies = Fixies.objects.all
 				#fixies = Fixies.objects.filter(user=request.user)
-				return redirect('core.views.index')
+				return redirect('/')
 	return render(request, 'core/register.html', {'form':form})
 
 def login_user(request):
@@ -50,3 +50,16 @@ def login_user(request):
 def logout_user(request):
 	logout(request)
 	return render(request, 'core/login.html')
+
+def create_fix(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		form = FixiesForm(request.POST or None)
+		if form.is_valid():
+			fixie = form.save(commit=False)
+			fixie.user = request.user
+			fixie.save()
+			return redirect('/')
+		return render(request, 'core/createfix.html', {'form':form})
+

@@ -6,7 +6,8 @@
 <body>
 
 <p>Logado como {{ user.username }}</p>
-<a href="{% url 'core:logout_user' %}">Deslogar</a>
+<a href="{% url 'core:logout_user' %}">Deslogar</a><br>
+<a href="{% url 'core:create_fix' %}">Criar fix</a>
 
 {% if fixies %}
 	<h2>Fixies: </h2>
