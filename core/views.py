@@ -1,7 +1,10 @@
+# -*- coding: utf 8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Fixies, ComentFixies
 from django.contrib.auth import authenticate, login, logout
-from .forms import UserForm, FixiesForm
+from .forms import UserForm, FixiesForm, ComentForm
+from django.http import Http404
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
@@ -66,9 +69,56 @@ def create_fix(request):
 def fix_detail(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
+
 	else:
+		form = ComentForm(request.POST or None)
+		if form.is_valid():
+			com = form.save(commit=False)
+			coment = form.cleaned_data['coment']
+			com.user = request.user
+			com.fixie = Fixies.objects.get(pk=pk)
+			com.save()
 		fixie = get_object_or_404(Fixies, pk=pk)
-		if fixie:
-			coments = ComentFixies.objects.filter(pk=fixie.pk)
-			return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments})
-		return render(request, 'core/fixdetail.html', {'fixie': fixie})
+		if fixie.user == request.user:
+			print('este fix é deste usuario')
+			chave = True
+		else:
+			print('este fix não é deste usuario')
+			chave = False
+		coments = ComentFixies.objects.filter(fixie=fixie.pk)
+	return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments, 'form':form, 'chave': chave})
+
+def best_answer(request, fixpk, compk):
+	#ufa! essa view quase me mata kkk :')
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixie = get_object_or_404(Fixies, pk=fixpk)
+
+		if fixie.user != request.user:
+			print('este fix não é deste usuario')
+			raise Http404
+		else:
+			lista = []
+			coments = ComentFixies.objects.filter(fixie=fixie.pk)
+			for com in coments:
+				print(com.pk)
+				lista.append(int(com.pk))
+
+			print(compk)
+			print(lista)
+
+			if int(compk) not in lista:
+				print("indice de coments invalido para exte fixie")
+				raise Http404
+			else:
+				for com in coments:
+					com.melhor_resposta = False
+					com.save()
+				newmybestanswer = get_object_or_404(ComentFixies, pk=compk)
+				newmybestanswer.melhor_resposta = True
+				newmybestanswer.save()
+				return fix_detail(request, fixpk)				
+				
+
+			

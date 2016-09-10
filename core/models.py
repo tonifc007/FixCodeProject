@@ -1,3 +1,4 @@
+# -*- coding: utf 8 -*-
 from __future__ import unicode_literals
 
 from django.db import models
@@ -18,6 +19,7 @@ class ComentFixies(models.Model):
 	fixie = models.ForeignKey(Fixies)
 	coment = models.TextField()
 	data = models.DateTimeField(default=timezone.now)
+	melhor_resposta = models.BooleanField(default=False)
 
 	def __str__(self):
 		return '~' + self.coment + '~ em ~' + self.fixie.titulo + '~'

@@ -11,17 +11,54 @@
 	<h4>Há {{ coments.counter }} respostas para este fix:</h4>
 
 	{% for com in coments %}
-		<p>...................</p>
-		<p><i>{{ com.coment }}</i></p>
-		<p>publicado por: {{ com.user }}</p>
-		<p>data: {{ com.data }}</p>
-		<p>....................</p>
+		{% if com.melhor_resposta %}
+			<div style="background-color: yellow;">
+				<p>MELHOR RESPOSTA ESCOLHIDA PELO AUTOR:</p>
+				<p>...................</p>
+				<p><i>{{ com.coment }}</i></p>
+				<p>publicado por: {{ com.user }}</p>
+				<p>data: {{ com.data }}</p>
+				<p>....................</p>
+			</div>
+			
+		{% endif %}		
 	{% endfor %}
+
+	{% if chave %}
+		{% for com in coments %}
+			<p>...................</p>
+			<p><i>{{ com.coment }}</i> - <a href="{% url 'core:best_answer' fixie.pk com.pk %}">Escolher como solução</a></p>
+			<p>publicado por: {{ com.user }}</p>
+			<p>data: {{ com.data }}</p>
+			<p>....................</p>
+		{% endfor %}
+	{% else %}
+		{% for com in coments %}
+			<p>...................</p>
+			<p><i>{{ com.coment }}</i></p>
+			<p>publicado por: {{ com.user }}</p>
+			<p>data: {{ com.data }}</p>
+			<p>....................</p>
+		{% endfor %}
+	{% endif %}
+
+	
 
 	<a href="#">Responder fix</a>
 {% else %}
 	<p>Ainda não nenhuma resposta</p>
 	<a href="#">Seja o primeiro a responder</a>
 {% endif %}
+
+<form method="post">
+	{% csrf_token %}
+	{% for field in form %}
+		{{ field.errors }}
+		{{ field.label_tag }}
+		<br>
+		{{ field }}
+		<br><br>
+	{% endfor %}
+<button type="submit">Responder</button>
 </body>
 </html>
