@@ -118,7 +118,35 @@ def best_answer(request, fixpk, compk):
 				newmybestanswer = get_object_or_404(ComentFixies, pk=compk)
 				newmybestanswer.melhor_resposta = True
 				newmybestanswer.save()
-				return fix_detail(request, fixpk)				
-				
+				fixie.tem_melhor_resposta = True
+				fixie.save()
+				return fix_detail(request, fixpk)
 
-			
+def mark_fixed_code(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixie = get_object_or_404(Fixies, pk=pk)
+
+		if fixie.user != request.user:
+			print('este fix não é deste usuario')
+			raise Http404
+		elif fixie.tem_melhor_resposta:
+			fixie.resolvido = True
+			fixie.save()
+		return fix_detail(request, pk)
+
+
+def to_restore_fixed_code(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixie = get_object_or_404(Fixies, pk=pk)
+
+		if fixie.user != request.user:
+			print('este fix não é deste usuario')
+			raise Http404
+		else:
+			fixie.resolvido = False
+			fixie.save()
+			return fix_detail(request, pk)

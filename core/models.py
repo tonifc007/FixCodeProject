@@ -10,6 +10,8 @@ class Fixies(models.Model):
 	titulo = models.CharField(max_length=100)
 	descricao = models.TextField()
 	data = models.DateTimeField(default=timezone.now)
+	resolvido = models.BooleanField(default=False)
+	tem_melhor_resposta = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.titulo
