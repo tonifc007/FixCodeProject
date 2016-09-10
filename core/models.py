@@ -12,6 +12,7 @@ class Fixies(models.Model):
 	data = models.DateTimeField(default=timezone.now)
 	resolvido = models.BooleanField(default=False)
 	tem_melhor_resposta = models.BooleanField(default=False)
+	notificacao = models.IntegerField(default=0)
 
 	def __str__(self):
 		return self.titulo

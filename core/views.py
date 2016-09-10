@@ -14,8 +14,13 @@ def index(request):
 		return render(request, 'core/login.html')
 	else:
 		print("saiu no if")
-		fixies = Fixies.objects.all
-		return render(request, 'core/index.html', {'fixies': fixies})
+		fixies = Fixies.objects.all()
+		myfixies = Fixies.objects.filter(user=request.user)
+		count_notify = 0
+		for fix in myfixies:
+			if int(fix.notificacao) > 0:
+				count_notify += 1
+		return render(request, 'core/index.html', {'fixies': fixies, 'count_notify': count_notify})
 
 def register(request):
 	form = UserForm(request.POST or None)
@@ -77,10 +82,15 @@ def fix_detail(request, pk):
 			coment = form.cleaned_data['coment']
 			com.user = request.user
 			com.fixie = Fixies.objects.get(pk=pk)
+			if com.fixie.user != request.user:				
+				com.fixie.notificacao += 1
+				com.fixie.save()
 			com.save()
 		fixie = get_object_or_404(Fixies, pk=pk)
 		if fixie.user == request.user:
 			print('este fix é deste usuario')
+			fixie.notificacao = 0
+			fixie.save()
 			chave = True
 		else:
 			print('este fix não é deste usuario')
@@ -150,3 +160,22 @@ def to_restore_fixed_code(request, pk):
 			fixie.resolvido = False
 			fixie.save()
 			return fix_detail(request, pk)
+
+def my_fixies(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixies = Fixies.objects.filter(user=request.user)
+		return render(request, 'core/myfixies.html', {'fixies': fixies})
+
+def participations(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		mycoments = ComentFixies.objects.filter(user=request.user)
+		relatedfixies = []
+		for com in mycoments:
+			if com.fixie.user != request.user:
+				relatedfixies.append(com.fixie)
+
+		return render(request, 'core/participations.html', {'relatedfixies':relatedfixies})

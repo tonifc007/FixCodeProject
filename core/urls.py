@@ -13,5 +13,7 @@ urlpatterns = [
     url(r'^fix/(?P<pk>[0-9]+)/$', views.fix_detail, name='fix_detail'),
     url(r'^fix/(?P<fixpk>[0-9]+)/best_answer/(?P<compk>[0-9]+)/$', views.best_answer, name='best_answer'),
     url(r'^fix/(?P<pk>[0-9]+)/fixed/$', views.mark_fixed_code, name='mark_fixed_code'),
-    url(r'^fix/(?P<pk>[0-9]+)/restore/$', views.to_restore_fixed_code, name='restore_fixed_code')
+    url(r'^fix/(?P<pk>[0-9]+)/restore/$', views.to_restore_fixed_code, name='restore_fixed_code'),
+    url(r'^myfixies/$', views.my_fixies, name='myfixies'),
+    url(r'^participations/$', views.participations, name='participations')
 ]
