@@ -26,3 +26,11 @@ class ComentFixies(models.Model):
 
 	def __str__(self):
 		return '~' + self.coment + '~ em ~' + self.fixie.titulo + '~'
+
+class Participations(models.Model):
+	user = models.ForeignKey(User)
+	fixie = models.ForeignKey(Fixies)
+	notificacao = models.IntegerField(default=0)
+
+	def __str__(self):
+		return self.user.username + ' participa de: ' + self.fixie.titulo

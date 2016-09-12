@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Fixies, ComentFixies
+from .models import Fixies, ComentFixies, Participations
 from django.contrib.auth import authenticate, login, logout
 from .forms import UserForm, FixiesForm, ComentForm
 from django.http import Http404
@@ -20,7 +20,14 @@ def index(request):
 		for fix in myfixies:
 			if int(fix.notificacao) > 0:
 				count_notify += 1
-		return render(request, 'core/index.html', {'fixies': fixies, 'count_notify': count_notify})
+
+		myrelationships = Participations.objects.filter(user=request.user)
+		count_notify_relationships = 0
+		for mr in myrelationships:
+			if int(mr.notificacao) > 0:
+				count_notify_relationships += 1
+
+		return render(request, 'core/index.html', {'fixies': fixies, 'count_notify': count_notify, 'count_notify_relationships': count_notify_relationships})
 
 def register(request):
 	form = UserForm(request.POST or None)
@@ -47,8 +54,7 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                fixies = Fixies.objects.all
-                return render(request, 'core/index.html', {'fixies': fixies})
+                return index(request)
             else:
                 return render(request, 'core/login.html', {'error_message': 'Your account has been disabled'})
         else:
@@ -85,6 +91,29 @@ def fix_detail(request, pk):
 			if com.fixie.user != request.user:				
 				com.fixie.notificacao += 1
 				com.fixie.save()
+			try:
+				table_participation = Participations.objects.get(user=request.user, fixie=com.fixie)
+				print("tabela já existe")
+			except ObjectDoesNotExist:
+				if com.fixie.user != request.user:
+					table_participation = Participations()
+					table_participation.user=request.user
+					table_participation.fixie = com.fixie
+					table_participation.save()
+					print("tabela ainda não existe")
+					print("Objetos relacionados")
+			#--------------------------------------
+			ids_participantes = []
+			table = Participations.objects.filter(fixie=com.fixie)
+			for t in table:
+				#ids_participantes.append(t.user.pk)
+				relationship = Participations.objects.get(user=t.user, fixie=com.fixie)
+				if relationship.user != request.user and relationship.user != com.fixie.user:
+					relationship.notificacao += 1
+					relationship.save()
+			#print(ids_participantes)
+			#-----------------------------
+
 			com.save()
 		fixie = get_object_or_404(Fixies, pk=pk)
 		if fixie.user == request.user:
@@ -95,6 +124,15 @@ def fix_detail(request, pk):
 		else:
 			print('este fix não é deste usuario')
 			chave = False
+
+		try:
+			table_participation = Participations.objects.get(user=request.user, fixie=fixie)
+			if table_participation:
+				table_participation.notificacao = 0
+				table_participation.save()
+				print("tabela já existe, é participação deste usuário e as notificações desta participação foram zeradas")
+		except ObjectDoesNotExist:
+			print("Este usuário não tem participação com este fixie")
 		coments = ComentFixies.objects.filter(fixie=fixie.pk)
 	return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments, 'form':form, 'chave': chave})
 
@@ -168,14 +206,21 @@ def my_fixies(request):
 		fixies = Fixies.objects.filter(user=request.user)
 		return render(request, 'core/myfixies.html', {'fixies': fixies})
 
+# def participations(request):
+# 	if not request.user.is_authenticated():
+# 		return render(request, 'core/login.html')
+# 	else:
+# 		mycoments = ComentFixies.objects.filter(user=request.user)
+# 		relatedfixies = []
+# 		for com in mycoments:
+# 			if com.fixie.user != request.user:
+# 				relatedfixies.append(com.fixie)
+
+# 		return render(request, 'core/participations.html', {'relatedfixies':relatedfixies})
+
 def participations(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		mycoments = ComentFixies.objects.filter(user=request.user)
-		relatedfixies = []
-		for com in mycoments:
-			if com.fixie.user != request.user:
-				relatedfixies.append(com.fixie)
-
-		return render(request, 'core/participations.html', {'relatedfixies':relatedfixies})
+		myparticipations = Participations.objects.filter(user=request.user)
+		return render(request, 'core/participations.html', {'myparticipations':myparticipations})

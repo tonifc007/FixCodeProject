@@ -12,9 +12,16 @@
 <a href="{% url 'core:participations' %}">Participações</a>
 
 {% if fixies %}
-	{% if count_notify > 0%}
-		<a href="{% url 'core:myfixies' %}"><h4 style="background-color: blue">Você tem {{ count_notify }} fixies respondidos</h4></a>
+	{% if count_notify > 0 %}
+		<a href="{% url 'core:myfixies' %}"><h4 style="background-color: blue; color: white;">Você tem {{ count_notify }} fixies respondidos</h4></a>
 	{% endif %}
+{% endif %}
+{% if count_notify_relationships > 0%}
+	<a href="{% url 'core:participations' %}"><h4 style="background-color: green; color: white;">{{ count_notify_relationships }} das suas participações tem novas repostas</h4></a>
+{% endif %}
+
+{% if fixies %}
+
 	<h2>Fixies: </h2>
 	{% for fixie in fixies %}
 		<p>----------------</p>

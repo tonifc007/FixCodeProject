@@ -6,14 +6,14 @@
 <body>
 {% load aux_tags %}
 
-{% if relatedfixies %}
+{% if myparticipations %}
 	<h2>Participações: </h2>
-	{% for fixie in relatedfixies %}
-		<p>------------------</p>
-		<p>{{ fixie.titulo }}</p>
-		<p>{{ fixie.user }}</p>
-		<p>{{ fixie.pk|quant_coment }} comentários neste fixie</p>
-		<a href="{% url 'core:fix_detail' fixie.pk %}">Responder fix</a>
+	{% for fix in myparticipations %}
+		<p>-------{{ fix.notificacao }} respostas ainda não vistas-----------</p>
+		<p>{{ fix.fixie.titulo }}</p>
+		<p>{{ fix.fixie.user }}</p>
+		<p>{{ fix.fixie.pk|quant_coment }} comentários neste fixie</p>
+		<a href="{% url 'core:fix_detail' fix.fixie.pk %}">Responder fix</a>
 		<p>-----------------</p>
 		
 	{% endfor %}
