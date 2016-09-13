@@ -34,3 +34,11 @@ class Participations(models.Model):
 
 	def __str__(self):
 		return self.user.username + ' participa de: ' + self.fixie.titulo
+
+class Favorites(models.Model):
+	user = models.ForeignKey(User)
+	fixie = models.ForeignKey(Fixies)
+	notificacao = models.IntegerField(default=0)
+
+	def __str__(self):
+		return self.user.username + ' favoritou: ' + self.fixie.titulo

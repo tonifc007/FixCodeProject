@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Fixies favoritos</title>
+</head>
+<body>
+{% load aux_tags %}
+
+{% if myfavorites %}
+	<h2>Favoritados: </h2>
+	{% for fix in myfavorites %}
+		<p>-------{{ fix.notificacao }} respostas ainda não vistas---------</p>
+		<p>{{ fix.fixie.titulo }}</p>
+		<p>{{ fix.fixie.user }}</p>
+		<p>{{ fix.fixie.pk|quant_coment }} comentários neste fixie</p>
+		<a href="{% url 'core:fix_detail' fix.fixie.pk %}">Responder fix</a>
+		<p>-----------------</p>
+		
+	{% endfor %}
+{% else %}
+	<h2>Você ainda não criou nenhum fixie, comece <a href="#"> por aqui</a></h2>
+{% endif %}
+
+</body>
+</html>

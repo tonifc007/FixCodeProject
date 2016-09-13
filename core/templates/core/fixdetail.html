@@ -29,6 +29,13 @@
 		{% endif %}		
 	{% endfor %}
 
+	{% if chave_fav is 1 %}
+		<p>Marcado como favorito - <a href="{% url 'core:un_favorite_fix' fixie.pk %}">Desfavoritar</a></p>
+	{% elif chave_fav is 2 %}
+		<p><a href="{% url 'core:favorite_fix' fixie.pk %}">Favoritar Fix</a></p>
+	{% endif %}
+
+
 	{% if chave %}
 		{% if fixie.resolvido %}
 			<p>Este fix está resolvido! - <a href="{% url 'core:restore_fixed_code' fixie.pk%}">Restaurar fix</a></p> 

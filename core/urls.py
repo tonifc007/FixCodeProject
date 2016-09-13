@@ -15,5 +15,8 @@ urlpatterns = [
     url(r'^fix/(?P<pk>[0-9]+)/fixed/$', views.mark_fixed_code, name='mark_fixed_code'),
     url(r'^fix/(?P<pk>[0-9]+)/restore/$', views.to_restore_fixed_code, name='restore_fixed_code'),
     url(r'^myfixies/$', views.my_fixies, name='myfixies'),
-    url(r'^participations/$', views.participations, name='participations')
+    url(r'^participations/$', views.participations, name='participations'),
+    url(r'^fix/(?P<pk>[0-9]+)/favorite/$', views.favorite_fix, name='favorite_fix'),
+    url(r'^fix/(?P<pk>[0-9]+)/un_favorite/$', views.un_favorite_fix, name='un_favorite_fix'),
+    url(r'^favorites/$', views.favorites, name='favorites'),
 ]

@@ -6,10 +6,11 @@
 <body>
 {% load aux_tags %}
 <p>Logado como {{ user.username }}</p>
-<a href="{% url 'core:logout_user' %}">Deslogar</a><br>
+<a href="{% url 'core:logout_user' %}">Deslogar</a>
 <a href="{% url 'core:create_fix' %}">Criar fix</a>
 <a href="{% url 'core:myfixies' %}">Meus fixies</a>
 <a href="{% url 'core:participations' %}">Participações</a>
+<a href="{% url 'core:favorites' %}">Favoritos</a>
 
 {% if fixies %}
 	{% if count_notify > 0 %}

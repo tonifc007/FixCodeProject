@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Fixies, ComentFixies, Participations
+from .models import Fixies, ComentFixies, Participations, Favorites
 from django.contrib.auth import authenticate, login, logout
 from .forms import UserForm, FixiesForm, ComentForm
 from django.http import Http404
@@ -102,6 +102,9 @@ def fix_detail(request, pk):
 					table_participation.save()
 					print("tabela ainda não existe")
 					print("Objetos relacionados")
+
+			#----------------------------------
+			#O laço for seguinte notifica os usuários que se relacionaram com o fix
 			#--------------------------------------
 			ids_participantes = []
 			table = Participations.objects.filter(fixie=com.fixie)
@@ -112,7 +115,18 @@ def fix_detail(request, pk):
 					relationship.notificacao += 1
 					relationship.save()
 			#print(ids_participantes)
+
 			#-----------------------------
+			#O laço for seguinte notifica os usuários que favoritaram o fix
+			#--------------------------------------
+			ids_pessoas_que_favoritaram_este_fix = []
+			table_fix = Favorites.objects.filter(fixie=com.fixie)
+			for tf in table_fix:
+				relationship_favorites = Favorites.objects.get(user=tf.user, fixie=com.fixie)
+				if relationship_favorites.user != request.user:
+					relationship_favorites.notificacao += 1
+					relationship_favorites.save()
+
 
 			com.save()
 		fixie = get_object_or_404(Fixies, pk=pk)
@@ -133,8 +147,31 @@ def fix_detail(request, pk):
 				print("tabela já existe, é participação deste usuário e as notificações desta participação foram zeradas")
 		except ObjectDoesNotExist:
 			print("Este usuário não tem participação com este fixie")
+
+		try:
+			table_fav = Favorites.objects.get(user=request.user, fixie=fixie)
+			if table_fav:
+				table_fav.notificacao = 0
+				table_fav.save()
+				print("tabela já existe, é favoritado deste usuário e as notificações desta relação foram zeradas")
+		except ObjectDoesNotExist:
+			print("Este usuário não tem relação de favorito com este fixie")
+
+		if fixie.user != request.user:
+			try:
+				table_favorite = Favorites.objects.get(user=request.user, fixie=fixie)
+				if table_favorite:
+					print("este fix é favorito deste usuário")
+					chave_fav = 1
+			except ObjectDoesNotExist:
+				print("este fix não é favorito deste usuário")
+				chave_fav = 2
+		else:
+			chave_fav = 0
+
+
 		coments = ComentFixies.objects.filter(fixie=fixie.pk)
-	return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments, 'form':form, 'chave': chave})
+	return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments, 'form':form, 'chave': chave, 'chave_fav': chave_fav})
 
 def best_answer(request, fixpk, compk):
 	#ufa! essa view quase me mata kkk :')
@@ -224,3 +261,47 @@ def participations(request):
 	else:
 		myparticipations = Participations.objects.filter(user=request.user)
 		return render(request, 'core/participations.html', {'myparticipations':myparticipations})
+
+def favorite_fix(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixie = get_object_or_404(Fixies, pk=pk)
+		if fixie.user != request.user:
+			try:
+				table_favorite = Favorites.objects.get(user=request.user, fixie=fixie)
+				if table_favorite:
+					print("este fix já é favorito deste usuário")
+			except ObjectDoesNotExist:
+				print("este fix não é favorito deste usuário")
+				table_favorite = Favorites()
+				table_favorite.user = request.user
+				table_favorite.fixie = fixie
+				table_favorite.save()
+				print("relacionamento criado")
+			return fix_detail(request, pk)
+	raise Http404
+
+def un_favorite_fix(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixie = get_object_or_404(Fixies, pk=pk)
+		if fixie.user != request.user:
+			try:
+				table_favorite = Favorites.objects.get(user=request.user, fixie=fixie)
+				if table_favorite:
+					print("este fix já é favorito deste usuário")
+					table_favorite.delete()
+			except ObjectDoesNotExist:
+				print("este fix não é favorito deste usuário")
+				raise Http404
+			return fix_detail(request, pk)
+	raise Http404
+
+def favorites(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		myfavorites = Favorites.objects.filter(user=request.user)
+		return render(request, 'core/favorites.html', {'myfavorites':myfavorites})
