@@ -6,9 +6,9 @@
 <body>
 {% load aux_tags %}
 
-{% if fixies %}
+{% if pagina %}
 	<h2>Fixies: </h2>
-	{% for fixie in fixies %}
+	{% for fixie in pagina %}
 		<p>-------{{ fixie.notificacao }} respostas ainda não vistas---------</p>
 		<p>{{ fixie.titulo }}</p>
 		<p>{{ fixie.user }}</p>
@@ -17,6 +17,20 @@
 		<p>-----------------</p>
 		
 	{% endfor %}
+<div class="pagination">
+    <span class="step-links">
+        {% if pagina.has_previous %}
+            <a href="?page={{ pagina.previous_page_number }}">anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
+        </span>
+
+        {% if pagina.has_next %}
+            <a href="?page={{ pagina.next_page_number }}">próximo</a>
+        {% endif %}
+    </span>
 {% else %}
 	<h2>Você ainda não criou nenhum fixie, comece <a href="#"> por aqui</a></h2>
 {% endif %}

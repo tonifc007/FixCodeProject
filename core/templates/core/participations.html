@@ -6,9 +6,9 @@
 <body>
 {% load aux_tags %}
 
-{% if myparticipations %}
+{% if pagina %}
 	<h2>Participações: </h2>
-	{% for fix in myparticipations %}
+	{% for fix in pagina %}
 		<p>-------{{ fix.notificacao }} respostas ainda não vistas-----------</p>
 		<p>{{ fix.fixie.titulo }}</p>
 		<p>{{ fix.fixie.user }}</p>
@@ -17,6 +17,20 @@
 		<p>-----------------</p>
 		
 	{% endfor %}
+	<div class="pagination">
+    <span class="step-links">
+        {% if pagina.has_previous %}
+            <a href="?page={{ pagina.previous_page_number }}">anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
+        </span>
+
+        {% if pagina.has_next %}
+            <a href="?page={{ pagina.next_page_number }}">próximo</a>
+        {% endif %}
+    </span>
 {% else %}
 	<h2>Você ainda não participou, comece <a href="#"> por aqui</a></h2>
 {% endif %}

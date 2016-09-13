@@ -6,15 +6,31 @@
 <body>
 {% load aux_tags %}
 
-{% if myfavorites %}
+{% if pagina %}
 	<h2>Favoritados: </h2>
-	{% for fix in myfavorites %}
+	{% for fix in pagina %}
 		<p>-------{{ fix.notificacao }} respostas ainda não vistas---------</p>
 		<p>{{ fix.fixie.titulo }}</p>
 		<p>{{ fix.fixie.user }}</p>
 		<p>{{ fix.fixie.pk|quant_coment }} comentários neste fixie</p>
 		<a href="{% url 'core:fix_detail' fix.fixie.pk %}">Responder fix</a>
 		<p>-----------------</p>
+
+	<div class="pagination">
+	<div class="pagination">
+    <span class="step-links">
+        {% if pagina.has_previous %}
+            <a href="?page={{ pagina.previous_page_number }}">anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
+        </span>
+
+        {% if pagina.has_next %}
+            <a href="?page={{ pagina.next_page_number }}">próximo</a>
+        {% endif %}
+    </span>
 		
 	{% endfor %}
 {% else %}

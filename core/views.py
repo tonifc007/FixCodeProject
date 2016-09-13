@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import UserForm, FixiesForm, ComentForm
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 
@@ -15,6 +16,7 @@ def index(request):
 	else:
 		print("saiu no if")
 		fixies = Fixies.objects.all()
+
 		myfixies = Fixies.objects.filter(user=request.user)
 		count_notify = 0
 		for fix in myfixies:
@@ -22,12 +24,26 @@ def index(request):
 				count_notify += 1
 
 		myrelationships = Participations.objects.filter(user=request.user)
+		paginator = Paginator(fixies, 5)
+
+		page = request.GET.get('page')
+		print(page)
+		print("Estou requisitando a {} página" .format(page))
+
+		try:
+			relations = paginator.page(page)
+			print(relations)
+		except PageNotAnInteger:
+			relations = paginator.page(1)
+		except EmptyPage:
+			relations = paginator.page(paginator.num_pages)
+
 		count_notify_relationships = 0
 		for mr in myrelationships:
 			if int(mr.notificacao) > 0:
 				count_notify_relationships += 1
 
-		return render(request, 'core/index.html', {'fixies': fixies, 'count_notify': count_notify, 'count_notify_relationships': count_notify_relationships})
+		return render(request, 'core/index.html', {'relations':relations, 'count_notify': count_notify, 'count_notify_relationships': count_notify_relationships})
 
 def register(request):
 	form = UserForm(request.POST or None)
@@ -241,7 +257,16 @@ def my_fixies(request):
 		return render(request, 'core/login.html')
 	else:
 		fixies = Fixies.objects.filter(user=request.user)
-		return render(request, 'core/myfixies.html', {'fixies': fixies})
+		paginator = Paginator(fixies, 5)
+
+		page = request.GET.get('page')
+		try:
+			pagina = paginator.page(page)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPage:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/myfixies.html', {'pagina': pagina})
 
 # def participations(request):
 # 	if not request.user.is_authenticated():
@@ -260,7 +285,16 @@ def participations(request):
 		return render(request, 'core/login.html')
 	else:
 		myparticipations = Participations.objects.filter(user=request.user)
-		return render(request, 'core/participations.html', {'myparticipations':myparticipations})
+		paginator = Paginator(myparticipations, 5)
+
+		page = request.GET.get('page')
+		try:
+			pagina = paginator.page(page)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPage:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/participations.html', {'pagina':pagina})
 
 def favorite_fix(request, pk):
 	if not request.user.is_authenticated():
@@ -304,4 +338,13 @@ def favorites(request):
 		return render(request, 'core/login.html')
 	else:
 		myfavorites = Favorites.objects.filter(user=request.user)
-		return render(request, 'core/favorites.html', {'myfavorites':myfavorites})
+		paginator = Paginator(myfavorites, 5)
+
+		page = request.GET.get('page')
+		try:
+			pagina = paginator.page(page)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPage:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/favorites.html', {'pagina':pagina})
