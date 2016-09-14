@@ -5,12 +5,12 @@
 </head>
 <body>
 {% load aux_tags %}
-<p>Logado como {{ user.username }}</p>
+<p>Logado como {{ user.first_name }}</p>
 <a href="{% url 'core:logout_user' %}">Deslogar</a>
 <a href="{% url 'core:create_fix' %}">Criar fix</a>
 <a href="{% url 'core:myfixies' %}">Meus fixies</a>
-<a href="{% url 'core:participations' %}">Participações</a>
-<a href="{% url 'core:favorites' %}">Favoritos</a>
+<a href="{% url 'core:participations' user.username %}">Participações</a>
+<a href="{% url 'core:favorites' user.username %}">Favoritos</a>
 <a href="{% url 'core:profile' user.username %}">Perfil</a>
 
 {% if fixies %}
@@ -19,7 +19,7 @@
 	{% endif %}
 {% endif %}
 {% if count_notify_relationships > 0%}
-	<a href="{% url 'core:participations' %}"><h4 style="background-color: green; color: white;">{{ count_notify_relationships }} das suas participações tem novas repostas</h4></a>
+	<a href="{% url 'core:participations' user.username %}"><h4 style="background-color: green; color: white;">{{ count_notify_relationships }} das suas participações tem novas repostas</h4></a>
 {% endif %}
 
 {% if relations %}

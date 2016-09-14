@@ -6,6 +6,10 @@
 <body>
 {% load aux_tags %}
 
+{% if delete %}
+	<p>Fix deletado</p>
+{% endif %}
+
 {% if pagina %}
 	<h2>Fixies: </h2>
 	{% for fixie in pagina %}
@@ -32,7 +36,7 @@
         {% endif %}
     </span>
 {% else %}
-	<h2>Você ainda não criou nenhum fixie, comece <a href="#"> por aqui</a></h2>
+	<h2>Você tem nenhum fixie, comece <a href="#"> por aqui</a></h2>
 {% endif %}
 
 </body>

@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Participações</title>
+	<title>Participações de {{ user.first_name }} - Fixcode</title>
 </head>
 <body>
 {% load aux_tags %}
 
+{% if chave %}
+	<h2>Minhas participações</h2>
+{% else %}
+	<h2>Participações: de {{ user.username }}</h2>
+{% endif %}
+
 {% if pagina %}
-	<h2>Participações: </h2>
 	{% for fix in pagina %}
-		<p>-------{{ fix.notificacao }} respostas ainda não vistas-----------</p>
+		{% if chave %}
+			<p>-------{{ fix.notificacao }} respostas ainda não vistas-----------</p>
+		{% else %}
+			<p>------------------------------------------------------------------</p>
+		{% endif %}		
 		<p>{{ fix.fixie.titulo }}</p>
 		<p>{{ fix.fixie.user }}</p>
 		<p>{{ fix.fixie.pk|quant_coment }} comentários neste fixie</p>
@@ -32,7 +41,12 @@
         {% endif %}
     </span>
 {% else %}
-	<h2>Você ainda não participou, comece <a href="#"> por aqui</a></h2>
+	{% if chave %}
+		<h2>Você ainda não participou, comece <a href="#"> por aqui</a></h2>
+	{% else %}
+		<h2>Ainda não há participações deste usuário</h2>
+	{% endif %}
+	
 {% endif %}
 
 </body>

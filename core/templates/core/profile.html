@@ -9,6 +9,8 @@
 	<h2>Sobrenome: {{ profile.user.last_name }}</h2>
 	<h3>Bio: {{ profile.bio }}</h3>
 	<h3>Github: <a href="{{ profile.git }}"> {{ profile.git }} </a></h3>
+	<p><a href="{% url 'core:participations' profile.user.username %}">Participações ({{ participations.count }})</a></p>
+	<p><a href="{% url 'core:favorites' profile.user.username %}">Favoritos ({{ favorites.count }})</a></p>
 
 </body>
 </html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Deletar Fix {{ fixie.titulo }} - Fixcode</title>
+</head>
+<body>
+	<h2>Deseja mesmo deletar este fix?</h2>
+	<p>{{ fixie.titulo }}</p>
+	<p>{{ fixie.descricao }}</p>
+	<br>
+	<a href="{% url 'core:myfixies' %}">Cancelar</a> <a href="{% url 'core:confirm_delete_fix' fixie.pk %}">Deletar</a>
+</body>
+</html>

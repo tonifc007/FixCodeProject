@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Fixies favoritos</title>
+	<title>Favoritos de {{ user.first_name }} - Fixcode</title>
 </head>
 <body>
 {% load aux_tags %}
 
+{% if chave %}
+	<h2>Meus favoritos</h2>
+{% else %}
+	<h2>Favoritos de {{ user.username }}</h2>
+{% endif %}
+
 {% if pagina %}
-	<h2>Favoritados: </h2>
 	{% for fix in pagina %}
-		<p>-------{{ fix.notificacao }} respostas ainda não vistas---------</p>
+		{% if chave %}
+			<p>-------{{ fix.notificacao }} respostas ainda não vistas-----------</p>
+		{% else %}
+			<p>------------------------------------------------------------------</p>
+		{% endif %}	
 		<p>{{ fix.fixie.titulo }}</p>
 		<p>{{ fix.fixie.user }}</p>
 		<p>{{ fix.fixie.pk|quant_coment }} comentários neste fixie</p>

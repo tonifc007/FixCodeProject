@@ -12,6 +12,11 @@
 <h1>{{ fixie.titulo }}</h1>
 <h3>por {{ fixie.user }} - publicado em {{ fixie.data }}</h3>
 <span>{{ fixie.descricao }}</span>
+
+{% if chave %}
+	<a href="{% url 'core:delete_fix' fixie.pk %}">Deletar fix</a>
+{% endif %}
+
 {% if coments %}
 	<h4>Há {{ coments|l }} respostas para este fix:</h4>
 

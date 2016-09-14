@@ -91,8 +91,10 @@ def edit_details_profile(request):
 def profile(request, username):
 	print("Requisitou o perfil de {}".format(username))
 	use = get_object_or_404(User, username=username)
+	participations = Participations.objects.filter(user=use)
+	favorites = Favorites.objects.filter(user=use)
 	profile = get_object_or_404(Profile, user=use)
-	return render(request, 'core/profile.html', {'profile':profile})
+	return render(request, 'core/profile.html', {'profile':profile, 'participations':participations, 'favorites':favorites})
 
 def login_user(request):
     if request.method == "POST":
@@ -269,6 +271,33 @@ def mark_fixed_code(request, pk):
 			fixie.save()
 		return fix_detail(request, pk)
 
+def delete_fix(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixie = get_object_or_404(Fixies, pk=pk)
+
+		if fixie.user != request.user:
+			print('este fix não é deste usuario')
+			raise Http404
+		return render(request, 'core/delete_fix.html', {'fixie':fixie})
+
+def confirm_delete_fix(request, pk):
+	print('chegou na função')
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixie = get_object_or_404(Fixies, pk=pk)
+
+
+		if fixie.user != request.user:
+			print('este fix não é deste usuario')
+			raise Http404
+		else:
+			fixie.delete()
+			print("chegou pra deletar")
+		return my_fixies(request, True)
+
 
 def to_restore_fixed_code(request, pk):
 	if not request.user.is_authenticated():
@@ -284,7 +313,7 @@ def to_restore_fixed_code(request, pk):
 			fixie.save()
 			return fix_detail(request, pk)
 
-def my_fixies(request):
+def my_fixies(request, delete=False):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
@@ -298,7 +327,7 @@ def my_fixies(request):
 			pagina = paginator.page(1)
 		except EmptyPage:
 			pagina = paginator.page(paginator.num_pages)
-		return render(request, 'core/myfixies.html', {'pagina': pagina})
+		return render(request, 'core/myfixies.html', {'pagina': pagina, 'delete':delete})
 
 # def participations(request):
 # 	if not request.user.is_authenticated():
@@ -312,12 +341,19 @@ def my_fixies(request):
 
 # 		return render(request, 'core/participations.html', {'relatedfixies':relatedfixies})
 
-def participations(request):
+def participations(request, username):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		myparticipations = Participations.objects.filter(user=request.user)
+		user = get_object_or_404(User, username=username)
+		myparticipations = Participations.objects.filter(user=user)
+		print(user)
 		paginator = Paginator(myparticipations, 5)
+
+		if user == request.user:
+			chave = True
+		else:
+			chave = False
 
 		page = request.GET.get('page')
 		try:
@@ -326,7 +362,7 @@ def participations(request):
 			pagina = paginator.page(1)
 		except EmptyPage:
 			pagina = paginator.page(paginator.num_pages)
-		return render(request, 'core/participations.html', {'pagina':pagina})
+		return render(request, 'core/participations.html', {'pagina':pagina, 'chave': chave, 'user': user})
 
 def favorite_fix(request, pk):
 	if not request.user.is_authenticated():
@@ -365,12 +401,18 @@ def un_favorite_fix(request, pk):
 			return fix_detail(request, pk)
 	raise Http404
 
-def favorites(request):
+def favorites(request, username):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		myfavorites = Favorites.objects.filter(user=request.user)
+		user = get_object_or_404(User, username=username)
+		myfavorites = Favorites.objects.filter(user=user)
 		paginator = Paginator(myfavorites, 5)
+
+		if user == request.user:
+			chave = True
+		else:
+			chave = False
 
 		page = request.GET.get('page')
 		try:
@@ -379,4 +421,4 @@ def favorites(request):
 			pagina = paginator.page(1)
 		except EmptyPage:
 			pagina = paginator.page(paginator.num_pages)
-		return render(request, 'core/favorites.html', {'pagina':pagina})
+		return render(request, 'core/favorites.html', {'pagina':pagina, 'chave': chave, 'user': user})
