@@ -1,11 +1,12 @@
 # -*- coding: utf 8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Fixies, ComentFixies, Participations, Favorites
-from django.contrib.auth import authenticate, login, logout
-from .forms import UserForm, FixiesForm, ComentForm
+from .models import Fixies, ComentFixies, Participations, Favorites, Profile
+from django.contrib.auth import authenticate, login, logout, get_user 
+from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -46,21 +47,52 @@ def index(request):
 		return render(request, 'core/index.html', {'relations':relations, 'count_notify': count_notify, 'count_notify_relationships': count_notify_relationships})
 
 def register(request):
-	form = UserForm(request.POST or None)
+	form = UserFormRegister(request.POST or None)
 	if form.is_valid():
 		user = form.save(commit=False)
+		name = form.cleaned_data['first_name']
+		lastname = form.cleaned_data['last_name']
 		username = form.cleaned_data['username']
 		password = form.cleaned_data['password']
+		repassword = form.cleaned_data['repassword']
+		if password != repassword:
+			return render(request, 'core/register.html', {'form':form, 'error_message': 'Senhas não conferem'})
 		user.set_password(password)
 		user.save()
+		
+
 		user = authenticate(username=username, password=password)
 		if user is not None:
 			if user.is_active:
 				login(request, user)
+				newprofile = Profile()
+				newprofile.user = request.user
+				newprofile.save()
 				fixies = Fixies.objects.all
 				#fixies = Fixies.objects.filter(user=request.user)
-				return redirect('/')
+				return redirect('/editprofile/')
 	return render(request, 'core/register.html', {'form':form})
+
+def edit_details_profile(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		form = EditProfile(request.POST or None)
+		user=request.user
+		if form.is_valid():
+			detalhes = form.save(commit=False)
+			bio = form.cleaned_data['bio']
+			githut = form.cleaned_data['git']
+			detalhes.user=request.user
+			detalhes.save()
+			return profile(request, request.user.username)
+	return render(request, 'core/edit_profile.html', {'form': form, 'user':user})
+
+def profile(request, username):
+	print("Requisitou o perfil de {}".format(username))
+	use = get_object_or_404(User, username=username)
+	profile = get_object_or_404(Profile, user=use)
+	return render(request, 'core/profile.html', {'profile':profile})
 
 def login_user(request):
     if request.method == "POST":

@@ -11,6 +11,7 @@
 <a href="{% url 'core:myfixies' %}">Meus fixies</a>
 <a href="{% url 'core:participations' %}">Participações</a>
 <a href="{% url 'core:favorites' %}">Favoritos</a>
+<a href="{% url 'core:profile' user.username %}">Perfil</a>
 
 {% if fixies %}
 	{% if count_notify > 0 %}

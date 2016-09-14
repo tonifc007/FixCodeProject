@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ profile.user.first_name }} - Fixcode</title>
+</head>
+<body>
+	<h1>Perfil</h1>
+	<h2>Primeiro nome: {{ profile.user.first_name }}</h2>
+	<h2>Sobrenome: {{ profile.user.last_name }}</h2>
+	<h3>Bio: {{ profile.bio }}</h3>
+	<h3>Github: <a href="{{ profile.git }}"> {{ profile.git }} </a></h3>
+
+</body>
+</html>

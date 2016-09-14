@@ -5,6 +5,12 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import Permission, User
 
+class Profile(models.Model):
+	user = models.OneToOneField(User, related_name='profile')
+	bio = models.TextField(verbose_name='Bio', blank=True)
+	git = models.CharField(max_length=100, verbose_name='Github', blank=True)
+	data_cadastro = models.DateTimeField(default=timezone.now)
+
 class Fixies(models.Model):
 	user = models.ForeignKey(User, default=1)
 	titulo = models.CharField(max_length=100)
