@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pessoas que seguem {{ userfollow.first_name }}</title>
+</head>
+<body>
+<h1>Pessoas que seguem {{ userfollow.first_name }} </h1>
+	{% if followers %}
+		{% for pessoa in followers %}
+			<a href="{% url 'core:profile' pessoa.username %}">{{ pessoa.first_name }}</a><br>
+		{% endfor %}
+	{% else %}
+		<h3>Ainda não há registros.</h3>
+	{% endif %}
+
+</body>
+</html>

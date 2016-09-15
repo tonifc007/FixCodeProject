@@ -48,3 +48,12 @@ class Favorites(models.Model):
 
 	def __str__(self):
 		return self.user.username + ' favoritou: ' + self.fixie.titulo
+
+class Followers(models.Model):
+	user = models.ForeignKey(User, related_name='+')
+	following = models.ForeignKey(User)
+	block = models.BooleanField(default=False)
+	data = models.DateTimeField(default=timezone.now)
+
+	def __str__(self):
+		return self.user.username + ' esta seguindo ' + self.following.username

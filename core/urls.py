@@ -23,4 +23,8 @@ urlpatterns = [
     url(r'^fix/(?P<pk>[0-9]+)/favorite/$', views.favorite_fix, name='favorite_fix'),
     url(r'^fix/(?P<pk>[0-9]+)/un_favorite/$', views.un_favorite_fix, name='un_favorite_fix'),
     url(r'^profile/(?P<username>\w+)/favorites/$', views.favorites, name='favorites'),
+    url(r'^profile/(?P<username>\w+)/follow/$', views.follow, name='follow'),
+    url(r'^profile/(?P<username>\w+)/unfollow/$', views.unfollow, name='unfollow'),
+    url(r'^profile/(?P<username>\w+)/following/$', views.following, name='following'),
+    url(r'^profile/(?P<username>\w+)/followers/$', views.follower, name='follower'),
 ]

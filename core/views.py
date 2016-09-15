@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Fixies, ComentFixies, Participations, Favorites, Profile
+from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers
 from django.contrib.auth import authenticate, login, logout, get_user 
 from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile
 from django.http import Http404
@@ -94,7 +94,21 @@ def profile(request, username):
 	participations = Participations.objects.filter(user=use)
 	favorites = Favorites.objects.filter(user=use)
 	profile = get_object_or_404(Profile, user=use)
-	return render(request, 'core/profile.html', {'profile':profile, 'participations':participations, 'favorites':favorites})
+
+	if request.user.is_authenticated():
+		if use != request.user:
+			try:
+				procurarRegistro = Followers.objects.get(user=request.user, following=use)
+				if procurarRegistro:
+					dadosSeguir = 1
+			except ObjectDoesNotExist:
+				dadosSeguir = 2
+		else:
+			dadosSeguir = 0
+	else:
+		dadosSeguir = 0 
+
+	return render(request, 'core/profile.html', {'profile':profile, 'participations':participations, 'favorites':favorites, 'dadosSeguir':dadosSeguir})
 
 def login_user(request):
     if request.method == "POST":
@@ -422,3 +436,56 @@ def favorites(request, username):
 		except EmptyPage:
 			pagina = paginator.page(paginator.num_pages)
 		return render(request, 'core/favorites.html', {'pagina':pagina, 'chave': chave, 'user': user})
+
+def follow(request, username):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		userfollow = get_object_or_404(User, username=username)
+		if userfollow != request.user:
+			try:
+				procurarRegistro = Followers.objects.get(user=request.user, following=userfollow)
+				if procurarRegistro:
+					print("{} já segue {}".format(user.username, following.username))
+			except ObjectDoesNotExist:
+				novoRegistro = Followers()
+				novoRegistro.user = request.user
+				novoRegistro.following = userfollow
+				novoRegistro.save()
+				print("Registro criado")
+		return profile(request, username)
+
+def unfollow(request, username):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		userfollow = get_object_or_404(User, username=username)
+		if userfollow != request.user:
+			try:
+				procurarRegistro = Followers.objects.get(user=request.user, following=userfollow)
+				procurarRegistro.delete()
+				print("Parou de seguir")
+			except ObjectDoesNotExist:
+				raise Http404
+		return profile(request, username)
+
+def following(request, username):
+	userfollow = get_object_or_404(User, username=username)
+	relacao = Followers.objects.filter(user=userfollow)
+	followings = []
+
+	for pessoa in relacao:
+		followings.append(pessoa.following)
+
+	return render(request, 'core/following.html', {'followings':followings, 'userfollow':userfollow})
+
+def follower(request, username):
+	userfollow = get_object_or_404(User, username=username)
+	relacao = Followers.objects.filter(following=userfollow)
+
+	followers = []
+
+	for pessoa in relacao:
+		followers.append(pessoa.user)
+
+	return render(request, 'core/followers.html', {'followers':followers, 'userfollow':userfollow})
