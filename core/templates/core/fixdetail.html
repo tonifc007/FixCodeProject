@@ -17,6 +17,10 @@
 	<a href="{% url 'core:delete_fix' fixie.pk %}">Deletar fix</a>
 {% endif %}
 
+{% if aviso %}
+	<h4>{{ aviso }}</h4>
+{% endif %}
+
 {% if coments %}
 	<h4>Há {{ coments|l }} respostas para este fix:</h4>
 
@@ -40,10 +44,19 @@
 		<p><a href="{% url 'core:favorite_fix' fixie.pk %}">Favoritar Fix</a></p>
 	{% endif %}
 
+	{% if chave_de_participacao == 1 %}
+		<p><a href="{% url 'core:inativeNotifyParticipations' fixie.pk %}">Desativar notificação de participação</a></p>
+		<p><a href="{% url 'core:deleteParticipation' fixie.pk %}">Excluir participação</a></p>
+	{% elif chave_de_participacao == 2 %}
+		<p><a href="{% url 'core:ativeNotifyParticipations' fixie.pk %}">Ativar notificação de participação</a></p>
+		<p><a href="{% url 'core:deleteParticipation' fixie.pk %}">Excluir participação</a></p>
+	{% endif %}
+
+
 
 	{% if chave %}
 		{% if fixie.resolvido %}
-			<p>Este fix está resolvido! - <a href="{% url 'core:restore_fixed_code' fixie.pk%}">Restaurar fix</a></p> 
+			<p>Este fix está resolvido! - <a href="{% url 'core:restore_fixed_code' fixie.pk %}">Restaurar fix</a></p> 
 		{% else %}
 			{% if coments.counter != 0 %}
 				<a href="{% url 'core:mark_fixed_code' fixie.pk %}">Marcar fix como resolvido</a> (Esta opção irá desabilitar novas respostas)
@@ -55,6 +68,9 @@
 			<p><i>{{ com.coment }}</i> - <a href="{% url 'core:best_answer' fixie.pk com.pk %}">Escolher como solução</a></p>
 			<p>publicado por: {{ com.user }}</p>
 			<p>data: {{ com.data }}</p>
+			{% if com.user != request.user %}
+				<p><a href="{% url 'core:report_coment' fixie.pk com.pk %}">Reportar resposta</a></p>
+			{% endif %}
 			<p>....................</p>
 		{% endfor %}
 	{% else %}

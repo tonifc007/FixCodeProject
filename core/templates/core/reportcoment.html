@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Reportar fix - Fixcode</title>
+</head>
+<body>
+<h1>Deseja reportar este comentário?</h1>
+<p>"{{ coment.coment }}" em "{{ fix.titulo }}"</p>
+
+<a href="{% url 'core:report_coment_confirm' fix.pk coment.pk %}">Reportar</a><br>
+<a href="{% url 'core:fix_detail' fix.pk %}">Cancelar</a>
+</body>
+</html>

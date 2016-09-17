@@ -37,6 +37,7 @@ class Participations(models.Model):
 	user = models.ForeignKey(User)
 	fixie = models.ForeignKey(Fixies)
 	notificacao = models.IntegerField(default=0)
+	ativa_notificacao = models.BooleanField(default=True)
 
 	def __str__(self):
 		return self.user.username + ' participa de: ' + self.fixie.titulo

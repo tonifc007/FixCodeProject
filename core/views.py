@@ -141,7 +141,7 @@ def create_fix(request):
 			return redirect('/')
 		return render(request, 'core/createfix.html', {'form':form})
 
-def fix_detail(request, pk):
+def fix_detail(request, pk, aviso=False):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 
@@ -176,8 +176,9 @@ def fix_detail(request, pk):
 				#ids_participantes.append(t.user.pk)
 				relationship = Participations.objects.get(user=t.user, fixie=com.fixie)
 				if relationship.user != request.user and relationship.user != com.fixie.user:
-					relationship.notificacao += 1
-					relationship.save()
+					if relationship.ativa_notificacao != False:
+						relationship.notificacao += 1
+						relationship.save()
 			#print(ids_participantes)
 
 			#-----------------------------
@@ -206,10 +207,15 @@ def fix_detail(request, pk):
 		try:
 			table_participation = Participations.objects.get(user=request.user, fixie=fixie)
 			if table_participation:
+				if table_participation.ativa_notificacao == True:
+					chave_de_participacao = 1
+				else:
+					chave_de_participacao = 2
 				table_participation.notificacao = 0
 				table_participation.save()
 				print("tabela já existe, é participação deste usuário e as notificações desta participação foram zeradas")
 		except ObjectDoesNotExist:
+			chave_de_participacao = 0
 			print("Este usuário não tem participação com este fixie")
 
 		try:
@@ -235,7 +241,7 @@ def fix_detail(request, pk):
 
 
 		coments = ComentFixies.objects.filter(fixie=fixie.pk)
-	return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments, 'form':form, 'chave': chave, 'chave_fav': chave_fav})
+	return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments, 'form':form, 'chave':chave, 'chave_fav':chave_fav, 'aviso':aviso, 'chave_de_participacao':chave_de_participacao})
 
 def best_answer(request, fixpk, compk):
 	#ufa! essa view quase me mata kkk :')
@@ -378,6 +384,45 @@ def participations(request, username):
 			pagina = paginator.page(paginator.num_pages)
 		return render(request, 'core/participations.html', {'pagina':pagina, 'chave': chave, 'user': user})
 
+def inativeNotifyParticipations(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixie = get_object_or_404(Fixies, pk=pk)
+		if fixie.user != request.user:
+			relacao = get_object_or_404(Participations, user=request.user, fixie=fixie)
+			relacao.ativa_notificacao = False
+			relacao.save()
+		else:
+			raise Http404
+		return fix_detail(request, pk)
+
+def ativeNotifyParticipations(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixie = get_object_or_404(Fixies, pk=pk)
+		if fixie.user != request.user:
+			relacao = get_object_or_404(Participations, user=request.user, fixie=fixie)
+			relacao.ativa_notificacao = True
+			relacao.save()
+		else:
+			raise Http404
+		return fix_detail(request, pk)
+
+def deleteParticipation(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		fixie = get_object_or_404(Fixies, pk=pk)
+		user=request.user
+		if fixie.user != request.user:
+			relacao = get_object_or_404(Participations, user=request.user, fixie=fixie)
+			relacao.delete()
+		else:
+			raise Http404
+		return participations(request, user.username)	
+
 def favorite_fix(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
@@ -489,3 +534,36 @@ def follower(request, username):
 		followers.append(pessoa.user)
 
 	return render(request, 'core/followers.html', {'followers':followers, 'userfollow':userfollow})
+
+def report_coment(request, fixpk, compk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		aviso = False
+		fix = get_object_or_404(Fixies, pk=fixpk)
+		if fix.user == request.user:
+			coment = get_object_or_404(ComentFixies, pk=compk)
+			if coment.user == request.user:
+				raise Http404
+			return render(request, 'core/reportcoment.html', {'fix':fix, 'coment':coment})
+		else:
+			raise Http404
+
+def report_coment_confirm(request, fixpk, compk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		aviso = False
+		fix = get_object_or_404(Fixies, pk=fixpk)
+		if fix.user == request.user:
+			print("este fix é deste usuário")
+			coment = get_object_or_404(ComentFixies, pk=compk)
+			if coment.user == request.user:
+				raise Http404
+			else:
+				coment.delete()
+			aviso = 'A resposta "'+coment.coment+'" foi reportada.'
+		else:
+			raise Http404
+	print(aviso)
+	return fix_detail(request, fixpk, aviso)
