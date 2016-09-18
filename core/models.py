@@ -19,6 +19,7 @@ class Fixies(models.Model):
 	resolvido = models.BooleanField(default=False)
 	tem_melhor_resposta = models.BooleanField(default=False)
 	notificacao = models.IntegerField(default=0)
+	ativa_notificacao = models.BooleanField(default=True)
 
 	def __str__(self):
 		return self.titulo

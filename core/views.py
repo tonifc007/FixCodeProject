@@ -152,9 +152,10 @@ def fix_detail(request, pk, aviso=False):
 			coment = form.cleaned_data['coment']
 			com.user = request.user
 			com.fixie = Fixies.objects.get(pk=pk)
-			if com.fixie.user != request.user:				
-				com.fixie.notificacao += 1
-				com.fixie.save()
+			if com.fixie.user != request.user:
+				if com.fixies.ativa_notificacao != False:				
+					com.fixie.notificacao += 1
+					com.fixie.save()
 			try:
 				table_participation = Participations.objects.get(user=request.user, fixie=com.fixie)
 				print("tabela já existe")
@@ -348,6 +349,30 @@ def my_fixies(request, delete=False):
 		except EmptyPage:
 			pagina = paginator.page(paginator.num_pages)
 		return render(request, 'core/myfixies.html', {'pagina': pagina, 'delete':delete})
+
+def inativeNotifyMyFixies(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		relacao = get_object_or_404(Fixies, user=request.user, pk=pk)
+		if relacao.user == request.user:			
+			relacao.ativa_notificacao = False
+			relacao.save()
+		else:
+			raise Http404
+		return fix_detail(request, pk)
+
+def ativeNotifyMyFixies(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		relacao = get_object_or_404(Fixies, user=request.user, pk=pk)
+		if relacao.user == request.user:
+			relacao.ativa_notificacao = True
+			relacao.save()
+		else:
+			raise Http404
+		return fix_detail(request, pk)
 
 # def participations(request):
 # 	if not request.user.is_authenticated():

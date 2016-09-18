@@ -15,6 +15,11 @@
 
 {% if chave %}
 	<a href="{% url 'core:delete_fix' fixie.pk %}">Deletar fix</a>
+	{% if fixie.ativa_notificacao == True %}
+		<a href="{% url 'core:inativeNotifyMyFixies' fixie.pk %}">Desativar notificações</a>
+	{% else %}
+		<a href="{% url 'core:ativeNotifyMyFixies' fixie.pk %}">Ativar notificações</a>
+	{% endif %}
 {% endif %}
 
 {% if aviso %}
