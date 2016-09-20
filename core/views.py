@@ -1,5 +1,5 @@
 # -*- coding: utf 8 -*-
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers
 from django.contrib.auth import authenticate, login, logout, get_user 
 from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile
@@ -7,6 +7,7 @@ from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
+import json
 
 # Create your views here.
 
@@ -507,37 +508,66 @@ def favorites(request, username):
 			pagina = paginator.page(paginator.num_pages)
 		return render(request, 'core/favorites.html', {'pagina':pagina, 'chave': chave, 'user': user})
 
-def follow(request, username):
-	if not request.user.is_authenticated():
-		return render(request, 'core/login.html')
-	else:
-		userfollow = get_object_or_404(User, username=username)
-		if userfollow != request.user:
-			try:
-				procurarRegistro = Followers.objects.get(user=request.user, following=userfollow)
-				if procurarRegistro:
-					print("{} já segue {}".format(user.username, following.username))
-			except ObjectDoesNotExist:
-				novoRegistro = Followers()
-				novoRegistro.user = request.user
-				novoRegistro.following = userfollow
-				novoRegistro.save()
-				print("Registro criado")
-		return profile(request, username)
 
-def unfollow(request, username):
+def followajax(request, username):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		userfollow = get_object_or_404(User, username=username)
-		if userfollow != request.user:
-			try:
-				procurarRegistro = Followers.objects.get(user=request.user, following=userfollow)
-				procurarRegistro.delete()
-				print("Parou de seguir")
-			except ObjectDoesNotExist:
-				raise Http404
-		return profile(request, username)
+		if request.method == 'POST':
+			use = request.POST.get('id')
+			userfollow = get_object_or_404(User, username=use)
+			response_data = {}
+			if userfollow != request.user:
+				try:
+					procurarRegistro = Followers.objects.get(user=request.user, following=userfollow)
+					if procurarRegistro:
+						print("{} já segue {}".format(user.username, following.username))
+				except ObjectDoesNotExist:
+					novoRegistro = Followers()
+					novoRegistro.user = request.user
+					novoRegistro.following = userfollow
+					novoRegistro.save()
+					
+					response_data['result'] = 'Usuário seguido com sucesso'
+					print("Registro criado")
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def unfollowajax(request, username):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			use = request.POST.get('id')
+			userfollow = get_object_or_404(User, username=use)
+			response_data = {}
+			if userfollow != request.user:
+				try:
+					procurarRegistro = Followers.objects.get(user=request.user, following=userfollow)
+					procurarRegistro.delete()
+					print("Parou de seguir")
+				except ObjectDoesNotExist:
+					raise Http404
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def getrelationship(request, username):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			use = request.POST.get('id')
+			userfollow = get_object_or_404(User, username=use)
+			response_data = False
+			if userfollow != request.user:
+				try:
+					procurarRegistro = Followers.objects.get(user=request.user, following=userfollow)
+					if procurarRegistro:
+						response_data = True
+				except ObjectDoesNotExist:
+					response_data = False
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
 def following(request, username):
 	userfollow = get_object_or_404(User, username=username)
