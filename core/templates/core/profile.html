@@ -20,10 +20,10 @@
 	{% if dadosSeguir is not 0 %}
 		{% if dadosSeguir is 1 %}
 			
-			<a href="#" id="seguimento" onclick="requisicao('{{profile.user.username}}')">Parar de seguir</a>
+			<a href="#" id="seguimento" onclick="requisicao('{{ profile.user.username }}')">Parar de seguir</a>
 		{% else %}
 			
-			<a href="#" id="seguimento" onclick="requisicao('{{profile.user.username}}')">Seguir</a>
+			<a href="#" id="seguimento" onclick="requisicao('{{ profile.user.username }}')">Seguir</a>
 		{% endif %}
 	{% endif %}
 	</div>

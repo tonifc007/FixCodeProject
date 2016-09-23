@@ -6,6 +6,9 @@
 	{% else %}
 		<title>{{ fixie.titulo }} - Fixcode</title>
 	{% endif %}
+	{% load staticfiles %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="{% static 'core/js/main.js' %}"></script>
 </head>
 <body>
 {% load aux_tags %}
@@ -14,11 +17,11 @@
 <span>{{ fixie.descricao }}</span>
 
 {% if chave %}
-	<a href="{% url 'core:delete_fix' fixie.pk %}">Deletar fix</a>
+	<a href="#" onclick="alertDelete('{{fixie.pk}}')">Deletar fix</a>
 	{% if fixie.ativa_notificacao == True %}
-		<a href="{% url 'core:inativeNotifyMyFixies' fixie.pk %}">Desativar notificações</a>
+		<a href="#" id="seg" onclick="getNotifyMyFix('{{ fixie.pk }}')">Desativar notificações</a>
 	{% else %}
-		<a href="{% url 'core:ativeNotifyMyFixies' fixie.pk %}">Ativar notificações</a>
+		<a href="#" id="seg" onclick="getNotifyMyFix('{{ fixie.pk }}')">Ativar notificações</a>
 	{% endif %}
 {% endif %}
 
@@ -61,20 +64,20 @@
 
 	{% if chave %}
 		{% if fixie.resolvido %}
-			<p>Este fix está resolvido! - <a href="{% url 'core:restore_fixed_code' fixie.pk %}">Restaurar fix</a></p> 
+			<p>Este fix está resolvido! - <a href="#" onclick="restore('{{ fixie.pk }}')">Restaurar fix</a></p> 
 		{% else %}
 			{% if coments.counter != 0 %}
-				<a href="{% url 'core:mark_fixed_code' fixie.pk %}">Marcar fix como resolvido</a> (Esta opção irá desabilitar novas respostas)
+				<a href="#" onclick="fixed('{{ fixie.pk }}')">Marcar fix como resolvido</a> (Esta opção irá desabilitar novas respostas)
 			{% endif %}
 		{% endif %}
 		
 		{% for com in coments %}
 			<p>...................</p>
-			<p><i>{{ com.coment }}</i> - <a href="{% url 'core:best_answer' fixie.pk com.pk %}">Escolher como solução</a></p>
+			<p><i>{{ com.coment }}</i> - <a href="" onclick="best_answer('{{ com.pk }}')">Escolher como solução</a> <div id="best{{com.id}}"></div></p>
 			<p>publicado por: {{ com.user }}</p>
 			<p>data: {{ com.data }}</p>
 			{% if com.user != request.user %}
-				<p><a href="{% url 'core:report_coment' fixie.pk com.pk %}">Reportar resposta</a></p>
+				<p><a href="" onclick="report('{{ com.pk }}')"">Reportar resposta</a></p>
 			{% endif %}
 			<p>....................</p>
 		{% endfor %}

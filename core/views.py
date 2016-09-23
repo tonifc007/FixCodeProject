@@ -23,11 +23,11 @@ def index(request):
 		count_notify = 0
 		for fix in myfixies:
 			if int(fix.notificacao) > 0:
+				print "incrementa"
 				count_notify += 1
-
+		print count_notify
 		myrelationships = Participations.objects.filter(user=request.user)
 		paginator = Paginator(fixies, 5)
-
 		page = request.GET.get('page')
 		print(page)
 		print("Estou requisitando a {} página" .format(page))
@@ -154,7 +154,7 @@ def fix_detail(request, pk, aviso=False):
 			com.user = request.user
 			com.fixie = Fixies.objects.get(pk=pk)
 			if com.fixie.user != request.user:
-				if com.fixies.ativa_notificacao != False:				
+				if com.fixie.ativa_notificacao != False:				
 					com.fixie.notificacao += 1
 					com.fixie.save()
 			try:
@@ -245,95 +245,101 @@ def fix_detail(request, pk, aviso=False):
 		coments = ComentFixies.objects.filter(fixie=fixie.pk)
 	return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments, 'form':form, 'chave':chave, 'chave_fav':chave_fav, 'aviso':aviso, 'chave_de_participacao':chave_de_participacao})
 
-def best_answer(request, fixpk, compk):
+def best_answer(request, pk):
 	#ufa! essa view quase me mata kkk :')
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		fixie = get_object_or_404(Fixies, pk=fixpk)
 
-		if fixie.user != request.user:
-			print('este fix não é deste usuario')
-			raise Http404
-		else:
-			lista = []
-			coments = ComentFixies.objects.filter(fixie=fixie.pk)
-			for com in coments:
-				print(com.pk)
-				lista.append(int(com.pk))
-
-			print(compk)
-			print(lista)
-
-			if int(compk) not in lista:
-				print("indice de coments invalido para exte fixie")
+		if request.method == 'POST':
+			comentpk = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pk)
+			response_data = "Deu errado"
+			if fixie.user != request.user:
+				print('este fix não é deste usuario')
 				raise Http404
 			else:
+				lista = []
+				coments = ComentFixies.objects.filter(fixie=fixie.pk)
 				for com in coments:
-					com.melhor_resposta = False
-					com.save()
-				newmybestanswer = get_object_or_404(ComentFixies, pk=compk)
-				newmybestanswer.melhor_resposta = True
-				newmybestanswer.save()
-				fixie.tem_melhor_resposta = True
-				fixie.save()
-				return fix_detail(request, fixpk)
+					lista.append(int(com.pk))
+
+				if int(comentpk) not in lista:
+					print("indice de coments invalido para exte fixie")
+					raise Http404
+				else:
+					for com in coments:
+						if com.melhor_resposta == True:
+							com.melhor_resposta = False
+							com.save()
+							print "Salvou"
+
+					newmybestanswer = get_object_or_404(ComentFixies, pk=comentpk)
+					newmybestanswer.melhor_resposta = True
+					newmybestanswer.save()
+					fixie.tem_melhor_resposta = True
+					fixie.save()
+					response_data = "Deu certo"
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
 
 def mark_fixed_code(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		fixie = get_object_or_404(Fixies, pk=pk)
 
-		if fixie.user != request.user:
-			print('este fix não é deste usuario')
-			raise Http404
-		elif fixie.tem_melhor_resposta:
-			fixie.resolvido = True
-			fixie.save()
-		return fix_detail(request, pk)
+		if request.method == 'POST':
+			fix = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=fix)
+			response_data = "Deu errado"
+			if fixie.user != request.user:
+				print('este fix não é deste usuario')
+				raise Http404
+			elif fixie.tem_melhor_resposta:
+				fixie.resolvido = True
+				fixie.save()
+				response_data = "Deu certo"
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
-def delete_fix(request, pk):
-	if not request.user.is_authenticated():
-		return render(request, 'core/login.html')
-	else:
-		fixie = get_object_or_404(Fixies, pk=pk)
-
-		if fixie.user != request.user:
-			print('este fix não é deste usuario')
-			raise Http404
-		return render(request, 'core/delete_fix.html', {'fixie':fixie})
 
 def confirm_delete_fix(request, pk):
-	print('chegou na função')
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		fixie = get_object_or_404(Fixies, pk=pk)
-
-
-		if fixie.user != request.user:
-			print('este fix não é deste usuario')
-			raise Http404
-		else:
-			fixie.delete()
-			print("chegou pra deletar")
-		return my_fixies(request, True)
-
+		if request.method == 'POST':
+			use = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pk)
+			response_data = {}
+			if fixie.user != request.user:
+				print('este fix não é deste usuario')
+				raise Http404
+			else:
+				fixie.delete()
+				print("chegou pra deletar")
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+	
 
 def to_restore_fixed_code(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		fixie = get_object_or_404(Fixies, pk=pk)
 
-		if fixie.user != request.user:
-			print('este fix não é deste usuario')
-			raise Http404
-		else:
-			fixie.resolvido = False
-			fixie.save()
-			return fix_detail(request, pk)
+		if request.method == 'POST':
+			fix = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=fix)
+			response_data = "Deu errado"
+			if fixie.user != request.user:
+				print('este fix não é deste usuario')
+				raise Http404
+			elif fixie.tem_melhor_resposta:
+				fixie.resolvido = False
+				fixie.save()
+				response_data = "Deu certo"
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
 def my_fixies(request, delete=False):
 	if not request.user.is_authenticated():
@@ -367,25 +373,30 @@ def ativeNotifyMyFixies(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		relacao = get_object_or_404(Fixies, user=request.user, pk=pk)
-		if relacao.user == request.user:
-			relacao.ativa_notificacao = True
-			relacao.save()
-		else:
-			raise Http404
-		return fix_detail(request, pk)
+		if request.method == 'POST':
+			pk = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pk)
+			if fixie.user == request.user:
+				fixie.ativa_notificacao = True
+				fixie.save()
+				response_data = "Notificações ativadas"
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
-# def participations(request):
-# 	if not request.user.is_authenticated():
-# 		return render(request, 'core/login.html')
-# 	else:
-# 		mycoments = ComentFixies.objects.filter(user=request.user)
-# 		relatedfixies = []
-# 		for com in mycoments:
-# 			if com.fixie.user != request.user:
-# 				relatedfixies.append(com.fixie)
+def inativeNotifyMyFixies(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			pk = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pk)
+			if fixie.user == request.user:
+				fixie.ativa_notificacao = False
+				fixie.save()
+				response_data = "Notificações desativadas"
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
-# 		return render(request, 'core/participations.html', {'relatedfixies':relatedfixies})
 
 def participations(request, username):
 	if not request.user.is_authenticated():
@@ -551,7 +562,10 @@ def unfollowajax(request, username):
 			return HttpResponse(json.dumps(response_data), content_type="application/json")
         return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
+
 def getrelationship(request, username):
+	print "Chegou na função"
+
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
@@ -567,7 +581,23 @@ def getrelationship(request, username):
 				except ObjectDoesNotExist:
 					response_data = False
 			return HttpResponse(json.dumps(response_data), content_type="application/json")
-        return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def getnotifymyfix(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			pk = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pk)
+			response_data = False
+			if fixie.user == request.user:
+				if fixie.ativa_notificacao == True:
+					response_data = True
+				else:
+					response_data = False
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
 def following(request, username):
 	userfollow = get_object_or_404(User, username=username)
@@ -590,35 +620,22 @@ def follower(request, username):
 
 	return render(request, 'core/followers.html', {'followers':followers, 'userfollow':userfollow})
 
-def report_coment(request, fixpk, compk):
-	if not request.user.is_authenticated():
-		return render(request, 'core/login.html')
-	else:
-		aviso = False
-		fix = get_object_or_404(Fixies, pk=fixpk)
-		if fix.user == request.user:
-			coment = get_object_or_404(ComentFixies, pk=compk)
-			if coment.user == request.user:
-				raise Http404
-			return render(request, 'core/reportcoment.html', {'fix':fix, 'coment':coment})
-		else:
-			raise Http404
 
-def report_coment_confirm(request, fixpk, compk):
+def report_coment(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		aviso = False
-		fix = get_object_or_404(Fixies, pk=fixpk)
-		if fix.user == request.user:
-			print("este fix é deste usuário")
-			coment = get_object_or_404(ComentFixies, pk=compk)
-			if coment.user == request.user:
-				raise Http404
-			else:
-				coment.delete()
-			aviso = 'A resposta "'+coment.coment+'" foi reportada.'
-		else:
-			raise Http404
-	print(aviso)
-	return fix_detail(request, fixpk, aviso)
+		if request.method == 'POST':
+			comentpk = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pk)
+			response_data = "Não foi possível reportar"
+			if fixie.user == request.user:
+				print("este fix é deste usuário")
+				coment = get_object_or_404(ComentFixies, pk=comentpk)
+				if coment.user == request.user:
+					raise Http404
+				else:
+					coment.delete()
+					response_data = "Reportado com sucesso"
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")

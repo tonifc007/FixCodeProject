@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^editprofile/$', views.edit_details_profile, name='editprofile'),
     url(r'^profile/(?P<username>\w+)/$', views.profile, name='profile'),
     url(r'^create_fix/$', views.create_fix, name='create_fix'),
-    url(r'^fix/(?P<pk>[0-9]+)/delete/$', views.delete_fix, name='delete_fix'),
+    url(r'^fix/(?P<pk>[0-9]+)/getnotifymyfix/$', views.getnotifymyfix, name='getnotifymyfix'),
     url(r'^fix/(?P<pk>[0-9]+)/inativenotifyfix/$', views.inativeNotifyMyFixies, name='inativeNotifyMyFixies'),
     url(r'^fix/(?P<pk>[0-9]+)/ativenotifyfix/$', views.ativeNotifyMyFixies, name='ativeNotifyMyFixies'),
     url(r'^fix/(?P<pk>[0-9]+)/inativenotifyparticipate/$', views.inativeNotifyParticipations, name='inativeNotifyParticipations'),
@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^fix/(?P<pk>[0-9]+)/deteleparticipation/$', views.deleteParticipation, name='deleteParticipation'),
     url(r'^fix/(?P<pk>[0-9]+)/delete_confirm/$', views.confirm_delete_fix, name='confirm_delete_fix'),
     url(r'^fix/(?P<pk>[0-9]+)/$', views.fix_detail, name='fix_detail'),
-    url(r'^fix/(?P<fixpk>[0-9]+)/best_answer/(?P<compk>[0-9]+)/$', views.best_answer, name='best_answer'),
+    url(r'^fix/(?P<pk>[0-9]+)/best_answer/$', views.best_answer, name='best_answer'),
     url(r'^fix/(?P<pk>[0-9]+)/fixed/$', views.mark_fixed_code, name='mark_fixed_code'),
     url(r'^fix/(?P<pk>[0-9]+)/restore/$', views.to_restore_fixed_code, name='restore_fixed_code'),
     url(r'^myfixies/$', views.my_fixies, name='myfixies'),
@@ -33,7 +33,6 @@ urlpatterns = [
     url(r'^profile/(?P<username>\w+)/unfollower/$', views.unfollowajax, name='unfollowajax'),
     url(r'^profile/(?P<username>\w+)/following/$', views.following, name='following'),
     url(r'^profile/(?P<username>\w+)/followers/$', views.follower, name='follower'),
-    url(r'^fix/(?P<fixpk>[0-9]+)/(?P<compk>[0-9]+)/report/$', views.report_coment, name='report_coment'),
-    url(r'^fix/(?P<fixpk>[0-9]+)/(?P<compk>[0-9]+)/reportconfirm/$', views.report_coment_confirm, name='report_coment_confirm'),
+    url(r'^fix/(?P<pk>[0-9]+)/report/$', views.report_coment, name='report_coment'),
 
 ]
