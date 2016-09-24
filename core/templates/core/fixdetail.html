@@ -47,17 +47,17 @@
 	{% endfor %}
 
 	{% if chave_fav is 1 %}
-		<p>Marcado como favorito - <a href="{% url 'core:un_favorite_fix' fixie.pk %}">Desfavoritar</a></p>
+		<p><a href="#" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">Desfavoritar Fix</a></p>
 	{% elif chave_fav is 2 %}
-		<p><a href="{% url 'core:favorite_fix' fixie.pk %}">Favoritar Fix</a></p>
+		<p><a href="#" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">Favoritar Fix</a></p>
 	{% endif %}
 
 	{% if chave_de_participacao == 1 %}
-		<p><a href="{% url 'core:inativeNotifyParticipations' fixie.pk %}">Desativar notificação de participação</a></p>
-		<p><a href="{% url 'core:deleteParticipation' fixie.pk %}">Excluir participação</a></p>
+		<p><a href="#" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')">Desativar notificação de participação</a></p>
+		<p><a href="#" onclick="deleteparticipation('{{ fixie.pk }}')">Excluir participação</a></p>
 	{% elif chave_de_participacao == 2 %}
-		<p><a href="{% url 'core:ativeNotifyParticipations' fixie.pk %}">Ativar notificação de participação</a></p>
-		<p><a href="{% url 'core:deleteParticipation' fixie.pk %}">Excluir participação</a></p>
+		<p><a href="#" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')">Ativar notificação de participação</a></p>
+		<p><a href="#" onclick="deleteparticipation('{{ fixie.pk }}')">Excluir participação</a></p>
 	{% endif %}
 
 

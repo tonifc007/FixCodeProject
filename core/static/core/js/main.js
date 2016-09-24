@@ -307,6 +307,189 @@ function report(ide){
     }
 }
 
+//AJAX para desfavoritar fix
+
+function requisicaoFavorite(ide) {
+    //console.log("função para saber se existe uma relaçao de seguidor");
+    $.ajax({
+        url : "getRelationshipFavorite/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            if (json == false){
+                console.log('está falso');
+                favorite(ide);
+            }
+            else{
+                console.log('está verdadeiro');
+                unfavorite(ide);
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+function favorite(ide){
+        $.ajax({
+        url : "favorite/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            $('#fav').text("Desfavoritar Fix");
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+function unfavorite(ide){
+        $.ajax({
+        url : "un_favorite/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            $('#fav').text("Favoritar Fix");
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+//AJAX para alternar chave de notificação de participação
+
+function requisicaoNotificacaoParticipacao(ide) {
+    //console.log("função para saber se existe uma relaçao de seguidor");
+    $.ajax({
+        url : "getnotifyparticipation/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            if (json == false){
+                console.log('está falso');
+                ativenotifyparticipate(ide);
+            }
+            else{
+                console.log('está verdadeiro');
+                inativenotifyparticipate(ide);
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+function ativenotifyparticipate(ide){
+        $.ajax({
+        url : "ativenotifyparticipate/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            $('#par').text("Desativar notificação de participação");
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+function inativenotifyparticipate(ide){
+        $.ajax({
+        url : "inativenotifyparticipate/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            $('#par').text("Ativar notificação de participação");
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+//AJAX para deletar participação
+
+function deleteparticipation(ide){
+    console.log("Deletando participação");
+    console.log(ide);
+    decisao = confirm("Deseja excluir o seu registro de participação neste fix?");
+    if (decisao) {
+        $.ajax({
+            url : "deleteparticipation/", // the endpoint
+            type : "POST", // http method
+            data : { 
+                id : ide,
+                 }, // data sent with the post request
+
+            // handle a successful response
+            success : function(json) {
+                console.log(json); // log the returned json to the console
+                console.log("success"); // another sanity check
+                parent.window.document.location.href = '';
+            },
+
+            // handle a non-successful response
+            error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText);
+               alert("Não foi possível excluir participação");
+
+            }
+        });
+    }
+}
+
 //Cookies globais padrões para utilização do AJAX
 
 function getCookie(name) {

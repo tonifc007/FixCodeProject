@@ -9,8 +9,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 import json
 
-# Create your views here.
-
 def index(request):
 	if not request.user.is_authenticated():
 		print("foi no if")
@@ -421,81 +419,151 @@ def participations(request, username):
 			pagina = paginator.page(paginator.num_pages)
 		return render(request, 'core/participations.html', {'pagina':pagina, 'chave': chave, 'user': user})
 
-def inativeNotifyParticipations(request, pk):
+
+def getnotifyparticipation(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		fixie = get_object_or_404(Fixies, pk=pk)
-		if fixie.user != request.user:
+		response_data = False
+		if request.method == 'POST':
+			pkfix = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pkfix)
+			if fixie.user == request.user:
+				raise Http404
 			relacao = get_object_or_404(Participations, user=request.user, fixie=fixie)
-			relacao.ativa_notificacao = False
-			relacao.save()
-		else:
-			raise Http404
-		return fix_detail(request, pk)
+			if relacao.ativa_notificacao == True:
+				response_data = True
+			else:
+				response_data = False
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
 def ativeNotifyParticipations(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		fixie = get_object_or_404(Fixies, pk=pk)
-		if fixie.user != request.user:
+		response_data = False
+		if request.method == 'POST':
+			pkfix = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pkfix)
 			relacao = get_object_or_404(Participations, user=request.user, fixie=fixie)
 			relacao.ativa_notificacao = True
 			relacao.save()
-		else:
-			raise Http404
-		return fix_detail(request, pk)
+			response_data = True
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def inativeNotifyParticipations(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		response_data = False
+		if request.method == 'POST':
+			pkfix = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pkfix)
+			relacao = get_object_or_404(Participations, user=request.user, fixie=fixie)
+			relacao.ativa_notificacao = False
+			relacao.save()
+			response_data = True
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
 def deleteParticipation(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		fixie = get_object_or_404(Fixies, pk=pk)
-		user=request.user
-		if fixie.user != request.user:
+		response_data = False
+		if request.method == 'POST':
+			pkfix = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pkfix)
+			if fixie.user == request.user:
+				print "entrou no if de erro"
+				raise Http404
 			relacao = get_object_or_404(Participations, user=request.user, fixie=fixie)
 			relacao.delete()
-		else:
-			raise Http404
-		return participations(request, user.username)	
+			response_data = True
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def getRelationshipFavorite(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		response_data = False
+		if request.method == 'POST':
+			pkfix = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pkfix)
+			if fixie.user != request.user:
+				try:
+					fav = Favorites.objects.get(user=request.user, fixie=fixie)
+					if fav:
+						response_data = True
+				except ObjectDoesNotExist:
+					response_data = False
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
 def favorite_fix(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		fixie = get_object_or_404(Fixies, pk=pk)
-		if fixie.user != request.user:
-			try:
-				table_favorite = Favorites.objects.get(user=request.user, fixie=fixie)
-				if table_favorite:
-					print("este fix já é favorito deste usuário")
-			except ObjectDoesNotExist:
-				print("este fix não é favorito deste usuário")
+		response_data = "Nao favoritou"
+		if request.method == 'POST':
+			pkfix = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pkfix)
+			if fixie.user != request.user:
 				table_favorite = Favorites()
 				table_favorite.user = request.user
 				table_favorite.fixie = fixie
 				table_favorite.save()
 				print("relacionamento criado")
-			return fix_detail(request, pk)
-	raise Http404
+				response_data = "favoritou"
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def favorite_fix(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		response_data = "Nao favoritou"
+		if request.method == 'POST':
+			pkfix = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pkfix)			
+			if fixie.user != request.user:
+				try:
+					table_favorite = Favorites()
+					table_favorite.user = request.user
+					table_favorite.fixie = fixie
+					table_favorite.save()
+					print("relacionamento criado")
+					response_data = "favoritou"
+				except ObjectDoesNotExist:
+					response_data = "Nao favoritou"
+					raise Http404
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
 def un_favorite_fix(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		fixie = get_object_or_404(Fixies, pk=pk)
-		if fixie.user != request.user:
-			try:
-				table_favorite = Favorites.objects.get(user=request.user, fixie=fixie)
-				if table_favorite:
-					print("este fix já é favorito deste usuário")
-					table_favorite.delete()
-			except ObjectDoesNotExist:
-				print("este fix não é favorito deste usuário")
-				raise Http404
-			return fix_detail(request, pk)
-	raise Http404
+		response_data = "Nao desfavoritou"
+		if request.method == 'POST':
+			pkfix = request.POST.get('id')
+			fixie = get_object_or_404(Fixies, pk=pkfix)
+			if fixie.user != request.user:
+				try:
+					table_favorite = Favorites.objects.get(user=request.user, fixie=fixie)
+					if table_favorite:
+						print("este fix já é favorito deste usuário")
+						table_favorite.delete()
+						response_data = "desfavoritou"
+				except ObjectDoesNotExist:
+					print("este fix não é favorito deste usuário")
+					raise Http404
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
 
 def favorites(request, username):
 	if not request.user.is_authenticated():
