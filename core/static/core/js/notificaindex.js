@@ -27,7 +27,7 @@ function notificaIndex(){
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
             console.log(xhr.status + ": " + xhr.responseText);
-           alert("Não foi possível excluir participação");
+            console.log('offline');
 
         }
     });
@@ -54,7 +54,7 @@ function notificaIndexParticipation(){
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
             console.log(xhr.status + ": " + xhr.responseText);
-           alert("Não foi possível excluir participação");
+            console.log('offline');
 
         }
     });
