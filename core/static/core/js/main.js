@@ -490,6 +490,7 @@ function deleteparticipation(ide){
     }
 }
 
+
 //Cookies globais padrões para utilização do AJAX
 
 function getCookie(name) {

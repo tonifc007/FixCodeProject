@@ -94,10 +94,10 @@
 
 {% else %}
 	<p>Ainda não nenhuma resposta</p>
-	<a href="#">Seja o primeiro a responder</a>
 {% endif %}
 
 {% if fixie.resolvido == False %}
+	<div id="post"></div>
 	<form method="post">
 	{% csrf_token %}
 	{% for field in form %}

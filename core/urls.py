@@ -10,6 +10,11 @@ urlpatterns = [
     url(r'^login/$', views.login_user, name='login_user'),
     url(r'^logout_user/$', views.logout_user, name='logout_user'),
     url(r'^editprofile/$', views.edit_details_profile, name='editprofile'),
+    url(r'^notificaIndex/$', views.notificaIndex, name='notifica'),
+    url(r'^notificaIndexParticipation/$', views.notificaIndexParticipation, name='notificaParticipation'),
+
+
+    #Páginas de fix
     url(r'^create_fix/$', views.create_fix, name='create_fix'),
     url(r'^fix/(?P<pk>[0-9]+)/$', views.fix_detail, name='fix_detail'),
     url(r'^myfixies/$', views.my_fixies, name='myfixies'),
@@ -18,6 +23,7 @@ urlpatterns = [
     url(r'^profile/(?P<username>\w+)/favorites/$', views.favorites, name='favorites'),
     url(r'^profile/(?P<username>\w+)/following/$', views.following, name='following'),
     url(r'^profile/(?P<username>\w+)/followers/$', views.follower, name='follower'),
+    url(r'^participations/$', views.participationsSemUser, name='participations'),
 
     #Rotas de requisiçoes AJAX
         #My fixies

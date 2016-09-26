@@ -16,15 +16,6 @@ def index(request):
 	else:
 		print("saiu no if")
 		fixies = Fixies.objects.all()
-
-		myfixies = Fixies.objects.filter(user=request.user)
-		count_notify = 0
-		for fix in myfixies:
-			if int(fix.notificacao) > 0:
-				print "incrementa"
-				count_notify += 1
-		print count_notify
-		myrelationships = Participations.objects.filter(user=request.user)
 		paginator = Paginator(fixies, 5)
 		page = request.GET.get('page')
 		print(page)
@@ -38,12 +29,38 @@ def index(request):
 		except EmptyPage:
 			relations = paginator.page(paginator.num_pages)
 
-		count_notify_relationships = 0
-		for mr in myrelationships:
-			if int(mr.notificacao) > 0:
-				count_notify_relationships += 1
+		return render(request, 'core/index.html', {'relations':relations})
 
-		return render(request, 'core/index.html', {'relations':relations, 'count_notify': count_notify, 'count_notify_relationships': count_notify_relationships})
+def notificaIndex(request):
+	if not request.user.is_authenticated():
+		print("foi no if")
+		return render(request, 'core/login.html')
+	else:			
+		myfixies = Fixies.objects.filter(user=request.user)
+		response_data = 0
+		for fix in myfixies:
+			if int(fix.notificacao) > 0:
+				print "incrementa"
+				response_data += 1
+		print response_data
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def notificaIndexParticipation(request):
+	if not request.user.is_authenticated():
+		print("foi no if")
+		return render(request, 'core/login.html')
+	else:			
+		myrelationships = Participations.objects.filter(user=request.user)
+		response_data = 0
+		for fix in myrelationships:
+			if int(fix.notificacao) > 0:
+				print "incrementa"
+				response_data += 1
+		print response_data
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
 
 def register(request):
 	form = UserFormRegister(request.POST or None)
@@ -155,6 +172,7 @@ def fix_detail(request, pk, aviso=False):
 				if com.fixie.ativa_notificacao != False:				
 					com.fixie.notificacao += 1
 					com.fixie.save()
+					coment = form.cleaned_data['coment']
 			try:
 				table_participation = Participations.objects.get(user=request.user, fixie=com.fixie)
 				print("tabela já existe")
@@ -194,6 +212,7 @@ def fix_detail(request, pk, aviso=False):
 
 
 			com.save()
+			return redirect('/fix/'+pk+'/#post')
 		fixie = get_object_or_404(Fixies, pk=pk)
 		if fixie.user == request.user:
 			print('este fix é deste usuario')
@@ -418,6 +437,23 @@ def participations(request, username):
 		except EmptyPage:
 			pagina = paginator.page(paginator.num_pages)
 		return render(request, 'core/participations.html', {'pagina':pagina, 'chave': chave, 'user': user})
+
+
+def participationsSemUser(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		myparticipations = Participations.objects.filter(user=request.user)
+		paginator = Paginator(myparticipations, 5)
+
+		page = request.GET.get('page')
+		try:
+			pagina = paginator.page(page)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPage:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/participations.html', {'pagina':pagina, 'chave': True, 'user': request.user})
 
 
 def getnotifyparticipation(request, pk):
