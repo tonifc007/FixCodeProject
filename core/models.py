@@ -59,3 +59,23 @@ class Followers(models.Model):
 
 	def __str__(self):
 		return self.user.username + ' esta seguindo ' + self.following.username
+
+class Post(models.Model):
+	user = models.ForeignKey(User, default=1)
+	titulo = models.CharField(max_length=100)
+	post = models.TextField()
+	data = models.DateTimeField(default=timezone.now)
+	notificacao = models.IntegerField(default=0)
+	ativa_notificacao = models.BooleanField(default=True)
+
+	def __str__(self):
+		return self.titulo
+
+class ComentPost(models.Model):
+	user = models.ForeignKey(User, default=1)
+	post = models.ForeignKey(Post)
+	coment = models.TextField()
+	data = models.DateTimeField(default=timezone.now)
+
+	def __str__(self):
+		return '~' + self.coment + '~ em ~' + self.post.titulo + '~'

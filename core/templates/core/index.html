@@ -17,7 +17,10 @@
 <a href="{% url 'core:favorites' user.username %}">Favoritos</a>
 <a href="{% url 'core:profile' user.username %}">Perfil</a>
 <a href="{% url 'core:following' user.username %}">Seguindo</a>
-<a href="{% url 'core:follower' user.username %}">Seguidores</a>
+<a href="{% url 'core:follower' user.username %}">Seguidores</a><br>
+<p>Posts</p>
+<a href="{% url 'core:create_post' %}">Postar</a>
+<a href="{% url 'core:my_posts' %}">Meus posts</a>
 
 <!--{% if relations %}
 	{% if count_notify > 0 %}
@@ -26,6 +29,7 @@
 {% endif %}-->
 <div id="notifica"></div>
 <div id="notificaParticipacao"></div>
+<div id="notificaPosts"></div>
 
 {% if relations %}
 

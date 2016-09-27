@@ -1,8 +1,8 @@
 # -*- coding: utf 8 -*-
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
-from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers
+from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, ComentPost
 from django.contrib.auth import authenticate, login, logout, get_user 
-from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile
+from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile, PostForm, ComentPostForm
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -55,6 +55,21 @@ def notificaIndexParticipation(request):
 		response_data = 0
 		for fix in myrelationships:
 			if int(fix.notificacao) > 0:
+				print "incrementa"
+				response_data += 1
+		print response_data
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def notificaIndexPosts(request):
+	if not request.user.is_authenticated():
+		print("foi no if")
+		return render(request, 'core/login.html')
+	else:			
+		myposts = Post.objects.filter(user=request.user)
+		response_data = 0
+		for post in myposts:
+			if int(post.notificacao) > 0:
 				print "incrementa"
 				response_data += 1
 		print response_data
@@ -122,9 +137,23 @@ def profile(request, username):
 		else:
 			dadosSeguir = 0
 	else:
-		dadosSeguir = 0 
+		dadosSeguir = 0
 
-	return render(request, 'core/profile.html', {'profile':profile, 'participations':participations, 'favorites':favorites, 'dadosSeguir':dadosSeguir})
+	posts = Post.objects.filter(user=use) 
+
+	paginator = Paginator(posts, 5)
+	page = request.GET.get('page')
+	print(page)
+	print("Estou requisitando a {} página" .format(page))
+
+	try:
+		relations = paginator.page(page)
+		print(relations)
+	except PageNotAnInteger:
+		relations = paginator.page(1)
+	except EmptyPage:
+		relations = paginator.page(paginator.num_pages)
+	return render(request, 'core/profile.html', {'relations':relations, 'profile':profile, 'participations':participations, 'favorites':favorites, 'dadosSeguir':dadosSeguir})
 
 def login_user(request):
     if request.method == "POST":
@@ -743,3 +772,68 @@ def report_coment(request, pk):
 					response_data = "Reportado com sucesso"
 			return HttpResponse(json.dumps(response_data), content_type="application/json")
 		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+
+#################################################################################
+#Sistema de blog
+#################################################################################
+
+def create_post(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		form = PostForm(request.POST or None)
+		if form.is_valid():
+			post = form.save(commit=False)
+			post.user = request.user
+			post.save()
+			return redirect('/')
+		return render(request, 'core/createpost.html', {'form':form})
+
+def post_detail(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		form = ComentPostForm(request.POST or None)
+		if form.is_valid():
+			com = form.save(commit=False)
+			coment = form.cleaned_data['coment']
+			com.user = request.user
+			com.post = Post.objects.get(pk=pk)
+			if com.post.user != request.user:
+				if com.post.ativa_notificacao != False:				
+					com.post.notificacao += 1
+					com.post.save()
+					coment = form.cleaned_data['coment']
+			com.save()
+			return redirect('/post/'+pk+'/#post')
+
+		post = get_object_or_404(Post, pk=pk)
+
+		if post.user == request.user:
+			print('este fix é deste usuario')
+			post.notificacao = 0
+			post.save()
+		coments = ComentPost.objects.filter(post=post)
+
+		return render(request, 'core/postdetail.html', {'post': post, 'coments':coments, 'form':form})
+
+def my_posts(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:		
+		posts = Post.objects.filter(user=request.user) 
+
+		paginator = Paginator(posts, 5)
+		page = request.GET.get('page')
+		print(page)
+		print("Estou requisitando a {} página" .format(page))
+
+		try:
+			relations = paginator.page(page)
+			print(relations)
+		except PageNotAnInteger:
+			relations = paginator.page(1)
+		except EmptyPage:
+			relations = paginator.page(paginator.num_pages)	
+		return render(request, 'core/myposts.html', {'relations':relations})

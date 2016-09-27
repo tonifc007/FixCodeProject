@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ post.titulo }} - Fixcode</title>
+	{% load staticfiles %}
+</head>
+<body>
+{% load aux_tags %}
+<h1>{{ post.titulo }}</h1>
+<h3>por {{ post.user }} - publicado em {{ post.data }}</h3>
+<span>{{ post.post }}</span>
+
+
+{% if coments %}
+	<h4>Há {{ coments|l }} respostas para este fix:</h4>
+		
+	{% for com in coments %}
+		<p>...................</p>
+		<p><i>{{ com.coment }}</i></p>
+		<p>publicado por: {{ com.user }}</p>
+		<p>data: {{ com.data }}</p>
+		<p>....................</p>
+	{% endfor %}
+
+{% else %}
+	<p>Ainda não nenhuma resposta</p>
+{% endif %}
+
+	<div id="post"></div>
+	<form method="post">
+	{% csrf_token %}
+	{% for field in form %}
+		{{ field.errors }}
+		{{ field.label_tag }}
+		<br>
+		{{ field }}
+		<br><br>
+	{% endfor %}
+	<button type="submit">Comentar</button>
+
+
+</body>
+</html>

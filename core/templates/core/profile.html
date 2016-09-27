@@ -28,5 +28,37 @@
 	{% endif %}
 	</div>
 
+	{% if relations %}
+
+	<h2>Posts: </h2>
+	{% for post in relations %}
+		<p>----------------</p>
+		<p>{{ post.titulo }}</p>
+		<p>{{ post.user }}</p>
+		<p>{{ post.data }}</p>
+		<p>{{ post.post }}</p>
+		<a href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
+		<p>-----------------</p>
+		
+	{% endfor %}
+	<div class="pagination">
+	    <span class="step-links">
+	        {% if relations.has_previous %}
+	            <a href="?page={{ relations.previous_page_number }}">anterior</a>
+	        {% endif %}
+
+	        <span class="current">
+	            Página {{ relations.number }} de {{ relations.paginator.num_pages }}.
+	        </span>
+
+	        {% if relations.has_next %}
+	            <a href="?page={{ relations.next_page_number }}">próximo</a>
+	        {% endif %}
+	    </span>
+	</div>
+	{% else %}
+		<h2>Nao ha nenhum post</h2>
+	{% endif %}
+
 </body>
 </html>

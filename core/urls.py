@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^editprofile/$', views.edit_details_profile, name='editprofile'),
     url(r'^notificaIndex/$', views.notificaIndex, name='notifica'),
     url(r'^notificaIndexParticipation/$', views.notificaIndexParticipation, name='notificaParticipation'),
+    url(r'^notificaIndexPosts/$', views.notificaIndexPosts, name='notificaPosts'),
 
 
     #Páginas de fix
@@ -24,6 +25,11 @@ urlpatterns = [
     url(r'^profile/(?P<username>\w+)/following/$', views.following, name='following'),
     url(r'^profile/(?P<username>\w+)/followers/$', views.follower, name='follower'),
     url(r'^participations/$', views.participationsSemUser, name='participations'),
+
+    #Páginas de post
+    url(r'^create_post/$', views.create_post, name='create_post'),
+    url(r'^post/(?P<pk>[0-9]+)/$', views.post_detail, name='post_detail'),
+    url(r'^myposts/$', views.my_posts, name='my_posts'),
 
     #Rotas de requisiçoes AJAX
         #My fixies

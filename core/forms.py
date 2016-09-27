@@ -1,7 +1,7 @@
 # -*- coding: utf 8 -*-
 from django import forms
 from django.contrib.auth.models import User
-from .models import Fixies, ComentFixies, Profile
+from .models import Fixies, ComentFixies, Profile, Post, ComentPost
 
 class UserForm(forms.ModelForm):
 	password = forms.CharField(widget=forms.PasswordInput)
@@ -35,3 +35,16 @@ class EditProfile(forms.ModelForm):
 	class Meta:
 		model = Profile
 		fields = ('bio', 'git')
+
+class PostForm(forms.ModelForm):
+
+	class Meta:
+		model = Post
+		fields = ('titulo', 'post')
+
+class ComentPostForm(forms.ModelForm):
+
+	class Meta:
+		model = ComentPost
+		fields = ('coment',)
+
