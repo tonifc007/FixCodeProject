@@ -139,7 +139,7 @@ def profile(request, username):
 	else:
 		dadosSeguir = 0
 
-	posts = Post.objects.filter(user=use) 
+	posts = Post.objects.filter(user=use, exibir_perfil=True) 
 
 	paginator = Paginator(posts, 5)
 	page = request.GET.get('page')
@@ -787,7 +787,7 @@ def create_post(request):
 			post = form.save(commit=False)
 			post.user = request.user
 			post.save()
-			return redirect('/')
+			return redirect('/post/'+str(post.pk)+'/')
 		return render(request, 'core/createpost.html', {'form':form})
 
 def post_detail(request, pk):
@@ -837,3 +837,160 @@ def my_posts(request):
 		except EmptyPage:
 			relations = paginator.page(paginator.num_pages)	
 		return render(request, 'core/myposts.html', {'relations':relations})
+
+def getkeypostprofile(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			pk = request.POST.get('id')
+			post = get_object_or_404(Post, pk=pk)
+			response_data = False
+			if post.user == request.user:
+				if post.exibir_perfil == True:
+					response_data = True
+				else:
+					response_data = False
+			else:
+				raise Http404
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def ativepostprofile(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			pk = request.POST.get('id')
+			post = get_object_or_404(Post, pk=pk)
+			response_data = False
+			if post.user == request.user:
+				post.exibir_perfil = True
+				post.save()
+				response_data = True
+			else:
+				raise Http404
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def inativepostprofile(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			pk = request.POST.get('id')
+			post = get_object_or_404(Post, pk=pk)
+			response_data = False
+			if post.user == request.user:
+				post.exibir_perfil = False
+				post.save()
+				response_data = True
+			else:
+				raise Http404
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def edit_post(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		post = get_object_or_404(Post, pk=pk)
+		if post.user == request.user:
+			form = PostForm(request.POST or None, instance=post)
+			if form.is_valid():
+				post = form.save(commit=False)
+				post.user = request.user
+				post.save()
+				return redirect('/post/'+pk+'/')
+			return render(request, 'core/createpost.html', {'form':form})
+		else:
+			raise Http404
+
+def delete_post(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			idPost = request.POST.get('id')
+			post = get_object_or_404(Post, pk=idPost)
+			response_data = False
+			if post.user != request.user:
+				print('este fix não é deste usuario')
+				raise Http404
+			else:
+				post.delete()
+				print("chegou pra deletar")
+				response_data = True
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def getkeyactivepost(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			pk = request.POST.get('id')
+			post = get_object_or_404(Post, pk=pk)
+			response_data = False
+			if post.user == request.user:
+				if post.ativa_notificacao == True:
+					response_data = True
+				else:
+					response_data = False
+			else:
+				raise Http404
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def ativeNotifyPost(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			pk = request.POST.get('id')
+			post = get_object_or_404(Post, pk=pk)
+			response_data = False
+			if post.user == request.user:
+				post.ativa_notificacao = True
+				post.save()
+				response_data = True
+			else:
+				raise Http404
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def inativeNotifyPost(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			pk = request.POST.get('id')
+			post = get_object_or_404(Post, pk=pk)
+			response_data = False
+			if post.user == request.user:
+				post.ativa_notificacao = False
+				post.save()
+				response_data = True
+			else:
+				raise Http404
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def report_coment_post(request, pk):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			comentpk = request.POST.get('id')
+			post = get_object_or_404(Post, pk=pk)
+			response_data = "Não foi possível reportar"
+			if post.user == request.user:
+				print("este fix é deste usuário")
+				coment = get_object_or_404(ComentPost, pk=comentpk)
+				if coment.user == request.user:
+					raise Http404
+				else:
+					coment.delete()
+					response_data = "Comentário reportado com sucesso"
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")

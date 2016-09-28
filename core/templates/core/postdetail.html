@@ -3,12 +3,30 @@
 <head>
 	<title>{{ post.titulo }} - Fixcode</title>
 	{% load staticfiles %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="{% static 'core/js/main.js' %}"></script>
 </head>
 <body>
 {% load aux_tags %}
 <h1>{{ post.titulo }}</h1>
 <h3>por {{ post.user }} - publicado em {{ post.data }}</h3>
-<span>{{ post.post }}</span>
+<span>{{ post.post }}</span><br>
+
+{% if post.user == request.user %}
+	{% if post.exibir_perfil == True %}
+		<a href="#" id="req" onclick="requisicaoChavePostPerfil('{{ post.pk }}')">Ocultar post do perfil</a><br>
+	{% else %}
+		<a href="#" id="req" onclick="requisicaoChavePostPerfil('{{ post.pk }}')">Exibir post no perfil</a><br>
+	{% endif %}
+	<a href="{% url 'core:edit_post' post.pk %}">Editar post</a><br>
+	<a href="#"onclick="alertDeletePost('{{ post.pk }}')">Excluir post</a><br>
+
+	{% if post.ativa_notificacao == True %}
+		<a href="#" id="reqP" onclick="requisicaoChaveAtivacaoPost('{{ post.pk }}')">Desativar notificações deste post</a><br>
+	{% else %}
+		<a href="#" id="reqP" onclick="requisicaoChaveAtivacaoPost('{{ post.pk }}')">Ativar notificações deste post</a><br>
+	{% endif %}
+{% endif %}
 
 
 {% if coments %}
@@ -19,6 +37,9 @@
 		<p><i>{{ com.coment }}</i></p>
 		<p>publicado por: {{ com.user }}</p>
 		<p>data: {{ com.data }}</p>
+		{% if post.user == request.user and com.user != request.user %}
+		<a href="#" onclick="report_coment_post('{{ com.pk }}')">Reportar comentário</a>
+		{% endif %}
 		<p>....................</p>
 	{% endfor %}
 

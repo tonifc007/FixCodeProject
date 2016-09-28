@@ -30,8 +30,14 @@ urlpatterns = [
     url(r'^create_post/$', views.create_post, name='create_post'),
     url(r'^post/(?P<pk>[0-9]+)/$', views.post_detail, name='post_detail'),
     url(r'^myposts/$', views.my_posts, name='my_posts'),
+    url(r'^post/(?P<pk>[0-9]+)/edit/$', views.edit_post, name='edit_post'),
+    url(r'^post/(?P<pk>[0-9]+)/delete_post/$', views.delete_post, name='delete_post'),
+    url(r'^post/(?P<pk>[0-9]+)/getkeyactivepost/$', views.getkeyactivepost, name='getkeyactivepost'),
+    url(r'^post/(?P<pk>[0-9]+)/activenotifypost/$', views.ativeNotifyPost, name='activenotifypost'),
+    url(r'^post/(?P<pk>[0-9]+)/inactivenotifypost/$', views.inativeNotifyPost, name='inactivenotifypost'),
+    url(r'^post/(?P<pk>[0-9]+)/report/$', views.report_coment_post, name='report'),
 
-    #Rotas de requisiçoes AJAX
+    #Rotas de requisiçoes AJAX - Fixies
         #My fixies
     url(r'^fix/(?P<pk>[0-9]+)/getnotifymyfix/$', views.getnotifymyfix, name='getnotifymyfix'),
     url(r'^fix/(?P<pk>[0-9]+)/inativenotifyfix/$', views.inativeNotifyMyFixies, name='inativeNotifyMyFixies'),
@@ -52,6 +58,12 @@ urlpatterns = [
     url(r'^fix/(?P<pk>[0-9]+)/getRelationshipFavorite/$', views.getRelationshipFavorite, name='getRelationshipFavorite'),
     url(r'^fix/(?P<pk>[0-9]+)/favorite/$', views.favorite_fix, name='favorite_fix'),
     url(r'^fix/(?P<pk>[0-9]+)/un_favorite/$', views.un_favorite_fix, name='un_favorite_fix'),
+
+    #Rotas de requisições AJAX - Posts
+    url(r'^post/(?P<pk>[0-9]+)/getkeypostprofile/$', views.getkeypostprofile, name='getkeypostprofile'),
+    url(r'^post/(?P<pk>[0-9]+)/ativepostprofile/$', views.ativepostprofile, name='getkeypostprofile'),
+    url(r'^post/(?P<pk>[0-9]+)/inativepostprofile/$', views.inativepostprofile, name='getkeypostprofile'),
+    
 
         #Profile
     url(r'^profile/(?P<username>\w+)/getrelationship/$', views.getrelationship, name='getrelationship'),

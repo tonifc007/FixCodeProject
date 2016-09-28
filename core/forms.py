@@ -40,7 +40,7 @@ class PostForm(forms.ModelForm):
 
 	class Meta:
 		model = Post
-		fields = ('titulo', 'post')
+		fields = ('titulo', 'post', 'exibir_perfil',)
 
 class ComentPostForm(forms.ModelForm):
 

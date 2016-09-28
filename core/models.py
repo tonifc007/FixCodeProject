@@ -67,6 +67,7 @@ class Post(models.Model):
 	data = models.DateTimeField(default=timezone.now)
 	notificacao = models.IntegerField(default=0)
 	ativa_notificacao = models.BooleanField(default=True)
+	exibir_perfil = models.BooleanField(default=True)
 
 	def __str__(self):
 		return self.titulo

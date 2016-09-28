@@ -281,7 +281,7 @@ function best_answer(ide){
 function report(ide){
     console.log("Reportando comentário");
     console.log(ide);
-    decisao = confirm("Deseja excluir este fix?");
+    decisao = confirm("Deseja excluir esta resposta?");
     if (decisao) {
         $.ajax({
             url : "report/", // the endpoint
@@ -484,6 +484,214 @@ function deleteparticipation(ide){
             error : function(xhr,errmsg,err) {
                 console.log(xhr.status + ": " + xhr.responseText);
                alert("Não foi possível excluir participação");
+
+            }
+        });
+    }
+}
+
+//AJAX para mostrar e ocutar post do perfil
+
+function requisicaoChavePostPerfil(ide) {
+    //console.log("função para saber se existe uma relaçao de seguidor");
+    $.ajax({
+        url : "getkeypostprofile/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            if (json == false){
+                console.log('está falso');
+                ativepostprofile(ide);
+            }
+            else{
+                console.log('está verdadeiro');
+                inativepostprofile(ide);
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+function ativepostprofile(ide){
+        $.ajax({
+        url : "ativepostprofile/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            $('#req').text("Ocultar post do perfil");
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+function inativepostprofile(ide){
+        $.ajax({
+        url : "inativepostprofile/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            $('#req').text("Exibir post no perfil");
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+function alertDeletePost(ide){
+    decisao = confirm("Deseja excluir este post?");
+    if (decisao) {
+        console.log("confirmou");
+        $.ajax({
+        url : "delete_post/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+
+        // handle a successful response
+        success : function(json) {
+            window.location.replace("/myposts/");
+            console.log(json); // log the returned json to the console
+            console.log("success"); // another sanity check
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado")
+
+        }
+    });
+    }
+}
+
+
+function requisicaoChaveAtivacaoPost(ide) {
+    //console.log("função para saber se existe uma relaçao de seguidor");
+    $.ajax({
+        url : "getkeyactivepost/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            if (json == false){
+                console.log('está falso');
+                ativenotifypost(ide)
+            }
+            else{
+                console.log('está verdadeiro');
+                inativenotifypost(ide)
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+function ativenotifypost(ide){
+        $.ajax({
+        url : "activenotifypost/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            $('#reqP').text("Desativar notificações deste post");
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+function inativenotifypost(ide){
+        $.ajax({
+        url : "inactivenotifypost/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            $('#reqP').text("Ativar notificações deste post");
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+function report_coment_post(ide){
+    console.log("Reportando comentário");
+    console.log(ide);
+    decisao = confirm("Deseja excluir esta comentário?");
+    if (decisao) {
+        $.ajax({
+            url : "report/", // the endpoint
+            type : "POST", // http method
+            data : { 
+                id : ide,
+                 }, // data sent with the post request
+
+            // handle a successful response
+            success : function(json) {
+                console.log(json); // log the returned json to the console
+                console.log("success"); // another sanity check
+                parent.window.document.location.href = '';
+            },
+
+            // handle a non-successful response
+            error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText);
+               alert("Não foi possível reportar esta resposta")
 
             }
         });
