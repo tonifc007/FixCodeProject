@@ -31,7 +31,7 @@ def index(request):
 
 		return render(request, 'core/index.html', {'relations':relations})
 
-def notificaIndex(request):
+def notificaIndex(request):	
 	if not request.user.is_authenticated():
 		print("foi no if")
 		return render(request, 'core/login.html')
@@ -40,24 +40,19 @@ def notificaIndex(request):
 		response_data = 0
 		for fix in myfixies:
 			if int(fix.notificacao) > 0:
-				print "incrementa"
 				response_data += 1
-		print response_data
 		return HttpResponse(json.dumps(response_data), content_type="application/json")
 	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
 def notificaIndexParticipation(request):
 	if not request.user.is_authenticated():
-		print("foi no if")
 		return render(request, 'core/login.html')
-	else:			
+	else:				
 		myrelationships = Participations.objects.filter(user=request.user)
 		response_data = 0
 		for fix in myrelationships:
 			if int(fix.notificacao) > 0:
-				print "incrementa"
 				response_data += 1
-		print response_data
 		return HttpResponse(json.dumps(response_data), content_type="application/json")
 	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 

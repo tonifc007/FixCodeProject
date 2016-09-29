@@ -31,11 +31,6 @@ urlpatterns = [
     url(r'^post/(?P<pk>[0-9]+)/$', views.post_detail, name='post_detail'),
     url(r'^myposts/$', views.my_posts, name='my_posts'),
     url(r'^post/(?P<pk>[0-9]+)/edit/$', views.edit_post, name='edit_post'),
-    url(r'^post/(?P<pk>[0-9]+)/delete_post/$', views.delete_post, name='delete_post'),
-    url(r'^post/(?P<pk>[0-9]+)/getkeyactivepost/$', views.getkeyactivepost, name='getkeyactivepost'),
-    url(r'^post/(?P<pk>[0-9]+)/activenotifypost/$', views.ativeNotifyPost, name='activenotifypost'),
-    url(r'^post/(?P<pk>[0-9]+)/inactivenotifypost/$', views.inativeNotifyPost, name='inactivenotifypost'),
-    url(r'^post/(?P<pk>[0-9]+)/report/$', views.report_coment_post, name='report'),
 
     #Rotas de requisiçoes AJAX - Fixies
         #My fixies
@@ -63,7 +58,11 @@ urlpatterns = [
     url(r'^post/(?P<pk>[0-9]+)/getkeypostprofile/$', views.getkeypostprofile, name='getkeypostprofile'),
     url(r'^post/(?P<pk>[0-9]+)/ativepostprofile/$', views.ativepostprofile, name='getkeypostprofile'),
     url(r'^post/(?P<pk>[0-9]+)/inativepostprofile/$', views.inativepostprofile, name='getkeypostprofile'),
-    
+    url(r'^post/(?P<pk>[0-9]+)/delete_post/$', views.delete_post, name='delete_post'),
+    url(r'^post/(?P<pk>[0-9]+)/getkeyactivepost/$', views.getkeyactivepost, name='getkeyactivepost'),
+    url(r'^post/(?P<pk>[0-9]+)/activenotifypost/$', views.ativeNotifyPost, name='activenotifypost'),
+    url(r'^post/(?P<pk>[0-9]+)/inactivenotifypost/$', views.inativeNotifyPost, name='inactivenotifypost'),
+    url(r'^post/(?P<pk>[0-9]+)/report/$', views.report_coment_post, name='report'),
 
         #Profile
     url(r'^profile/(?P<username>\w+)/getrelationship/$', views.getrelationship, name='getrelationship'),

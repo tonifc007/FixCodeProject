@@ -8,6 +8,10 @@ setTimeout("notificaIndex()", 1);
 setInterval("notificaIndex()", 2000);
 setTimeout("notificaIndexParticipation()", 1);
 setInterval("notificaIndexParticipation()", 2000);
+setTimeout("notificaIndexPosts()", 1);
+setInterval("notificaIndexPosts()", 2000);
+
+
 
 function notificaIndex(){
 
@@ -62,8 +66,8 @@ function notificaIndexParticipation(){
 
 }
 
-function notificaIndexParticipation(){
-    console.log("Notifica participação");
+function notificaIndexPosts(){
+    console.log("Notifica posts");
 
     $.ajax({
         url : "notificaIndexPosts/", // the endpoint
