@@ -10,3 +10,7 @@ def quant_coment(value):
 @register.filter(name='l')
 def l(value):
 	return value.count()
+
+@register.filter(name='nomearquivo')
+def nomearquivo(value):
+	return value.url.split('/')[-1]

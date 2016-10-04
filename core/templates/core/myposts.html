@@ -2,6 +2,11 @@
 <html>
 <head>
 	<title>Meus posts</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static 'core/css/estilohighlight.min.css' %}">
+    <script src="{% static 'core/js/highlight.min.js' %}"></script>
+
+<script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
 	{% if relations %}
@@ -12,7 +17,7 @@
 		<p>{{ post.titulo }}</p>
 		<p>{{ post.user }}</p>
 		<p>{{ post.data }}</p>
-		<p>{{ post.post }}</p>
+		<p>{{ post.post|safe }}</p>
 		<a href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
 		<p>-----------------</p>
 		

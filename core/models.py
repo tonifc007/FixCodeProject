@@ -1,9 +1,11 @@
 # -*- coding: utf 8 -*-
 from __future__ import unicode_literals
 
-from django.db import models
+from django.db import models  
 from django.utils import timezone
 from django.contrib.auth.models import Permission, User
+from ckeditor.fields import RichTextField
+
 
 class Profile(models.Model):
 	user = models.OneToOneField(User, related_name='profile')
@@ -14,7 +16,7 @@ class Profile(models.Model):
 class Fixies(models.Model):
 	user = models.ForeignKey(User, default=1)
 	titulo = models.CharField(max_length=100)
-	descricao = models.TextField()
+	descricao = RichTextField(config_name='principal')
 	data = models.DateTimeField(default=timezone.now)
 	resolvido = models.BooleanField(default=False)
 	tem_melhor_resposta = models.BooleanField(default=False)
@@ -27,7 +29,7 @@ class Fixies(models.Model):
 class ComentFixies(models.Model):
 	user = models.ForeignKey(User, default=1)
 	fixie = models.ForeignKey(Fixies)
-	coment = models.TextField()
+	coment = RichTextField(config_name='coment')
 	data = models.DateTimeField(default=timezone.now)
 	melhor_resposta = models.BooleanField(default=False)
 
@@ -60,14 +62,38 @@ class Followers(models.Model):
 	def __str__(self):
 		return self.user.username + ' esta seguindo ' + self.following.username
 
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'user_{0}/uploads/{1}'.format(instance.user.username, filename)
+
 class Post(models.Model):
 	user = models.ForeignKey(User, default=1)
 	titulo = models.CharField(max_length=100)
-	post = models.TextField()
+	post = RichTextField(config_name='principal')
 	data = models.DateTimeField(default=timezone.now)
 	notificacao = models.IntegerField(default=0)
 	ativa_notificacao = models.BooleanField(default=True)
 	exibir_perfil = models.BooleanField(default=True)
+	anexo = models.FileField(blank=True, null=True, upload_to=user_directory_path)
+
+	def save(self):
+		try:
+			this = Post.objects.get(id=self.id)
+			if this.anexo != self.anexo:
+				this.anexo.delete(save=False)
+				#this.anexo = self.anexo
+			else:
+				self.anexo = this.anexo
+		except: pass
+		super(Post, self).save()
+
+	def delete(self):
+		try:
+			this = Post.objects.get(id=self.id)
+			if this.anexo:
+				this.anexo.delete(save=False)
+		except: pass
+		super(Post, self).delete()
 
 	def __str__(self):
 		return self.titulo
@@ -75,7 +101,7 @@ class Post(models.Model):
 class ComentPost(models.Model):
 	user = models.ForeignKey(User, default=1)
 	post = models.ForeignKey(Post)
-	coment = models.TextField()
+	coment = RichTextField(config_name='coment')
 	data = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):

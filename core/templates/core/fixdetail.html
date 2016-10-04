@@ -9,6 +9,11 @@
 	{% load staticfiles %}
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 	<script src="{% static 'core/js/main.js' %}"></script>
+	<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'core/css/estilohighlight.min.css' %}">
+    <script src="{% static 'core/js/highlight.min.js' %}"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
 {% load aux_tags %}
@@ -37,7 +42,7 @@
 			<div style="background-color: yellow;">
 				<p>MELHOR RESPOSTA ESCOLHIDA PELO AUTOR:</p>
 				<p>...................</p>
-				<p><i>{{ com.coment }}</i></p>
+				<p><i>{{ com.coment|safe }}</i></p>
 				<p>publicado por: {{ com.user }}</p>
 				<p>data: {{ com.data }}</p>
 				<p>....................</p>
@@ -73,7 +78,7 @@
 		
 		{% for com in coments %}
 			<p>...................</p>
-			<p><i>{{ com.coment }}</i> - <a href="" onclick="best_answer('{{ com.pk }}')">Escolher como solução</a> <div id="best{{com.id}}"></div></p>
+			<p><i>{{ com.coment|safe }}</i> - <a href="" onclick="best_answer('{{ com.pk }}')">Escolher como solução</a> <div id="best{{com.id}}"></div></p>
 			<p>publicado por: {{ com.user }}</p>
 			<p>data: {{ com.data }}</p>
 			{% if com.user != request.user %}
@@ -84,7 +89,7 @@
 	{% else %}
 		{% for com in coments %}
 			<p>...................</p>
-			<p><i>{{ com.coment }}</i></p>
+			<p><i>{{ com.coment|safe }}</i></p>
 			<p>publicado por: {{ com.user }}</p>
 			<p>data: {{ com.data }}</p>
 			<p>....................</p>

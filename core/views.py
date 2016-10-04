@@ -9,6 +9,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 import json
 
+FILE_TYPES = ['pdf', 'doc', 'txt', 'zip', 'rar', '7z']
+
 def index(request):
 	if not request.user.is_authenticated():
 		print("foi no if")
@@ -158,7 +160,7 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return index(request)
+                return redirect('/')
             else:
                 return render(request, 'core/login.html', {'error_message': 'Your account has been disabled'})
         else:
@@ -781,6 +783,13 @@ def create_post(request):
 		if form.is_valid():
 			post = form.save(commit=False)
 			post.user = request.user
+			post.anexo = request.FILES.get('anexo', False)
+			print post.anexo
+			if post.anexo != False:
+				file_type = post.anexo.url.split('.')[-1]
+				file_type = file_type.lower()
+				if file_type not in FILE_TYPES:
+					return render(request, 'core/createpost.html', {'form':form, 'error_message':'Arquivo inválido'})
 			post.save()
 			return redirect('/post/'+str(post.pk)+'/')
 		return render(request, 'core/createpost.html', {'form':form})
@@ -895,6 +904,16 @@ def edit_post(request, pk):
 			if form.is_valid():
 				post = form.save(commit=False)
 				post.user = request.user
+				var = post.anexo
+				post.anexo = request.FILES.get('anexo', False)
+				print post.anexo
+				if post.anexo != False:
+					file_type = post.anexo.url.split('.')[-1]
+					file_type = file_type.lower()
+					if file_type not in FILE_TYPES:
+						return render(request, 'core/createpost.html', {'form':form, 'error_message':'Arquivo inválido'})
+				else:
+					post.anexo = var
 				post.save()
 				return redirect('/post/'+pk+'/')
 			return render(request, 'core/createpost.html', {'form':form})

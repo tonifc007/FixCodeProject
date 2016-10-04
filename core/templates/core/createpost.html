@@ -2,6 +2,13 @@
 <html>
 <head>
 	<title>Criar post</title>
+	{% load staticfiles %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'core/css/estilohighlight.min.css' %}">
+    <script src="{% static 'core/js/highlight.min.js' %}"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
 <h3>Crie um novo fix</h3>
@@ -10,7 +17,7 @@
 	<p>{{ error_message }}</p>
 {% endif %}
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 	{% for field in form %}
 		{{ field.errors }}
