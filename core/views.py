@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 import json
 
 FILE_TYPES = ['pdf', 'doc', 'txt', 'zip', 'rar', '7z']
+FILE_TYPES_IMAGE = ['jpg', 'jpeg']
 
 def index(request):
 	if not request.user.is_authenticated():
@@ -105,16 +106,25 @@ def edit_details_profile(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		form = EditProfile(request.POST or None)
-		user=request.user
+		detalhes = get_object_or_404(Profile, user=request.user)
+		form = EditProfile(request.POST or None, instance=detalhes)
 		if form.is_valid():
 			detalhes = form.save(commit=False)
+			var = detalhes.imagem_perfil
+			detalhes.imagem_perfil = request.FILES.get('imagem_perfil', False)
+			print detalhes.imagem_perfil
+			if detalhes.imagem_perfil != False:
+				file_type = detalhes.imagem_perfil.url.split('.')[-1]
+				file_type = file_type.lower()
+				if file_type not in FILE_TYPES_IMAGE:
+					return render(request, 'core/createpost.html', {'form':form, 'error_message':'Arquivo inválido'})
+			else:
+				detalhes.imagem_perfil = var
 			bio = form.cleaned_data['bio']
 			githut = form.cleaned_data['git']
-			detalhes.user=request.user
 			detalhes.save()
 			return profile(request, request.user.username)
-	return render(request, 'core/edit_profile.html', {'form': form, 'user':user})
+	return render(request, 'core/edit_profile.html', {'form': form, 'user':request.user})
 
 def profile(request, username):
 	print("Requisitou o perfil de {}".format(username))

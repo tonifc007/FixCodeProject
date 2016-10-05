@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Edite seu perfil, {{ user.first_name }}</h1>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 	{% for field in form %}
 		{{ field.errors }}

@@ -7,11 +7,35 @@ from django.contrib.auth.models import Permission, User
 from ckeditor.fields import RichTextField
 
 
+def user_directory_profileimage(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'user_{0}/profile/{1}'.format(instance.user.username, filename)
+
 class Profile(models.Model):
 	user = models.OneToOneField(User, related_name='profile')
 	bio = models.TextField(verbose_name='Bio', blank=True)
 	git = models.CharField(max_length=100, verbose_name='Github', blank=True)
+	imagem_perfil = models.ImageField(blank=True, null=True, upload_to=user_directory_profileimage)
 	data_cadastro = models.DateTimeField(default=timezone.now)
+
+	def save(self):
+		try:
+			this = Profile.objects.get(id=self.id)
+			if this.imagem_perfil != self.imagem_perfil:
+				this.imagem_perfil.delete(save=False)
+				#this.anexo = self.anexo
+			else:
+				self.imagem_perfil = this.imagem_perfil
+		except: pass
+		super(Profile, self).save()
+
+	def delete(self):
+		try:
+			this = Profile.objects.get(id=self.id)
+			if this.imagem_perfil:
+				this.imagem_perfil.delete(save=False)
+		except: pass
+		super(Profile, self).delete()
 
 class Fixies(models.Model):
 	user = models.ForeignKey(User, default=1)

@@ -34,7 +34,7 @@ class EditProfile(forms.ModelForm):
 
 	class Meta:
 		model = Profile
-		fields = ('bio', 'git')
+		fields = ('imagem_perfil', 'bio', 'git')
 
 class PostForm(forms.ModelForm):
 
