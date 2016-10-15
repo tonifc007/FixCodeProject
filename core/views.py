@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 import json
+import PIL
 
 FILE_TYPES = ['pdf', 'doc', 'txt', 'zip', 'rar', '7z']
 FILE_TYPES_IMAGE = ['jpg', 'jpeg']
@@ -114,6 +115,11 @@ def edit_details_profile(request):
 			detalhes.imagem_perfil = request.FILES.get('imagem_perfil', False)
 			print detalhes.imagem_perfil
 			if detalhes.imagem_perfil != False:
+				#esse diacho tá errado
+				#img = PIL.Image.open(detalhes.imagem_perfil.url)
+				#detalhes.imagem_perfil = img.resize((200, 200), PIL.Image.ANTIALIAS)
+				#detalhes.imagem_perfil.save(detalhes.imagem_perfil)
+				#detalhes.imagem_perfil = img
 				file_type = detalhes.imagem_perfil.url.split('.')[-1]
 				file_type = file_type.lower()
 				if file_type not in FILE_TYPES_IMAGE:
@@ -294,8 +300,9 @@ def fix_detail(request, pk, aviso=False):
 		else:
 			chave_fav = 0
 
-
 		coments = ComentFixies.objects.filter(fixie=fixie.pk)
+
+
 	return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments, 'form':form, 'chave':chave, 'chave_fav':chave_fav, 'aviso':aviso, 'chave_de_participacao':chave_de_participacao})
 
 def best_answer(request, pk):

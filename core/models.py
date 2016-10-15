@@ -5,6 +5,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import Permission, User
 from ckeditor.fields import RichTextField
+import PIL
 
 
 def user_directory_profileimage(instance, filename):
@@ -28,6 +29,22 @@ class Profile(models.Model):
 				self.imagem_perfil = this.imagem_perfil
 		except: pass
 		super(Profile, self).save()
+		img = PIL.Image.open(self.imagem_perfil)
+		(width, height) = img.size
+		print width
+		print height
+		if height > width:
+			divisor = height/300
+			width = width/divisor
+			height = 300
+		elif height < width:
+			divisor = width/300
+			height = height/divisor
+			width = 300
+		else:
+			width = height = 300
+		img = img.resize((width, height), PIL.Image.ANTIALIAS)
+		img.save(self.imagem_perfil.path)
 
 	def delete(self):
 		try:
