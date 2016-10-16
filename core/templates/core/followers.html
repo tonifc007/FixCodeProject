@@ -2,11 +2,18 @@
 <html>
 <head>
 	<title>Pessoas que seguem {{ userfollow.first_name }}</title>
+	{% load aux_tags %}
+	{% load staticfiles %}
 </head>
 <body>
 <h1>Pessoas que seguem {{ userfollow.first_name }} </h1>
 	{% if followers %}
 		{% for pessoa in followers %}
+			{% if pessoa.user|imagemperfil %}
+			<img src="{{ pessoa.user|imagemperfil }}" width="100" height="100">
+			{% else %}
+			<img src="{% static 'core/imagens/default.png' %}" width="100" height="100">
+			{% endif %}
 			<a href="{% url 'core:profile' pessoa.username %}">{{ pessoa.first_name }}</a><br>
 		{% endfor %}
 	{% else %}

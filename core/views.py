@@ -19,7 +19,9 @@ def index(request):
 		return render(request, 'core/login.html')
 	else:
 		print("saiu no if")
-		fixies = Fixies.objects.all()
+		perfil = get_object_or_404(Profile, user=request.user)
+		print perfil.habilidades.all()
+		fixies = Fixies.objects.filter(area=perfil.habilidades.all())
 		paginator = Paginator(fixies, 5)
 		page = request.GET.get('page')
 		print(page)
@@ -115,11 +117,6 @@ def edit_details_profile(request):
 			detalhes.imagem_perfil = request.FILES.get('imagem_perfil', False)
 			print detalhes.imagem_perfil
 			if detalhes.imagem_perfil != False:
-				#esse diacho tá errado
-				#img = PIL.Image.open(detalhes.imagem_perfil.url)
-				#detalhes.imagem_perfil = img.resize((200, 200), PIL.Image.ANTIALIAS)
-				#detalhes.imagem_perfil.save(detalhes.imagem_perfil)
-				#detalhes.imagem_perfil = img
 				file_type = detalhes.imagem_perfil.url.split('.')[-1]
 				file_type = file_type.lower()
 				if file_type not in FILE_TYPES_IMAGE:
@@ -128,6 +125,8 @@ def edit_details_profile(request):
 				detalhes.imagem_perfil = var
 			bio = form.cleaned_data['bio']
 			githut = form.cleaned_data['git']
+			#haha pegadinha do Django kkkk (ManyToManyField não considera alterações sem salvar a instância)
+			detalhes.habilidades = form.cleaned_data['habilidades']
 			detalhes.save()
 			return profile(request, request.user.username)
 	return render(request, 'core/edit_profile.html', {'form': form, 'user':request.user})
@@ -191,12 +190,16 @@ def create_fix(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		form = FixiesForm(request.POST or None)
+		fixie = Fixies()
+		fixie.save()
+		form = FixiesForm(request.POST or None, instance=fixie)
 		if form.is_valid():
 			fixie = form.save(commit=False)
 			fixie.user = request.user
+			fixie.area = form.cleaned_data['area']
 			fixie.save()
 			return redirect('/')
+		fixie.delete()
 		return render(request, 'core/createfix.html', {'form':form})
 
 def fix_detail(request, pk, aviso=False):
@@ -301,8 +304,6 @@ def fix_detail(request, pk, aviso=False):
 			chave_fav = 0
 
 		coments = ComentFixies.objects.filter(fixie=fixie.pk)
-
-
 	return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments, 'form':form, 'chave':chave, 'chave_fav':chave_fav, 'aviso':aviso, 'chave_de_participacao':chave_de_participacao})
 
 def best_answer(request, pk):
@@ -807,6 +808,7 @@ def create_post(request):
 				file_type = file_type.lower()
 				if file_type not in FILE_TYPES:
 					return render(request, 'core/createpost.html', {'form':form, 'error_message':'Arquivo inválido'})
+			post.area = form.cleaned_data['area']
 			post.save()
 			return redirect('/post/'+str(post.pk)+'/')
 		return render(request, 'core/createpost.html', {'form':form})

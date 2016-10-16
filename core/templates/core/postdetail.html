@@ -19,6 +19,7 @@
 <h1>{{ post.titulo }}</h1>
 <h3>por {{ post.user }} - publicado em {{ post.data }}</h3>
 <span>{{ post.post|safe }}</span><br>
+<p>Tags: {{ post.areas.all }}</p><br>
 {% if post.anexo %}
 <p>ANEXO: <a href="/media/{{ post.anexo }}" target="_blank">{{ post.anexo|nomearquivo }}</a></p>
 {% endif %}

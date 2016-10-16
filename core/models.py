@@ -12,12 +12,20 @@ def user_directory_profileimage(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return 'user_{0}/profile/{1}'.format(instance.user.username, filename)
 
+class Areas(models.Model):
+	nome_linguagem = models.CharField(max_length=100, verbose_name='Linguagem')
+
+	def __str__(self):
+		return self.nome_linguagem
+
+
 class Profile(models.Model):
 	user = models.OneToOneField(User, related_name='profile')
 	bio = models.TextField(verbose_name='Bio', blank=True)
 	git = models.CharField(max_length=100, verbose_name='Github', blank=True)
 	imagem_perfil = models.ImageField(blank=True, null=True, upload_to=user_directory_profileimage)
 	data_cadastro = models.DateTimeField(default=timezone.now)
+	habilidades = models.ManyToManyField(Areas)
 
 	def save(self):
 		try:
@@ -54,6 +62,9 @@ class Profile(models.Model):
 		except: pass
 		super(Profile, self).delete()
 
+	def __str__(self):
+		return self.user.username
+
 class Fixies(models.Model):
 	user = models.ForeignKey(User, default=1)
 	titulo = models.CharField(max_length=100)
@@ -63,6 +74,7 @@ class Fixies(models.Model):
 	tem_melhor_resposta = models.BooleanField(default=False)
 	notificacao = models.IntegerField(default=0)
 	ativa_notificacao = models.BooleanField(default=True)
+	area = models.ManyToManyField(Areas)
 
 	def __str__(self):
 		return self.titulo
@@ -116,6 +128,7 @@ class Post(models.Model):
 	ativa_notificacao = models.BooleanField(default=True)
 	exibir_perfil = models.BooleanField(default=True)
 	anexo = models.FileField(blank=True, null=True, upload_to=user_directory_path)
+	area = models.ManyToManyField(Areas)
 
 	def save(self):
 		try:
