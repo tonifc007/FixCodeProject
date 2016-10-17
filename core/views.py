@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
-from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, ComentPost
+from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, ComentPost, Areas
 from django.contrib.auth import authenticate, login, logout, get_user 
 from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile, PostForm, ComentPostForm
 from django.http import Http404
@@ -18,9 +18,10 @@ def index(request):
 		print("foi no if")
 		return render(request, 'core/login.html')
 	else:
+		#tá tudo errado nessa merda!
 		print("saiu no if")
 		perfil = get_object_or_404(Profile, user=request.user)
-		print perfil.habilidades.all()
+		print list(perfil.habilidades.all())
 		fixies = Fixies.objects.filter(area=perfil.habilidades.all())
 		paginator = Paginator(fixies, 5)
 		page = request.GET.get('page')
@@ -127,6 +128,11 @@ def edit_details_profile(request):
 			githut = form.cleaned_data['git']
 			#haha pegadinha do Django kkkk (ManyToManyField não considera alterações sem salvar a instância)
 			detalhes.habilidades = form.cleaned_data['habilidades']
+			if detalhes.habilidades.count() > 5:
+				detalhes.habilidades.clear()
+				hab = get_object_or_404(Areas,nome_linguagem='Outra linguagem')
+				detalhes.habilidades.add(hab)
+				return render(request, 'core/edit_profile.html', {'form': form, 'user':request.user, 'aviso':'Escolha até 5 habilidades!'})
 			detalhes.save()
 			return profile(request, request.user.username)
 	return render(request, 'core/edit_profile.html', {'form': form, 'user':request.user})
@@ -197,6 +203,10 @@ def create_fix(request):
 			fixie = form.save(commit=False)
 			fixie.user = request.user
 			fixie.area = form.cleaned_data['area']
+			if fixie.area.count() > 5 or fixie.area.count() == 1:
+				fixie.area.clear()
+				hab = get_object_or_404(Areas,nome_linguagem='Outra linguagem')
+				fixie.area.add(hab)
 			fixie.save()
 			return redirect('/')
 		fixie.delete()
@@ -797,7 +807,9 @@ def create_post(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		form = PostForm(request.POST or None)
+		post = Post()
+		post.save()
+		form = PostForm(request.POST or None, instance=post)
 		if form.is_valid():
 			post = form.save(commit=False)
 			post.user = request.user
@@ -809,8 +821,13 @@ def create_post(request):
 				if file_type not in FILE_TYPES:
 					return render(request, 'core/createpost.html', {'form':form, 'error_message':'Arquivo inválido'})
 			post.area = form.cleaned_data['area']
+			if post.area.count() > 5 or post.area.count() == 0:
+				post.area.clear()
+				hab = get_object_or_404(Areas,nome_linguagem='Outra linguagem')
+				post.area.add(hab)
 			post.save()
 			return redirect('/post/'+str(post.pk)+'/')
+		post.delete()
 		return render(request, 'core/createpost.html', {'form':form})
 
 def post_detail(request, pk):

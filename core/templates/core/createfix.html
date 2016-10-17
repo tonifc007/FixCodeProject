@@ -21,5 +21,8 @@
 		{{ field }}
 		<br><br>
 	{% endfor %}
+	{% if aviso %}
+	<p>{{ aviso }}</p>
+	{% endif %}
 	<button type="submit">Salvar fix!</button>
 </form>

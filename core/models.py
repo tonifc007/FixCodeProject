@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.contrib.auth.models import Permission, User
 from ckeditor.fields import RichTextField
 import PIL
+from django.http import Http404
 
 
 def user_directory_profileimage(instance, filename):
@@ -36,6 +37,8 @@ class Profile(models.Model):
 			else:
 				self.imagem_perfil = this.imagem_perfil
 		except: pass
+		if self.habilidades.count() > 5:
+			raise Http404
 		super(Profile, self).save()
 		img = PIL.Image.open(self.imagem_perfil)
 		(width, height) = img.size

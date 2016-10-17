@@ -5,6 +5,9 @@
 </head>
 <body>
 <h1>Edite seu perfil, {{ user.first_name }}</h1>
+{% if aviso %}
+<br><p>{{ aviso }}</p><br>
+{% endif %}
 <form method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 	{% for field in form %}

@@ -26,6 +26,9 @@
 		{{ field }}
 		<br><br>
 	{% endfor %}
+	{% if aviso %}
+	<p>{{ aviso }}</p>
+	{% endif %}
 	<button type="submit">Salvar Post</button>
 </form>
 </body>
