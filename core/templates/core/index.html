@@ -35,12 +35,31 @@
 
 	<h2>Fixies: </h2>
 	{% for fixie in relations %}
-		<p>----------------</p>
-		<p>{{ fixie.titulo }}</p>
-		<p>{{ fixie.user }}</p>
-		<p>{{ fixie.pk|quant_coment }} comentários neste fixie</p>
+		{% if fixie|fixoupost %}
+		<p style="color: blue">----------------</p>
+		{% if fixie.user|imagemperfil %}
+		<img src="{{ fixie.user|imagemperfil }}" width="100" height="100">
+		{% else %}
+		<img src="{% static 'core/imagens/default.png' %}" width="100" height="100">
+		{% endif %}
+		<p style="color: blue">{{ fixie.titulo }}</p>
+		<p style="color: blue">{{ fixie.user }}</p>
+		<p style="color: blue">{{ fixie.pk|quant_coment }} comentários neste fixie</p>
 		<a href="{% url 'core:fix_detail' fixie.pk %}">Responder fix</a>
-		<p>-----------------</p>
+		<p style="color: blue">-----------------</p>
+		{% else %}
+		<p style="color: red">----------------</p>
+		{% if fixie.user|imagemperfil %}
+		<img src="{{ fixie.user|imagemperfil }}" width="100" height="100">
+		{% else %}
+		<img src="{% static 'core/imagens/default.png' %}" width="100" height="100">
+		{% endif %}
+		<p style="color: red">{{ fixie.titulo }}</p>
+		<p style="color: red">{{ fixie.user }}</p>
+		<p style="color: red">{{ fixie.pk|quant_coment }} comentários neste post</p>
+		<a href="{% url 'core:fix_detail' fixie.pk %}">Detalhar</a>
+		<p style="color: red">-----------------</p>
+		{% endif %}
 		
 	{% endfor %}
 	<div class="pagination">

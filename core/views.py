@@ -9,6 +9,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 import json
 import PIL
+from operator import attrgetter
+from operator import itemgetter
 
 FILE_TYPES = ['pdf', 'doc', 'txt', 'zip', 'rar', '7z']
 FILE_TYPES_IMAGE = ['jpg', 'jpeg']
@@ -18,15 +20,43 @@ def index(request):
 		print("foi no if")
 		return render(request, 'core/login.html')
 	else:
-		#tá tudo errado nessa merda!
 		print("saiu no if")
 		perfil = get_object_or_404(Profile, user=request.user)
-		print list(perfil.habilidades.all())
-		fixies = Fixies.objects.filter(area=perfil.habilidades.all())
+
+		#todos os fixies e posts mostrados no index ficam guardados nesta variável
+		fixies = []
+
+		#recolhe fixies e posts das habilidades
+		for f in Fixies.objects.all():
+			for f1 in f.area.all():
+				for p in perfil.habilidades.all():
+					if f1 == p:
+						print("{} - {}".format(f1, p))
+						fixies.append(f)
+		for p in Post.objects.all():
+			for p1 in p.area.all():
+				for a in perfil.habilidades.all():
+					if p1 == a:
+						fixies.append(p)
+
+		#recolhe fixies e posts das pessoas que o usuário segue
+		for user in Followers.objects.filter(user=request.user):
+			postsdosseguidos = Post.objects.filter(user=user.following)
+			fixesdosseguidos = Fixies.objects.filter(user=user.following)
+			fixies.extend(list(postsdosseguidos))
+			fixies.extend(list(fixesdosseguidos))
+
+		#recolhe seus próprios fixies e posts
+		myfixies = Fixies.objects.filter(user=request.user)
+		myposts = Post.objects.filter(user=request.user)
+		fixies.extend(list(myfixies))
+		fixies.extend(list(myposts))
+ 		
+ 		#remove todas as duplicatas e ordena por data mais recente
+		fixies = sorted(list(set(fixies)), key=lambda inst: inst.data, reverse=True)
+
 		paginator = Paginator(fixies, 5)
 		page = request.GET.get('page')
-		print(page)
-		print("Estou requisitando a {} página" .format(page))
 
 		try:
 			relations = paginator.page(page)
@@ -203,7 +233,7 @@ def create_fix(request):
 			fixie = form.save(commit=False)
 			fixie.user = request.user
 			fixie.area = form.cleaned_data['area']
-			if fixie.area.count() > 5 or fixie.area.count() == 1:
+			if fixie.area.count() > 5 or fixie.area.count() == 0:
 				fixie.area.clear()
 				hab = get_object_or_404(Areas,nome_linguagem='Outra linguagem')
 				fixie.area.add(hab)

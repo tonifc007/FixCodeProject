@@ -27,3 +27,10 @@ def imagemperfil(value):
 				return False
 	except ObjectDoesNotExist as e:
 		return False
+
+@register.filter(name='fixoupost')
+def fixoupost(value):
+	if type(value) == Fixies:
+		return True
+	else:
+		return False
