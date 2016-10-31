@@ -1,7 +1,7 @@
 # -*- coding: utf 8 -*-
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, ComentPost, Areas
-from django.contrib.auth import authenticate, login, logout, get_user 
+from django.contrib.auth import authenticate, login, logout, get_user
 from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile, PostForm, ComentPostForm
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
@@ -45,13 +45,14 @@ def index(request):
 			fixesdosseguidos = Fixies.objects.filter(user=user.following)
 			fixies.extend(list(postsdosseguidos))
 			fixies.extend(list(fixesdosseguidos))
+			
 
 		#recolhe seus próprios fixies e posts
 		myfixies = Fixies.objects.filter(user=request.user)
 		myposts = Post.objects.filter(user=request.user)
 		fixies.extend(list(myfixies))
 		fixies.extend(list(myposts))
- 		
+
  		#remove todas as duplicatas e ordena por data mais recente
 		fixies = sorted(list(set(fixies)), key=lambda inst: inst.data, reverse=True)
 
@@ -68,11 +69,11 @@ def index(request):
 
 		return render(request, 'core/index.html', {'relations':relations})
 
-def notificaIndex(request):	
+def notificaIndex(request):
 	if not request.user.is_authenticated():
 		print("foi no if")
 		return render(request, 'core/login.html')
-	else:			
+	else:
 		myfixies = Fixies.objects.filter(user=request.user)
 		response_data = 0
 		for fix in myfixies:
@@ -84,7 +85,7 @@ def notificaIndex(request):
 def notificaIndexParticipation(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
-	else:				
+	else:
 		myrelationships = Participations.objects.filter(user=request.user)
 		response_data = 0
 		for fix in myrelationships:
@@ -97,7 +98,7 @@ def notificaIndexPosts(request):
 	if not request.user.is_authenticated():
 		print("foi no if")
 		return render(request, 'core/login.html')
-	else:			
+	else:
 		myposts = Post.objects.filter(user=request.user)
 		response_data = 0
 		for post in myposts:
@@ -122,7 +123,7 @@ def register(request):
 			return render(request, 'core/register.html', {'form':form, 'error_message': 'Senhas não conferem'})
 		user.set_password(password)
 		user.save()
-		
+
 
 		user = authenticate(username=username, password=password)
 		if user is not None:
@@ -187,7 +188,7 @@ def profile(request, username):
 	else:
 		dadosSeguir = 0
 
-	posts = Post.objects.filter(user=use, exibir_perfil=True) 
+	posts = Post.objects.filter(user=use, exibir_perfil=True)
 
 	paginator = Paginator(posts, 5)
 	page = request.GET.get('page')
@@ -254,7 +255,7 @@ def fix_detail(request, pk, aviso=False):
 			com.user = request.user
 			com.fixie = Fixies.objects.get(pk=pk)
 			if com.fixie.user != request.user:
-				if com.fixie.ativa_notificacao != False:				
+				if com.fixie.ativa_notificacao != False:
 					com.fixie.notificacao += 1
 					com.fixie.save()
 					coment = form.cleaned_data['coment']
@@ -421,7 +422,7 @@ def confirm_delete_fix(request, pk):
 				print("chegou pra deletar")
 		return HttpResponse(json.dumps(response_data), content_type="application/json")
 	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
-	
+
 
 def to_restore_fixed_code(request, pk):
 	if not request.user.is_authenticated():
@@ -463,7 +464,7 @@ def inativeNotifyMyFixies(request, pk):
 		return render(request, 'core/login.html')
 	else:
 		relacao = get_object_or_404(Fixies, user=request.user, pk=pk)
-		if relacao.user == request.user:			
+		if relacao.user == request.user:
 			relacao.ativa_notificacao = False
 			relacao.save()
 		else:
@@ -648,7 +649,7 @@ def favorite_fix(request, pk):
 		response_data = "Nao favoritou"
 		if request.method == 'POST':
 			pkfix = request.POST.get('id')
-			fixie = get_object_or_404(Fixies, pk=pkfix)			
+			fixie = get_object_or_404(Fixies, pk=pkfix)
 			if fixie.user != request.user:
 				try:
 					table_favorite = Favorites()
@@ -726,7 +727,7 @@ def followajax(request, username):
 					novoRegistro.user = request.user
 					novoRegistro.following = userfollow
 					novoRegistro.save()
-					
+
 					response_data['result'] = 'Usuário seguido com sucesso'
 					print("Registro criado")
 			return HttpResponse(json.dumps(response_data), content_type="application/json")
@@ -759,6 +760,7 @@ def getrelationship(request, username):
 	else:
 		if request.method == 'POST':
 			use = request.POST.get('id')
+			print("o use é: {}".format(use))
 			userfollow = get_object_or_404(User, username=use)
 			response_data = False
 			if userfollow != request.user:
@@ -871,7 +873,7 @@ def post_detail(request, pk):
 			com.user = request.user
 			com.post = Post.objects.get(pk=pk)
 			if com.post.user != request.user:
-				if com.post.ativa_notificacao != False:				
+				if com.post.ativa_notificacao != False:
 					com.post.notificacao += 1
 					com.post.save()
 					coment = form.cleaned_data['coment']
@@ -891,8 +893,8 @@ def post_detail(request, pk):
 def my_posts(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
-	else:		
-		posts = Post.objects.filter(user=request.user) 
+	else:
+		posts = Post.objects.filter(user=request.user)
 
 		paginator = Paginator(posts, 5)
 		page = request.GET.get('page')
@@ -905,7 +907,7 @@ def my_posts(request):
 		except PageNotAnInteger:
 			relations = paginator.page(1)
 		except EmptyPage:
-			relations = paginator.page(paginator.num_pages)	
+			relations = paginator.page(paginator.num_pages)
 		return render(request, 'core/myposts.html', {'relations':relations})
 
 def getkeypostprofile(request, pk):
