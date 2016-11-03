@@ -1,18 +1,162 @@
-<h3>Faça seu login</h3>
-{% if error_message %}
-	<p>
-		{{ error_message }}
-	</p>
-{% endif %}
+{% extends 'core/basevisitante.html' %}
+{% load staticfiles %}
+{% block body %}
+<body id="login">
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topNavBar">
 
-<form action="{% url 'core:login_user' %}" method="post">
-	{% csrf_token %}
-	<label>Username:</label>
-	<input type="text" name="username">
-	<label>Senha</label>
-	<input type="password" name="senha">
-	<button type="submit">Entrar</button>
-</form>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a class="navbar-brand" href="#">FixCode</a>
+		</div>
 
-<br>
-<a href="{% url 'core:register' %}">Cadastre-se aqui!</a>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="topNavBar">
+		  <ul class="nav navbar-nav">
+		  	<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+			<li><a href="#">Sobre</a></li>
+			<li><a href="#">Ajuda</a></li>
+			<li><a href="#">Feedback</a></li>
+			
+		  </ul>
+
+		  <ul class="nav navbar-nav navbar-right">
+			  {% if error_message == false %}
+			<li>
+				<form class="navbar-form navbar-right col-xs-12" action="{% url 'core:login_user' %}" method="post">
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="sr-only" for="user">
+							user:
+						</label>
+						<input type="text" class="form-control" id="user" placeholder="Username" name="username">
+					</div>
+					<div class="form-group">
+						<label class="sr-only" for="senha">
+							senha:
+						</label>
+						<input type="password" class="form-control" id="senha" placeholder="Senha" name="senha">
+					</div>
+					<button type="submit" class="btn btn-success btn-sm" id="entrar">Entrar</button>
+				</form>
+			</li>
+			{% else %}
+			<p class="navbar-text">Usuário e/ou senha incorreto(s)</p>
+			<li>
+				<form class="navbar-form navbar-right col-xs-12" action="{% url 'core:login_user' %}" method="post">
+					{% csrf_token %}
+					<div class="form-group has-error">
+						<label class="sr-only" for="user">
+							user:
+						</label>
+						<input type="text" class="form-control" id="user" placeholder="Username" name="username">
+					</div>
+					<div class="form-group has-error">
+						<label class="sr-only" for="senha">
+							senha:
+						</label>
+						<input type="password" class="form-control" id="senha" placeholder="Senha" name="senha">
+					</div>
+					<button type="submit" class="btn btn-success btn-sm" id="entrar">Entrar</button>
+				</form>
+			</li>
+
+			{% endif %}
+
+		  </ul>
+		</div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-md-6 col-lg-6">
+				<div class="jumbotron" id="comp-esq">
+				  <h1>FixCode, a comunidade</h1>
+				  <p>
+				  FixCode é uma plataforma desenvolvida pensando na comunidade de desenvolvedores.
+				  </p>
+				  <p>
+				  	Questione e interaja conosco!
+				  </p>
+				  <p><a class="btn btn-primary btn-lg" href="{% url 'core:register' %}" role="button">Crie uma conta</a> ou Faça login</p>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-6 col-lg-6">
+				<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+				  <!-- Indicators -->
+				  <ol class="carousel-indicators">
+				    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+				    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+				    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+				  </ol>
+
+				  <!-- Wrapper for slides -->
+				  <!-- As imagens devem estar no tamanho 954x822 -->
+				  <div class="carousel-inner" role="listbox">
+				    <div class="item active">
+				      <img src="{% static 'core/imagens/slide/imagem1.png' %}" class="img-responsive" alt="...">
+				      <div class="carousel-caption">
+				        <h3>Compartilhe sua ideia</h3>
+				        <p>Anexe seu arquivo na plataforma e compartilhe.</p>
+				      </div>
+				    </div>
+				    <div class="item">
+				      <img src="{% static 'core/imagens/slide/imagem2.png' %}" alt="...">
+				      <div class="carousel-caption">
+				        <h3>Fix your code!</h3>
+				        <p>Questione e tire dúvidas junto a comunidade.</p>
+				      </div>
+				    </div>
+				    <div class="item">
+				      <img src="{% static 'core/imagens/slide/imagem3.png' %}" alt="...">
+				      <div class="carousel-caption">
+				        <h3>Interaja</h3>
+				        <p>Conheça outros desenvolvedores.</p>
+				      </div>
+				    </div>
+				    
+				  </div>
+
+				  <!-- Controls -->
+				  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+				    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+				    <span class="sr-only">Previous</span>
+				  </a>
+				  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+				    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+				    <span class="sr-only">Next</span>
+				  </a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid" id="container-rodape">
+		<div class="container text-center">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+					<p>FixCode</p>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-">
+					<p>&reg; copyright 2016 FixCode comunity</p><br>
+					<a href="#">Sobre</a> - 
+					<a href="#">Cadastre-se</a> - 
+					<a href="#">Ajuda</a> - 
+					<a href="#">Blog</a>
+					<p></p>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+					<p>Redes sociais: <a href="#">Facebook</a> <a href="#">Youtube</a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+{% endblock %}

@@ -45,7 +45,7 @@ def index(request):
 			fixesdosseguidos = Fixies.objects.filter(user=user.following)
 			fixies.extend(list(postsdosseguidos))
 			fixies.extend(list(fixesdosseguidos))
-			
+
 
 		#recolhe seus próprios fixies e posts
 		myfixies = Fixies.objects.filter(user=request.user)
@@ -123,6 +123,7 @@ def register(request):
 			return render(request, 'core/register.html', {'form':form, 'error_message': 'Senhas não conferem'})
 		user.set_password(password)
 		user.save()
+
 
 
 		user = authenticate(username=username, password=password)

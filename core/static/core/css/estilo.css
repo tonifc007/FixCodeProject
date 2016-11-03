@@ -1,0 +1,19 @@
+input#user, input#senha{
+    width:150px;
+    height:30px;
+}
+/*
+button#entrar{
+    height: 30px;
+}*/
+body#login{
+	background-image: url("../imagens/codigojs.jpg"); 
+}
+
+div#comp-esq{
+	background-color: rgba(255,255,255,0.7);
+}
+
+div#container-rodape{
+	background-color: rgba(255,255,255,0.8);
+}

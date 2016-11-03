@@ -228,7 +228,7 @@ CKEDITOR_CONFIGS = {
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(tempfile.gettempdir(), 'ck_static')
-MEDIA_ROOT = os.path.join(tempfile.gettempdir(), 'ck_media')
+MEDIA_ROOT = 'media/'
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
