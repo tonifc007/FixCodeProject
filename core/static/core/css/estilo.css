@@ -6,14 +6,38 @@ input#user, input#senha{
 button#entrar{
     height: 30px;
 }*/
+
+/* backgroud da página inicial */
 body#login{
 	background-image: url("../imagens/codigojs.jpg"); 
 }
 
+/*barra de fundo da esquerda da página inicial*/
 div#comp-esq{
 	background-color: rgba(255,255,255,0.7);
 }
 
+/*slider da esquerda da página inicial*/
+div#comp-esq-reg{
+	background-color: rgba(126,126,126,0.3);
+}
+
+/*rodapé do site*/
 div#container-rodape{
 	background-color: rgba(255,255,255,0.8);
+}
+/* logo na página de registro */
+img#fcreg{
+	padding-top: 63px;
+}
+
+/*barra de pesquisa da navbar*/
+input#pesquisa{
+	width:270px;
+}
+
+@media screen and (max-width: 1000px) {
+	form#f{
+		display: none;
+	}
 }

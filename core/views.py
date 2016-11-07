@@ -120,11 +120,16 @@ def register(request):
 		password = form.cleaned_data['password']
 		repassword = form.cleaned_data['repassword']
 		if password != repassword:
-			return render(request, 'core/register.html', {'form':form, 'error_message': 'Senhas não conferem'})
+			if name == '' or lastname == '':
+				return render(request, 'core/register.html', {'form':form, 'error_de_reg': 'Senhas não conferem', 'error_name':'* Este campo é obrigatório.'})
+			else:
+				return render(request, 'core/register.html', {'form':form, 'error_de_reg': 'Senhas não conferem'})
+		elif name == '' or lastname == '':
+			return render(request, 'core/register.html', {'form':form, 'error_name':'* Este campo é obrigatório.'})
 		user.set_password(password)
 		user.save()
 
-
+		print("usuário: {} - senha: {}".format(username, password))
 
 		user = authenticate(username=username, password=password)
 		if user is not None:
@@ -132,9 +137,7 @@ def register(request):
 				login(request, user)
 				newprofile = Profile()
 				newprofile.user = request.user
-				newprofile.save()
-				fixies = Fixies.objects.all
-				#fixies = Fixies.objects.filter(user=request.user)
+				newprofile.saveInstance()
 				return redirect('/editprofile/')
 	return render(request, 'core/register.html', {'form':form})
 

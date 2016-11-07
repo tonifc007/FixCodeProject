@@ -1,16 +1,172 @@
-<h3>Se registre primeiro:</h3>
+{% extends 'core/basevisitante.html' %}
+{% load staticfiles %}
 
-{% if error_message %}
-	<p>{{ error_message }}</p>
-{% endif %}
+{% block body %}
+<link rel="stylesheet" type="text/css" href="{% static 'core/css/estiloregister.css' %}">
+<body>
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topNavBar">
 
-<form action="" method="post">
-	{% csrf_token %}
-	{% for field in form %}
-		{{ field.errors }}
-		{{ field.label_tag }}
-		{{ field }}
-		<br>
-	{% endfor %}
-	<button type="submit">Prosseguir</button>
-</form>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		  <a href="/"><img src="{% static 'core/imagens/logothumb.png' %}" class="navbar-brand" alt="logofix"></a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="topNavBar">
+		  <ul class="nav navbar-nav">
+		  	<li class="active"><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+			<li><a href="#">Sobre</a></li>
+			<li><a href="#">Ajuda</a></li>
+			<li><a href="#">Feedback</a></li>
+			
+		  </ul>
+
+		  <ul class="nav navbar-nav navbar-right">
+			  {% if error_message == false %}
+			<li>
+				<form class="navbar-form navbar-right col-xs-12" action="{% url 'core:login_user' %}" method="post">
+					{% csrf_token %}
+					<div class="form-group">
+						<label class="sr-only" for="user">
+							user:
+						</label>
+						<input type="text" class="form-control" id="user" placeholder="Username" name="username">
+					</div>
+					<div class="form-group">
+						<label class="sr-only" for="senha">
+							senha:
+						</label>
+						<input type="password" class="form-control" id="senha" placeholder="Senha" name="senha">
+					</div>
+					<button type="submit" class="btn btn-success btn-sm" id="entrar">Entrar</button>
+				</form>
+			</li>
+			{% else %}
+			<p class="navbar-text">Usuário e/ou senha incorreto(s)</p>
+			<li>
+				<form class="navbar-form navbar-right col-xs-12" action="{% url 'core:login_user' %}" method="post">
+					{% csrf_token %}
+					<div class="form-group has-error">
+						<label class="sr-only" for="user">
+							user:
+						</label>
+						<input type="text" class="form-control" id="user" placeholder="Username" name="username">
+					</div>
+					<div class="form-group has-error">
+						<label class="sr-only" for="senha">
+							senha:
+						</label>
+						<input type="password" class="form-control" id="senha" placeholder="Senha" name="senha">
+					</div>
+					<button type="submit" class="btn btn-success btn-sm" id="entrar">Entrar</button>
+				</form>
+			</li>
+
+			{% endif %}
+
+		  </ul>
+		</div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<ol class="breadcrumb">
+			  <li><a href="/">Home</a></li>
+			  <li class="active">Registro de usuário</li>
+			</ol>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				<div class="panel panel-primary">
+				  <div class="panel-heading"><h3>Faça seu registro:<br> <small style="color: rgba(255,255,255,.8);">(Cadastro gratuito, assim como toda a plataforma)</small></h3></div>
+				  <div class="panel-body">
+					<form action="{% url 'core:register' %}" class="form-horizontal" method="post">
+						{% csrf_token %}
+						{% for field in form %}
+						<div class="form-group">
+							<label for="{{field.name}}" class="col-xs-4 control-label">
+								{% if field.name == 'password' %}
+									Senha:
+								{% elif field.name == 'repassword' %}
+									Informe novamente sua senha:
+								{% else %}
+									{{ field.label_tag }}
+								{% endif %}
+								
+							</label>
+							<div class="col-xs-8">
+								{% if field.name == 'password' or field.name == 'repassword' %}
+									<input type="password" class="form-control" id="nomeRegistro"  name="{{field.name}}" placeholder="{{ field.errors.as_text }}">
+								{% elif field.name == 'first_name' or field.name == 'last_name' %}
+									{% if error_name %}
+										<input type="text" class="form-control" id="nomeRegistro"  name="{{field.name}}" placeholder="{{ error_name }}">
+									{% else %}
+										<input type="text" class="form-control" id="nomeRegistro"  name="{{field.name}}" placeholder="{{ field.errors.as_text }}">
+									{% endif %}										
+								{% else %}
+									<input type="text" class="form-control" id="nomeRegistro"  name="{{field.name}}" placeholder="{{ field.errors.as_text }}">
+								
+								{% endif %}
+							</div>
+						</div>
+						{% endfor %}
+						<button type="submit" class="btn btn-success btn-sm" id="entrar">Entrar</button>
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+			<div class="panel panel-default">
+			  <div class="panel-heading"><h3>Instruções:</h3></div>
+			  <div class="panel-body">
+			    <ul class="list-group">
+				  <li class="list-group-item">Preste bem atenção na escolha do <b>Username</b>, pois este será usado para fazer login na plataforma</li>
+				  <li class="list-group-item">O <b>Username</b> também integrará o link do seu perfil. exemplo: <i>fixcode/user/<b>diego</b></i>.</li>
+				  <li class="list-group-item">Para maior segurança, forneça uma senha contendo pelo menos letras e numeros num total maior que 8 caracteres. </li>
+				  <li class="list-group-item">Todos os campos são <b>obrigatórios</b>. </li>
+				  <div class="col-xs-4 col-xs-offset-4 col-sm-2 col-sm-offset-5 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4">
+				  	<img src="{% static 'core/imagens/logo.png' %}" class="img-responsive" alt="..." id="fcreg">
+				  </div>
+				</ul>
+			  </div>
+			</div>
+			
+		</div>
+		</div>
+	</div>
+
+	<div class="container-fluid" id="container-rodape">
+		<div class="container text-center">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+					<p>FixCode</p>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-">
+					<p>&reg; copyright 2016 FixCode comunity</p><br>
+					<a href="#">Sobre</a> - 
+					<a href="#">Cadastre-se</a> - 
+					<a href="#">Ajuda</a> - 
+					<a href="#">Blog</a>
+					<p></p>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+					<p>Redes sociais: <a href="#">Facebook</a> <a href="#">Youtube</a></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+{% endblock %}

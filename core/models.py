@@ -37,25 +37,32 @@ class Profile(models.Model):
 			else:
 				self.imagem_perfil = this.imagem_perfil
 		except: pass
+		
 		if self.habilidades.count() > 5:
 			raise Http404
 		super(Profile, self).save()
-		img = PIL.Image.open(self.imagem_perfil)
-		(width, height) = img.size
-		print width
-		print height
-		if height > width:
-			divisor = height/300
-			width = width/divisor
-			height = 300
-		elif height < width:
-			divisor = width/300
-			height = height/divisor
-			width = 300
-		else:
-			width = height = 300
-		img = img.resize((width, height), PIL.Image.ANTIALIAS)
-		img.save(self.imagem_perfil.path)
+		try:
+			if self.imagem_perfil != False:
+				img = PIL.Image.open(self.imagem_perfil)
+				(width, height) = img.size
+				print width
+				print height
+				if height > width:
+					divisor = height/300
+					width = width/divisor
+					height = 300
+				elif height < width:
+					divisor = width/300
+					height = height/divisor
+					width = 300
+				else:
+					width = height = 300
+				img = img.resize((width, height), PIL.Image.ANTIALIAS)
+				img.save(self.imagem_perfil.path)
+		except: pass
+
+	def saveInstance(self):
+		super(Profile, self).save()
 
 	def delete(self):
 		try:

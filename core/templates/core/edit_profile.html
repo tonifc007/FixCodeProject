@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Editar perfil - Fixcode</title>
-</head>
-<body>
+{% extends 'core/baselogado.html' %}
+{% load staticfiles %}
+
+{% block body %}
 <h1>Edite seu perfil, {{ user.first_name }}</h1>
 {% if aviso %}
 <br><p>{{ aviso }}</p><br>
@@ -18,5 +16,4 @@
 		<br><br>
 	{% endfor %}
 	<button type="submit">Concluir</button>
-</body>
-</html>
+{% endblock %}
