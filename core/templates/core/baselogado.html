@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>FixCode - Entre para a comunidade para desenvolvedores</title>
+        <title>{% block titulo %}{%endblock%}</title>
         <meta charset="utf-8">
         <title></title>
         {% load staticfiles %}
@@ -45,21 +45,24 @@
                 </label>
                 <input type="text" class="form-control" id="pesquisa" placeholder="Procure por usuário, fix, post e etc." name="busca">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" id="bpesquisa">Go!</button>
+                    <button class="btn btn-default" type="button" id="bpesquisa"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 </span>
             </div>
         </form>
             
 
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+             {% block imagemperfil %}
+                {% endblock %}
+                
+            <li class="dropdown">              
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{%block user%}{%endblock%}<span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
+                <li><a href="#">Ver perfil</a></li>
+                <li><a href="#">Editar perfil</a></li>
+                <li><a href="#">Criar fix</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">Separated link</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Logout</a></li>
               </ul>
             </li>
 
@@ -70,6 +73,27 @@
 
     {% block body %}
     {% endblock %}
+
+    <div class="container-fluid" id="container-rodape">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <p>FixCode</p>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-">
+                    <p>&reg; copyright 2016 FixCode comunity</p><br>
+                    <a href="#">Sobre</a> - 
+                    <a href="#">Cadastre-se</a> - 
+                    <a href="#">Ajuda</a> - 
+                    <a href="#">Blog</a>
+                    <p></p>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <p>Redes sociais: <a href="#">Facebook</a> <a href="#">Youtube</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
      <script language="javascript" src="{% static 'core/css/bootstrap/js/jquery-3.1.0.min.js' %}"></script>
     <script language="javascript" src="{% static 'core/css/bootstrap/js/bootstrap.min.js' %}"></script>

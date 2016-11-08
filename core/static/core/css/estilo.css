@@ -36,6 +36,13 @@ input#pesquisa{
 	width:270px;
 }
 
+/*botão de salvar em editar perfil*/
+button#salvarperfil{
+	margin-bottom: 10px;
+	margin-left: 180px;
+	width: 200px;
+}
+
 @media screen and (max-width: 1000px) {
 	form#f{
 		display: none;

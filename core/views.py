@@ -156,7 +156,7 @@ def edit_details_profile(request):
 				file_type = detalhes.imagem_perfil.url.split('.')[-1]
 				file_type = file_type.lower()
 				if file_type not in FILE_TYPES_IMAGE:
-					return render(request, 'core/createpost.html', {'form':form, 'error_message':'Arquivo inválido'})
+					return render(request, 'core/edit_profile.html', {'form':form, 'user':request.user, 'avisoimagem':'Formato de imagem inválido.', 'profile':detalhes})
 			else:
 				detalhes.imagem_perfil = var
 			bio = form.cleaned_data['bio']
@@ -167,10 +167,10 @@ def edit_details_profile(request):
 				detalhes.habilidades.clear()
 				hab = get_object_or_404(Areas,nome_linguagem='Outra linguagem')
 				detalhes.habilidades.add(hab)
-				return render(request, 'core/edit_profile.html', {'form': form, 'user':request.user, 'aviso':'Escolha até 5 habilidades!'})
+				return render(request, 'core/edit_profile.html', {'form': form, 'user':request.user, 'aviso':'Escolha até 5 habilidades!', 'profile':detalhes})
 			detalhes.save()
 			return profile(request, request.user.username)
-	return render(request, 'core/edit_profile.html', {'form': form, 'user':request.user})
+	return render(request, 'core/edit_profile.html', {'form': form, 'user':request.user, 'profile':detalhes})
 
 def profile(request, username):
 	print("Requisitou o perfil de {}".format(username))

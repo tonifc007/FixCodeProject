@@ -1,19 +1,92 @@
 {% extends 'core/baselogado.html' %}
 {% load staticfiles %}
+{% block titulo %}Editar perfil{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
 
+{% block imagemperfil %}
+	{% if profile.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ profile.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
+		
+	{% endif %}
+{% endblock %}
 {% block body %}
-<h1>Edite seu perfil, {{ user.first_name }}</h1>
-{% if aviso %}
-<br><p>{{ aviso }}</p><br>
-{% endif %}
-<form method="post" enctype="multipart/form-data">
-	{% csrf_token %}
-	{% for field in form %}
-		{{ field.errors }}
-		{{ field.label_tag }}
-		<br>
-		{{ field }}
-		<br><br>
-	{% endfor %}
-	<button type="submit">Concluir</button>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<ol class="breadcrumb">
+		  <li><a href="/">Home</a></li>
+		  <li class="active">Edição de perfil</li>
+		</ol>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+		<div class="row">
+		<form action="{% url 'core:editprofile' %}" class="form-horizontal" method="post" enctype="multipart/form-data">
+			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				<div class="panel panel-default">
+				  <div class="panel-heading"><h3>Edite seu perfil:<br> <small>(Não obrigatório)</small></h3></div>
+				  {% if avisoimagem %}
+				  	<p class="text-danger" style="text-align: center;">{{avisoimagem}}</p>
+				  {% endif %}
+				  <div class="panel-body">
+					
+						{% csrf_token %}
+						{% for field in form %}
+						{%if field.name != 'habilidades'%}
+						<div class="form-group">
+							<label for="{{field.name}}" class="col-xs-4 control-label">
+									{{ field.label_tag }}
+							</label>
+							<div class="col-xs-8">
+								{% if field.name == 'imagem_perfil' %}
+								
+									{% if profile.imagem_perfil %}
+										<a href="{% url 'core:profile' user.username %}"><img src="{{ profile.imagem_perfil.url }}" class="img-responsive img-thumbnail" alt="imgperfil"></a>
+										{{ field }}
+									{% else %}
+										<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="img-responsive img-thumbnail" alt="imgperfil"></a>
+										{{ field }}
+									{% endif %}
+									<p>Formato permitido: JPG</p>
+								{% elif field.name == 'bio' %}
+									<textarea class="form-control" rows="6" name="{{field.name}}" placeholder="Algo sobre você! ;)">{{field.value}}</textarea>
+								{% else %}
+									<input type="text" class="form-control" id="nomeRegistro"  name="{{field.name}}" placeholder="Usuário do Github. ex.: diegofsousa" value="{{field.value}}">
+								{% endif %}
+								
+							</div>
+						</div>
+						{%endif%}
+						{% endfor %}
+						
+
+						
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				<div class="panel panel-default">
+				  <div class="panel-heading"><h3>Habilidades:<br> <small>(Selecione até 5 habilidades ou pelo menos uma. Obrigatório)</small></h3></div>
+				  {% if form.errors %}
+				  	<p class="text-danger" style="text-align: center;">Por favor, escolha pelo menos uma habilidade.</p>
+				  {% elif aviso %}
+				  	<p class="text-danger" style="text-align: center;">{{aviso}}</p>
+				  {% endif %}
+				 
+				  <div class="panel-body">
+				    {{ form.habilidades }}
+				  </div>
+				  <button type="submit" class="btn btn-success" id="salvarperfil">Salvar alterações</button>
+				</div>
+				
+			</div>
+			
+			</form>
+		
+		</div>
+	</div>
 {% endblock %}
