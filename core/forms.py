@@ -13,10 +13,12 @@ class UserForm(forms.ModelForm):
 class UserFormRegister(forms.ModelForm):
 	password = forms.CharField(widget=forms.PasswordInput)
 	repassword = forms.CharField(widget=forms.PasswordInput)
+	oldpassword = forms.CharField(widget=forms.PasswordInput)
 
 	class Meta:
 		model = User
-		fields = ['first_name','last_name','username', 'password', 'repassword']
+		fields = ['first_name','last_name','username', 'password', 'repassword', 'oldpassword']
+
 
 class FixiesForm(forms.ModelForm):
 	area = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Areas.objects.all())

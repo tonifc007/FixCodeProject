@@ -141,6 +141,46 @@ def register(request):
 				return redirect('/editprofile/')
 	return render(request, 'core/register.html', {'form':form})
 
+def settings(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		detalhes = get_object_or_404(Profile, user=request.user)
+		#form = UserFormRegister(request.POST or None, instance=request.user)
+		if request.POST:
+			print 'entrou na funçao'
+			
+			name = request.POST.get('first_name')
+			lastname = request.POST.get('last_name')
+			#username = request.POST.get('username')
+			password = request.POST.get('password')
+			repassword = request.POST.get('repassword')
+			oldpassword = request.POST.get('oldpassword')
+			print name
+			print lastname
+			print password
+			print repassword
+			print oldpassword
+
+			if name == '' or lastname == '' or password == '' or repassword == '' or oldpassword == '':
+				return render(request, 'core/settings.html', {'error_name':'* Este campo é obrigatório.', 'profile':detalhes})
+
+			if request.user.check_password(oldpassword) == False:
+				print 'senha incorreta'
+				return render(request, 'core/settings.html', {'error_de_senha': 'Senha atual está incorreta', 'profile':detalhes})
+
+			if password != repassword:
+				return render(request, 'core/settings.html', {'error_de_reg': 'Senhas não conferem'})
+
+			request.user.first_name = name
+			request.user.last_name = lastname
+			request.user.set_password(password)
+			request.user.save()
+			user = authenticate(username=request.user.username, password=password)
+			login(request, user)
+			return redirect('/profile/'+user.username+'/')
+		return render(request, 'core/settings.html', {'profile':detalhes}) 
+
 def edit_details_profile(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
@@ -156,6 +196,7 @@ def edit_details_profile(request):
 				file_type = detalhes.imagem_perfil.url.split('.')[-1]
 				file_type = file_type.lower()
 				if file_type not in FILE_TYPES_IMAGE:
+					detalhes.imagem_perfil = None
 					return render(request, 'core/edit_profile.html', {'form':form, 'user':request.user, 'avisoimagem':'Formato de imagem inválido.', 'profile':detalhes})
 			else:
 				detalhes.imagem_perfil = var

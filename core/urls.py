@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^login/$', views.login_user, name='login_user'),
     url(r'^logout_user/$', views.logout_user, name='logout_user'),
     url(r'^editprofile/$', views.edit_details_profile, name='editprofile'),
+    url(r'^editprofile/settings/$', views.settings, name='settings'),
     url(r'^notificaIndex/$', views.notificaIndex, name='notifica'),
     url(r'^notificaIndexParticipation/$', views.notificaIndexParticipation, name='notificaParticipation'),
     url(r'^notificaIndexPosts/$', views.notificaIndexPosts, name='notificaPosts'),
