@@ -1,5 +1,5 @@
 from django import template
-from ..models import ComentFixies, Fixies, Profile
+from ..models import ComentFixies, Fixies, Profile, Participations, Favorites, Post
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
@@ -40,3 +40,23 @@ def fixoupost(value):
 def subtempo(value):
 	a = timezone.now() - value
 	return a.days
+
+@register.filter(name='quant_fix')
+def quant_fix(value):
+	f = Fixies.objects.filter(user=value)
+	return f.count()
+
+@register.filter(name='quant_part')
+def quant_part(value):
+	f =  Participations.objects.filter(user=value)
+	return f.count()
+
+@register.filter(name='quant_fav')
+def quant_fav(value):
+	f = Favorites.objects.filter(user=value)
+	return f.count()
+
+@register.filter(name='quant_post')
+def quant_post(value):
+	f = Post.objects.filter(user=value)
+	return f.count()

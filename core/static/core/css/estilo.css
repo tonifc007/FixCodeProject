@@ -97,3 +97,8 @@ div#pcorconfig{
 	box-shadow: 0.3px 0.3px 2.5px green;
 }
 
+@media screen and (max-width: 800px) {
+	.sai{
+		display: none;
+	}
+}

@@ -25,7 +25,8 @@ function notificaIndex(){
             if (json != indice && json != 0){
                 console.log('muda');
                 indice = json;
-                $('#notifica').html("<a href='/myfixies/'><h4 style='background-color: blue; color: white;'>Você tem "+json+" fixies respondidos</h4></a>");
+                $('#notifica').html("<a class='btn btn-primary btn-block' style='margin-bottom: 6px;' href='/myfixies/'>Você tem "+json+" fixie(s) com novas respostas.</a>");
+
             }
         },
 
@@ -52,7 +53,7 @@ function notificaIndexParticipation(){
             if (json != indicePart && json != 0){
                 console.log('muda');
                 indicePart = json;
-                $('#notificaParticipacao').html("<a href='participations/'><h4 style='background-color: green; color: white;'>"+json+" das suas participações tem novas respostas</h4></a>");
+                $('#notificaParticipacao').html("<a class='btn btn-warning btn-block' style='margin-bottom: 6px;' href='participations/'>Você tem "+json+" participação(es) com novas respostas.</a>");
             }
         },
 
@@ -79,7 +80,7 @@ function notificaIndexPosts(){
             if (json != indicePost && json != 0){
                 console.log('muda');
                 indicePost = json;
-                $('#notificaPosts').html("<a href='myposts/'><h4 style='background-color: yellow; color: white;'>"+json+" de seus posts tem novos respostas</h4></a>");
+                $('#notificaPosts').html("<a class='btn btn-success btn-block' style='margin-bottom: 6px;' href='myposts/'>Você tem "+json+" post(s) com novos comentários.</a>");
             }
         },
 
