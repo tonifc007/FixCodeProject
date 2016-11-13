@@ -13,11 +13,10 @@ class UserForm(forms.ModelForm):
 class UserFormRegister(forms.ModelForm):
 	password = forms.CharField(widget=forms.PasswordInput)
 	repassword = forms.CharField(widget=forms.PasswordInput)
-	oldpassword = forms.CharField(widget=forms.PasswordInput)
 
 	class Meta:
 		model = User
-		fields = ['first_name','last_name','username', 'password', 'repassword', 'oldpassword']
+		fields = ['first_name','last_name','username', 'password', 'repassword']
 
 
 class FixiesForm(forms.ModelForm):

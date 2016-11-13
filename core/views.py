@@ -9,8 +9,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
 import json
 import PIL
-from operator import attrgetter
-from operator import itemgetter
+from django.utils import timezone
 
 FILE_TYPES = ['pdf', 'doc', 'txt', 'zip', 'rar', '7z']
 FILE_TYPES_IMAGE = ['jpg', 'jpeg']
@@ -56,8 +55,37 @@ def index(request):
  		#remove todas as duplicatas e ordena por data mais recente
 		fixies = sorted(list(set(fixies)), key=lambda inst: inst.data, reverse=True)
 
+		#buscar seguindo pra por na página
+		relacao = Followers.objects.filter(user=request.user)
+		followings = []
+
+		for pessoa in relacao:
+			followings.append(pessoa.following)
+
+		#invertendo para os ultmos serem os primeiros
+		followings = followings[::-1]
+
+		
+
+		#sistema de paginação
 		paginator = Paginator(fixies, 5)
 		page = request.GET.get('page')
+
+		comentariosDosSeguindo = list()
+		for i in followings:
+			print i.first_name
+			comentariosDesteSeguindo = ComentFixies.objects.filter(user=i)
+			for a in comentariosDesteSeguindo:
+				print("{} coment in {}".format(i.first_name, a.fixie.titulo))
+				comentariosDosSeguindo.append(a)
+
+		comentariosDosSeguindo = comentariosDosSeguindo[::-1]
+		tempos = list()
+		for i in comentariosDosSeguindo:
+			tempos.append(timezone.now() - i.data)
+
+		comentariosDosSeguindo = comentariosDosSeguindo[0:10]
+		tempos = tempos[0:10]
 
 		try:
 			relations = paginator.page(page)
@@ -67,7 +95,7 @@ def index(request):
 		except EmptyPage:
 			relations = paginator.page(paginator.num_pages)
 
-		return render(request, 'core/index.html', {'relations':relations})
+		return render(request, 'core/index.html', {'relations':relations, 'profile':perfil,'comentariosDosSeguindo':comentariosDosSeguindo})
 
 def notificaIndex(request):
 	if not request.user.is_authenticated():

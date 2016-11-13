@@ -49,6 +49,51 @@ button#salvarperfil{
 	}
 }
 
+/*cor do título painel de configuração*/
 div#pcorconfig{
 	background-color: purple;
 }
+
+/*cor dos paineis laterais do index*/
+.pesqindex{
+	background-color: #e9e9e9;
+}
+
+/*alinhamento do texto no index*/
+.titp{
+	text-align: center;
+}
+
+/*cor de "ver todos" da index*/
+.vertodos{
+	color: black;
+}
+
+/*cor das tags no post do ikndex*/
+.pCinza{
+	color: #BEBEBE;
+}
+
+/*cor do nome do usuário no post do index*/
+.pCinzaUser{
+	color: #9C9C9C;
+}
+
+/*cor do link do firstname dos posts do index*/
+
+.titulopindex{
+	color: #000000;
+}
+
+.titulopindex:hover{
+	transition: 500ms;
+}
+
+.comentf{
+	margin-top: 6px;
+}
+
+.painelpost{	
+	box-shadow: 0.3px 0.3px 2.5px green;
+}
+

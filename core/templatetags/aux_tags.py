@@ -1,6 +1,7 @@
 from django import template
 from ..models import ComentFixies, Fixies, Profile
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 
 register = template.Library()
 
@@ -20,12 +21,12 @@ def nomearquivo(value):
 def imagemperfil(value):
 	try:
 		perfil = Profile.objects.get(user=value)
-		if perfil:
+		if perfil:			
 			if perfil.imagem_perfil:
 				return perfil.imagem_perfil.url
 			else:
 				return False
-	except ObjectDoesNotExist as e:
+	except ObjectDoesNotExist:
 		return False
 
 @register.filter(name='fixoupost')
@@ -34,3 +35,8 @@ def fixoupost(value):
 		return True
 	else:
 		return False
+
+@register.filter(name='subtempo')
+def subtempo(value):
+	a = timezone.now() - value
+	return a.days

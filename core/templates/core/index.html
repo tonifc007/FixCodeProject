@@ -1,85 +1,237 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Fixcode</title>
-	{% load staticfiles %}
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-	<script src="{% static 'core/js/main.js' %}"></script>
-	<script src="{% static 'core/js/notificaindex.js' %}"></script>
-</head>
-<body>
+{% extends 'core/baselogado.html' %}
+{% load staticfiles %}
 {% load aux_tags %}
-<p>Logado como {{ user.first_name }}</p>
-<a href="{% url 'core:logout_user' %}">Deslogar</a>
-<a href="{% url 'core:create_fix' %}">Criar fix</a>
-<a href="{% url 'core:myfixies' %}">Meus fixies</a>
-<a href="{% url 'core:participations' user.username %}">Participações</a>
-<a href="{% url 'core:favorites' user.username %}">Favoritos</a>
-<a href="{% url 'core:profile' user.username %}">Perfil</a>
-<a href="{% url 'core:following' user.username %}">Seguindo</a>
-<a href="{% url 'core:follower' user.username %}">Seguidores</a><br>
-<p>Posts</p>
-<a href="{% url 'core:create_post' %}">Postar</a>
-<a href="{% url 'core:my_posts' %}">Meus posts</a>
+{% block titulo %}Fixcode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
 
-<!--{% if relations %}
-	{% if count_notify > 0 %}
-		<a href="{% url 'core:myfixies' %}" id="notifica"><h4 style="background-color: blue; color: white;">Você tem {{ count_notify }} fixies respondidos</h4></a>
+{% block imagemperfil %}
+	{% if profile.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ profile.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
+		
 	{% endif %}
-{% endif %}-->
+{% endblock %}
+
+{% block body %}
+
 <div id="notifica"></div>
 <div id="notificaParticipacao"></div>
 <div id="notificaPosts"></div>
 
-{% if relations %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+			<div class="panel panel-default pesqindex">
+				<div class="panel-heading"><h4 class="titp">Fix</h4></div>
+				  <div class="panel-body">
+				    <a href="{% url 'core:create_fix' %}" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Novo fix</a>
+				    <ul class="nav" role="tablist">
+					  <li role="presentation"><a href="{% url 'core:myfixies' %}">Meus Fixies <span class="badge pull-right">45</span></a></li>
+					  <li role="presentation"><a href="{% url 'core:participations' user.username %}">Participações <span class="badge pull-right">4</span></a></li>
+					  <li role="presentation"><a href="{% url 'core:favorites' user.username %}">Favoritos <span class="badge pull-right">3</span></a></li>
+					</ul>
+				  </div>
+			</div>
+			<div class="panel panel-default pesqindex">
+				<div class="panel-heading"><h4 class="titp">Blog</h4></div>
+				  <div class="panel-body">
+				    <a href="{% url 'core:create_post' %}" class="btn btn-success btn-block"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Nova postagem</a>
+				    <ul class="nav" role="tablist">
+					  <li role="presentation"><a href="{% url 'core:my_posts' %}">Minhas postagens <span class="badge pull-right">45</span></a></li>
+					</ul>
+				  </div>
+			</div>
 
-	<h2>Fixies: </h2>
-	{% for fixie in relations %}
-		{% if fixie|fixoupost %}
-		<p style="color: blue">----------------</p>
-		{% if fixie.user|imagemperfil %}
-		<img src="{{ fixie.user|imagemperfil }}" width="100" height="100">
-		{% else %}
-		<img src="{% static 'core/imagens/default.png' %}" width="100" height="100">
-		{% endif %}
-		<p style="color: blue">{{ fixie.titulo }}</p>
-		<p style="color: blue">{{ fixie.user }}</p>
-		<p style="color: blue">{{ fixie.pk|quant_coment }} comentários neste fixie</p>
-		<a href="{% url 'core:fix_detail' fixie.pk %}">Responder fix</a>
-		<p style="color: blue">-----------------</p>
-		{% else %}
-		<p style="color: red">----------------</p>
-		{% if fixie.user|imagemperfil %}
-		<img src="{{ fixie.user|imagemperfil }}" width="100" height="100">
-		{% else %}
-		<img src="{% static 'core/imagens/default.png' %}" width="100" height="100">
-		{% endif %}
-		<p style="color: red">{{ fixie.titulo }}</p>
-		<p style="color: red">{{ fixie.user }}</p>
-		<p style="color: red">{{ fixie.pk|quant_coment }} comentários neste post</p>
-		<a href="{% url 'core:fix_detail' fixie.pk %}">Detalhar</a>
-		<p style="color: red">-----------------</p>
-		{% endif %}
-		
-	{% endfor %}
-	<div class="pagination">
-    <span class="step-links">
-        {% if relations.has_previous %}
-            <a href="?page={{ relations.previous_page_number }}">anterior</a>
-        {% endif %}
+			<div class="panel panel-default pesqindex">
+				<div class="panel-heading"><h4 class="titp">Suas habilidades ({{profile.habilidades.all|length}})</h4></div>
+				  <div class="panel-body">
+				  <ul class="nav" role="tablist">
+				  	{% for habilidade in profile.habilidades.all %}
+				  		<li role="presentation"><a href="#">{{ habilidade }} <span class="badge pull-right">5</span></a></li>
+				  	{% endfor %}
+				  	</ul>
+					<ul class="nav" role="tablist">
+					  <li role="presentation"><a href="{% url 'core:following' user.username %}" class="vertodos">Ver todos >><span class="badge pull-right">{{nfollowing|length}}</span></a></li>
+					</ul>
+				  </div>
+			</div>
+			
+			
+		</div>
+		<div class="col-xs-8 col-sm-6 col-md-6 col-lg-6">
+			{% if relations %}
 
-        <span class="current">
-            Página {{ relations.number }} de {{ relations.paginator.num_pages }}.
-        </span>
+				{% for fixie in relations %}
+					
+						{% if fixie|fixoupost %}
+							<div class="panel panel-default">
+								<div class="panel-body">
+								<div class="media-left media-top">
+								    {% if fixie.user|imagemperfil %}
+									<img class="thumbnail media-object" src="{{ fixie.user|imagemperfil }}" width="80" height="80">
+									{% else %}
+									<img class="thumbnail media-object src="{% static 'core/imagens/default.png' %}" width="100" height="100">
+									{% endif %}
+								</div>
+								<div class="media-body">
+								    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' fixie.user.username %}">{{ fixie.user.first_name }}</a> - <span class="pCinzaUser">{{fixie.user.username}}</span></h4>
+								    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
+								    	{% if fixie.data|subtempo == 0 %}
+								  			hoje
+								  		{% elif fixie.data|subtempo == 1 %}
+								  			ontem
+								  		{% else %}
+								  			Há {{ fixie.data|subtempo }} dias
+								  		{% endif %}
+								  		- <span class="glyphicon glyphicon-tags"></span>
+								  		{% for tag in fixie.area.all %}
+								  			{% if tag == fixie.area.all.last %}
+								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+								  			{% else %}
+								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+								  			{% endif %}
+								  		{% endfor %}
+								  		{% if fixie.resolvido %}
+								  			&nbsp;- <span class="glyphicon glyphicon-ok"></span>
+								  			Resolvido
+								  		{% endif %}
 
-        {% if relations.has_next %}
-            <a href="?page={{ relations.next_page_number }}">próximo</a>
-        {% endif %}
-    </span>
+								    </small>
+								    <h3>{{ fixie.titulo }}</h3>
+								    <p>{{ fixie.descricao|safe }}</p>
+
+								    	
+								    	<a class="btn btn-default col-lg-4" href="{% url 'core:fix_detail' fixie.pk %}">Responder fix</a>
+								    
+								    	<p class="col-lg-6 comentf">
+								    	{% if fixie.pk|quant_coment == 0 %}
+								    		<span class="glyphicon glyphicon-comment"></span> Não há nenhum comentário
+								    	{% else %}
+								    		<span class="glyphicon glyphicon-comment"></span> Há {{ fixie.pk|quant_coment }} comentários neste fixie
+								    	{% endif %}
+								    	</p>
+								    	
+								    	
+								    
+								</div>
+								</div>
+							</div>
+						{% else %}
+						<div class="panel painelpost">
+								<div class="panel-body">
+								<div class="media-left media-top">
+								    {% if fixie.user|imagemperfil %}
+									<img class="thumbnail media-object" src="{{ fixie.user|imagemperfil }}" width="80" height="80">
+									{% else %}
+									<img class="thumbnail media-object src="{% static 'core/imagens/default.png' %}" width="100" height="100">
+									{% endif %}
+								</div>
+								<div class="media-body">
+								    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' fixie.user.username %}">{{ fixie.user.first_name }}</a> - <span class="pCinzaUser">{{fixie.user.username}}</span></h4>
+								    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
+								    	{% if fixie.data|subtempo == 0 %}
+								  			hoje
+								  		{% elif fixie.data|subtempo == 1 %}
+								  			ontem
+								  		{% else %}
+								  			Há {{ fixie.data|subtempo }} dias
+								  		{% endif %}
+								  		- <span class="glyphicon glyphicon-tags"></span>
+								  		{% for tag in fixie.area.all %}
+								  			{% if tag == fixie.area.all.last %}
+								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+								  			{% else %}
+								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+								  			{% endif %}
+								  		{% endfor %}
+
+								    </small>
+								    <h3>{{ fixie.titulo }}</h3>
+								    <p>{{ fixie.post|safe }}</p>
+
+								    	
+								    	<a class="btn btn-default col-lg-4" href="{% url 'core:post_detail' fixie.pk %}">Detalhar</a>
+								    
+								    	<p class="col-lg-6 comentf">
+								    	{% if fixie.pk|quant_coment == 0 %}
+								    		<span class="glyphicon glyphicon-comment"></span> Não há nenhum comentário
+								    	{% else %}
+								    		<span class="glyphicon glyphicon-comment"></span> Há {{ fixie.pk|quant_coment }} comentários neste fixie
+								    	{% endif %}
+								    	</p>
+								    	
+								    	
+								    
+								</div>
+								</div>
+							</div>
+
+						
+						{% endif %}
+				
+			{% endfor %}
+				<nav aria-label="Page navigation">
+				  <ul class="pager">
+				    {% if relations.has_previous %}
+				    	<li class="previous"><a href="?page={{ relations.previous_page_number }}"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+				    {% else %}
+				    	<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+			        {% endif %}
+				    Página {{ relations.number }} de {{ relations.paginator.num_pages }}.
+				    {% if relations.has_next %}
+				    	<li class="next"><a href="?page={{ relations.next_page_number }}">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+				    {% else %}
+				    	<li class="next disabled"><a href="#">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+			        {% endif %}
+				  </ul>
+				</nav>
+			{% else %}
+				<h2>Nao ha nenhum fixie</h2>
+			{% endif %}
+		</div>
+		<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+			<div class="panel panel-default pesqindex">
+				<div class="panel-heading"><h4 class="titp">Atividade dos seus amigos</h4></div>
+				  <div class="panel-body">
+				  	<ul class="list-group">
+				  	{% for com in comentariosDosSeguindo %}
+				  		<a href="#" class="list-group-item">
+				  		<div class="media-left media-middle">
+					        					   
+				  		{% if com.user|imagemperfil %}			    				
+	    				<img src="{{ com.user|imagemperfil }}" class="media-object" alt="imgperfil" width="40" height="40">
+						{% else %}
+						<img src="{% static 'core/imagens/default.png' %}" class="img-rounded img-responsive" alt="imgperfil" >
+						{% endif %}
+						</div>
+						<div class="media-body">
+						{{ com.user.first_name }} participou de "{{ com.fixie.titulo }}" - 
+				  		{% if com.data|subtempo == 0 %}
+				  			<small>hoje</small>
+				  		{% elif com.data|subtempo == 1 %}
+				  			<small>ontem</small>
+				  		{% else %}
+				  			<small>Há {{ com.data|subtempo }} dias</small>
+				  		{% endif %}
+				  		</div>
+				  		</a>			  		
+				  	{% endfor %}
+				  	</ul>
+				  	<ul class="nav" role="tablist">
+					  <li role="presentation"><a href="#" class="vertodos">Ver todos >></a></li>
+					</ul>
+				  </div>
+			</div>
+		</div>
+	</div>
 </div>
-{% else %}
-	<h2>Nao ha nenhum fixie</h2>
-{% endif %}
 
-</body>
-</html>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="{% static 'core/js/main.js' %}"></script>
+<script src="{% static 'core/js/notificaindex.js' %}"></script>
+
+{% endblock %}
