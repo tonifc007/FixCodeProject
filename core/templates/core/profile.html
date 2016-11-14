@@ -7,7 +7,7 @@
 
 {% block imagemperfil %}
 	{% if eu.imagem_perfil %}
-		<a href="{% url 'core:profile' user.username %}"><img src="{{ profile.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
 	{% else %}
 		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
 		
@@ -18,47 +18,66 @@
 {% block body %}
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0 col-md-3 col-lg-4">
+			<div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0 col-md-5 col-lg-4">
 				<div class="panel panel-default">
 				  	
 						<div class="panel-body">
-							<div class="col-xs-6 col-xs-offset-3 col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3 col-lg-8 col-lg-offset-2">
-							{% if profile.imagem_perfil %}
-								<img class="img-responsive thumbnail" src="{{ profile.imagem_perfil.url }}">
-							{% else %}
-								<img src="{% static 'core/imagens/default.png' %}" width="200" height="200">
-							{% endif %}
-							{% if profile.user == request.user %}
-								<a class="btn btn-default center-block btn-sm" href="{% url 'core:editprofile' %}">Editar perfil</a>
-							{% endif %}
-							</div>
-							<div class="col-lg-12">
-							
-							<h1>Perfil</h1>
-							<h2>Primeiro nome: {{ profile.user.first_name }}</h2>
-							<h2>Sobrenome: {{ profile.user.last_name }}</h2>
-							<h3>Bio: {{ profile.bio }}</h3>
-							<h3>Github: <a href="{{ profile.git }}"> {{ profile.git }} </a></h3>
-							<p><a href="{% url 'core:participations' profile.user.username %}">Participações ({{ participations.count }})</a></p>
-							<p><a href="{% url 'core:favorites' profile.user.username %}">Favoritos ({{ favorites.count }})</a></p>
-							<p><a href="{% url 'core:following' profile.user.username %}">Seguindo</a></p>
-							<p><a href="{% url 'core:follower' profile.user.username %}">Seguidores</a></p>
-							<div id="dad">
-							{% if dadosSeguir is not 0 %}
-								{% if dadosSeguir is 1 %}
-									
-									<a href="#" id="seguimento" onclick="requisicao('{{ profile.user.username }}')">Parar de seguir</a>
+							<div class="col-xs-8 col-xs-offset-2 col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-lg-8 col-lg-offset-2">
+								{% if profile.imagem_perfil %}
+									<img class="img-responsive thumbnail" src="{{ profile.imagem_perfil.url }}">
+								{% else %}
+									<img src="{% static 'core/imagens/default.png' %}">
+								{% endif %}
+								<div id="dad">
+								{% if profile.user == request.user %}
+									<a class="btn btn-default btn-block btn-sm" href="{% url 'core:editprofile' %}">Editar perfil</a>
 								{% else %}
 									
-									<a href="#" id="seguimento" onclick="requisicao('{{ profile.user.username }}')">Seguir</a>
+									{% if dadosSeguir is not 0 %}
+										{% if dadosSeguir is 1 %}
+											
+											<button class="btn btn-danger btn-block btn-sm" id="seguimento" onclick="requisicao('{{ profile.user.username }}')"><span class="glyphicon glyphicon-remove"></span> Parar de seguir</button>
+
+										{% else %}
+											
+											<button class="btn btn-success btn-block btn-sm" id="seguimento" onclick="requisicao('{{ profile.user.username }}')"><span class="glyphicon glyphicon-ok"></span> Seguir</button>
+										{% endif %}
+									{% endif %}
+									
 								{% endif %}
-							{% endif %}
+								</div>
 							</div>
+							<div class="col-lg-12">							
+								<h2>{{ profile.user.first_name }}<br>
+								<small>{{ profile.user.username }}</small>
+								</h2>
+								{% if dadosSeguir is 1 %}
+									<small class="pCinzaUser"><span class="glyphicon glyphicon-ok-circle"></span> Você segue {{ profile.user.first_name }} desde {{ data.day }}/{{ data.month }}/{{ data.year }}.</small>
+								{% endif %}
+								{% if dadosSDV is 1 %}
+									<br><small class="pCinzaUser"><span class="glyphicon glyphicon-ok-circle"></span> {{ profile.user.first_name }} segue você.</small>
+								{% endif %}
+
+								<div><hr></div>
+
+								{% if profile.bio %}
+									<h4><span class="glyphicon glyphicon-info-sign"></span> {{ profile.bio }}</h4>
+								{% endif %}
+								{% if profile.git %}
+									<h4><span><img src="{% static 'core/css/github-logo.png' %}" width="19" height="19"></span> <a href="http://github.com/{{ profile.git }}" target="_blank"> {{ profile.git }} </a></h4>
+								{% endif %}
+									<h4><span class="glyphicon glyphicon-time"></span> Ingressou em {{ profile.user.date_joined.day }}/{{ profile.user.date_joined.month }}/{{ profile.user.date_joined.year }} </a></h4>
+								
+								<p><a href="{% url 'core:participations' profile.user.username %}">Participações ({{ participations.count }})</a></p>
+								<p><a href="{% url 'core:favorites' profile.user.username %}">Favoritos ({{ favorites.count }})</a></p>
+								<p><a href="{% url 'core:following' profile.user.username %}">Seguindo</a></p>
+								<p><a href="{% url 'core:follower' profile.user.username %}">Seguidores</a></p>
+								
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-10 col-xs-offset-1 col-sm-9 col-sm-offset-0 col-md-9 col-lg-8">
+			<div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-0 col-md-7 col-lg-8">
 				<div class="panel panel-default">
 					<div class="panel-body">
 						{% if relations %}
@@ -69,7 +88,7 @@
 							<p>{{ post.titulo }}</p>
 							<p>{{ post.user }}</p>
 							<p>{{ post.data }}</p>
-							<p>{{ post.post }}</p>
+							<p>{{ post.post|safe }}</p>
 							<a href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
 							<p>-----------------</p>
 							

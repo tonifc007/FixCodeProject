@@ -250,17 +250,30 @@ def profile(request, username):
 	eu = get_object_or_404(Profile, user=request.user)
 
 	if request.user.is_authenticated():
+		dataQueComecouASeguir = None
 		if use != request.user:
 			try:
 				procurarRegistro = Followers.objects.get(user=request.user, following=use)
 				if procurarRegistro:
 					dadosSeguir = 1
+					dataQueComecouASeguir = procurarRegistro.data
 			except ObjectDoesNotExist:
 				dadosSeguir = 2
 		else:
 			dadosSeguir = 0
+
+		if use != request.user:
+			try:
+				procurarRegistroSDV = Followers.objects.get(user=use, following=request.user)
+				if procurarRegistroSDV:
+					dadosSDV = 1
+			except ObjectDoesNotExist:
+				dadosSDV = 2
+		else:
+			dadosSDV = 0
 	else:
 		dadosSeguir = 0
+		dadosSDV = 0
 
 	posts = Post.objects.filter(user=use, exibir_perfil=True)
 
@@ -276,7 +289,7 @@ def profile(request, username):
 		relations = paginator.page(1)
 	except EmptyPage:
 		relations = paginator.page(paginator.num_pages)
-	return render(request, 'core/profile.html', {'relations':relations, 'profile':profile, 'participations':participations, 'favorites':favorites, 'dadosSeguir':dadosSeguir, 'eu':eu})
+	return render(request, 'core/profile.html', {'relations':relations, 'profile':profile, 'participations':participations, 'favorites':favorites, 'dadosSeguir':dadosSeguir, 'dadosSDV':dadosSDV, 'eu':eu, 'data':dataQueComecouASeguir})
 
 def login_user(request):
     if request.method == "POST":

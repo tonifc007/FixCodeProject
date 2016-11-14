@@ -40,6 +40,7 @@ function friend(ide) {
 
         // handle a successful response
         success : function(json) {
+            $('#seguimento').addClass('btn-danger').removeClass('btn-success');
             $('#seguimento').text("Parar de seguir");// remove the value from the input
             console.log(json); // log the returned json to the console
             console.log("success"); // another sanity check
@@ -66,6 +67,7 @@ function unfriend(ide) {
 
         // handle a successful response
         success : function(json) {
+            $('#seguimento').addClass('btn-success').removeClass('btn-danger');
             $('#seguimento').text("Seguir"); // remove the value from the input
             console.log(json); // log the returned json to the console
             console.log("success"); // another sanity check
