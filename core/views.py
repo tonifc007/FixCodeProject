@@ -247,6 +247,7 @@ def profile(request, username):
 	participations = Participations.objects.filter(user=use)
 	favorites = Favorites.objects.filter(user=use)
 	profile = get_object_or_404(Profile, user=use)
+	eu = get_object_or_404(Profile, user=request.user)
 
 	if request.user.is_authenticated():
 		if use != request.user:
@@ -275,7 +276,7 @@ def profile(request, username):
 		relations = paginator.page(1)
 	except EmptyPage:
 		relations = paginator.page(paginator.num_pages)
-	return render(request, 'core/profile.html', {'relations':relations, 'profile':profile, 'participations':participations, 'favorites':favorites, 'dadosSeguir':dadosSeguir})
+	return render(request, 'core/profile.html', {'relations':relations, 'profile':profile, 'participations':participations, 'favorites':favorites, 'dadosSeguir':dadosSeguir, 'eu':eu})
 
 def login_user(request):
     if request.method == "POST":

@@ -1,73 +1,105 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>{{ profile.user.first_name }} - Fixcode</title>
-	{% load staticfiles %}
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-	<script src="{% static 'core/js/main.js' %}"></script>
+{% extends 'core/baselogado.html' %}
+{% load staticfiles %}
+{% load aux_tags %}
+{% block titulo %}{{ user.first_name }} - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
 
-</head>
-<body>
-	{% if profile.imagem_perfil %}
-		<img src="{{ profile.imagem_perfil.url }}" width="100" height="100">
+{% block imagemperfil %}
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ profile.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
 	{% else %}
-		<img src="{% static 'core/imagens/default.png' %}" width="100" height="100">
-	{% endif %}
-	{% if profile.user == request.user %}
-		<br><a href="{% url 'core:editprofile' %}">Editar perfil</a>
-	{% endif %}
-	<h1>Perfil</h1>
-	<h2>Primeiro nome: {{ profile.user.first_name }}</h2>
-	<h2>Sobrenome: {{ profile.user.last_name }}</h2>
-	<h3>Bio: {{ profile.bio }}</h3>
-	<h3>Github: <a href="{{ profile.git }}"> {{ profile.git }} </a></h3>
-	<p><a href="{% url 'core:participations' profile.user.username %}">Participações ({{ participations.count }})</a></p>
-	<p><a href="{% url 'core:favorites' profile.user.username %}">Favoritos ({{ favorites.count }})</a></p>
-	<p><a href="{% url 'core:following' profile.user.username %}">Seguindo</a></p>
-	<p><a href="{% url 'core:follower' profile.user.username %}">Seguidores</a></p>
-	<div id="dad">
-	{% if dadosSeguir is not 0 %}
-		{% if dadosSeguir is 1 %}
-			
-			<a href="#" id="seguimento" onclick="requisicao('{{ profile.user.username }}')">Parar de seguir</a>
-		{% else %}
-			
-			<a href="#" id="seguimento" onclick="requisicao('{{ profile.user.username }}')">Seguir</a>
-		{% endif %}
-	{% endif %}
-	</div>
-
-	{% if relations %}
-
-	<h2>Posts: </h2>
-	{% for post in relations %}
-		<p>----------------</p>
-		<p>{{ post.titulo }}</p>
-		<p>{{ post.user }}</p>
-		<p>{{ post.data }}</p>
-		<p>{{ post.post }}</p>
-		<a href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
-		<p>-----------------</p>
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
 		
-	{% endfor %}
-	<div class="pagination">
-	    <span class="step-links">
-	        {% if relations.has_previous %}
-	            <a href="?page={{ relations.previous_page_number }}">anterior</a>
-	        {% endif %}
-
-	        <span class="current">
-	            Página {{ relations.number }} de {{ relations.paginator.num_pages }}.
-	        </span>
-
-	        {% if relations.has_next %}
-	            <a href="?page={{ relations.next_page_number }}">próximo</a>
-	        {% endif %}
-	    </span>
-	</div>
-	{% else %}
-		<h2>Nao ha nenhum post</h2>
 	{% endif %}
+{% endblock %}
 
-</body>
-</html>
+
+{% block body %}
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-10 col-xs-offset-1 col-sm-3 col-sm-offset-0 col-md-3 col-lg-4">
+				<div class="panel panel-default">
+				  	
+						<div class="panel-body">
+							<div class="col-xs-6 col-xs-offset-3 col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3 col-lg-8 col-lg-offset-2">
+							{% if profile.imagem_perfil %}
+								<img class="img-responsive thumbnail" src="{{ profile.imagem_perfil.url }}">
+							{% else %}
+								<img src="{% static 'core/imagens/default.png' %}" width="200" height="200">
+							{% endif %}
+							{% if profile.user == request.user %}
+								<a class="btn btn-default center-block btn-sm" href="{% url 'core:editprofile' %}">Editar perfil</a>
+							{% endif %}
+							</div>
+							<div class="col-lg-12">
+							
+							<h1>Perfil</h1>
+							<h2>Primeiro nome: {{ profile.user.first_name }}</h2>
+							<h2>Sobrenome: {{ profile.user.last_name }}</h2>
+							<h3>Bio: {{ profile.bio }}</h3>
+							<h3>Github: <a href="{{ profile.git }}"> {{ profile.git }} </a></h3>
+							<p><a href="{% url 'core:participations' profile.user.username %}">Participações ({{ participations.count }})</a></p>
+							<p><a href="{% url 'core:favorites' profile.user.username %}">Favoritos ({{ favorites.count }})</a></p>
+							<p><a href="{% url 'core:following' profile.user.username %}">Seguindo</a></p>
+							<p><a href="{% url 'core:follower' profile.user.username %}">Seguidores</a></p>
+							<div id="dad">
+							{% if dadosSeguir is not 0 %}
+								{% if dadosSeguir is 1 %}
+									
+									<a href="#" id="seguimento" onclick="requisicao('{{ profile.user.username }}')">Parar de seguir</a>
+								{% else %}
+									
+									<a href="#" id="seguimento" onclick="requisicao('{{ profile.user.username }}')">Seguir</a>
+								{% endif %}
+							{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-10 col-xs-offset-1 col-sm-9 col-sm-offset-0 col-md-9 col-lg-8">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						{% if relations %}
+
+						<h2>Posts: </h2>
+						{% for post in relations %}
+							<p>----------------</p>
+							<p>{{ post.titulo }}</p>
+							<p>{{ post.user }}</p>
+							<p>{{ post.data }}</p>
+							<p>{{ post.post }}</p>
+							<a href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
+							<p>-----------------</p>
+							
+						{% endfor %}
+						<div class="pagination">
+						    <span class="step-links">
+						        {% if relations.has_previous %}
+						            <a href="?page={{ relations.previous_page_number }}">anterior</a>
+						        {% endif %}
+
+						        <span class="current">
+						            Página {{ relations.number }} de {{ relations.paginator.num_pages }}.
+						        </span>
+
+						        {% if relations.has_next %}
+						            <a href="?page={{ relations.next_page_number }}">próximo</a>
+						        {% endif %}
+						    </span>
+						</div>
+						{% else %}
+							<h2>Nao ha nenhum post</h2>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+
+	
+	<script src="{% static 'core/js/main.js' %}"></script>
+{% endblock %}
