@@ -16,10 +16,6 @@
 
 
 {% block body %}
-<p><a href="{% url 'core:participations' profile.user.username %}">Participações ({{ participations.count }})</a></p>
-								<p><a href="{% url 'core:favorites' profile.user.username %}">Favoritos ({{ favorites.count }})</a></p>
-								<p><a href="{% url 'core:following' profile.user.username %}">Seguindo</a></p>
-								<p><a href="{% url 'core:follower' profile.user.username %}">Seguidores</a></p>
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0 col-md-5 col-lg-4">
@@ -121,12 +117,13 @@
 				<div class="panel panel-default">
 					<div class="panel-body">
 						<ul class="nav nav-tabs nav-justified">
-						  <li role="presentation" class="active"><a href="#">Posts</a></li>
-						  <li role="presentation"><a href="#">Participações</a></li>
-						  <li role="presentation"><a href="#">Favoritos</a></li>
-						  <li role="presentation"><a href="#">Seguidores</a></li>
-						  <li role="presentation"><a href="#">Seguindo</a></li>
+						  <li role="presentation" class="active"><a href="{% url 'core:profile' profile.user.username %}">Posts<span class="badge pull-right">{{ profile.user|quant_post }}</span></a></li>
+						  <li role="presentation"><a href="{% url 'core:participations' profile.user.username %}">Participações<span class="badge pull-right">{{ participations.count }}</span></a></li>
+						  <li role="presentation"><a href="{% url 'core:favorites' profile.user.username %}">Favoritos<span class="badge pull-right">{{ favorites.count }}</span></a></li>
+						  <li role="presentation"><a href="{% url 'core:following' profile.user.username %}">Seguidores<span class="badge pull-right">{{ nfollowers|length }}</span></a></li>
+						  <li role="presentation"><a href="{% url 'core:follower' profile.user.username %}">Seguindo<span class="badge pull-right">{{ nfollowings|length }}</span></a></li>
 						</ul>
+						
 						{% if relations %}
 							<h2>Posts: </h2>
 						{% for post in relations %}
