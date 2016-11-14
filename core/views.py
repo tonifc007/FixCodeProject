@@ -275,6 +275,38 @@ def profile(request, username):
 		dadosSeguir = 0
 		dadosSDV = 0
 
+	#buscar seguindo pra por na página
+	relacao = Followers.objects.filter(user=use)
+	followings = []
+
+	for pessoa in relacao:
+		followings.append(pessoa.following)
+
+	#invertendo para os ultmos serem os primeiros
+	followings = followings[::-1]
+
+	#formação da matriz 3x3
+	matrizDeSeguindo = list()
+	for i in range(3):
+		matrizDeSeguindo.append(followings[i*3:(i+1)*3])
+
+
+
+	#buscar seguidores pra por na pagina
+	relacaoSeguidores = Followers.objects.filter(following=use)
+	followers = []
+
+	for pessoaS in relacaoSeguidores:
+		followers.append(pessoaS.user)
+
+	#invertendo para os ultmos serem os primeiros
+	followers = followers[::-1]
+
+	#formação da matriz 3x3
+	matrizDeSeguidores = list()
+	for i in range(3):
+		matrizDeSeguidores.append(followers[i*3:(i+1)*3])
+
 	posts = Post.objects.filter(user=use, exibir_perfil=True)
 
 	paginator = Paginator(posts, 5)
@@ -289,7 +321,18 @@ def profile(request, username):
 		relations = paginator.page(1)
 	except EmptyPage:
 		relations = paginator.page(paginator.num_pages)
-	return render(request, 'core/profile.html', {'relations':relations, 'profile':profile, 'participations':participations, 'favorites':favorites, 'dadosSeguir':dadosSeguir, 'dadosSDV':dadosSDV, 'eu':eu, 'data':dataQueComecouASeguir})
+	return render(request, 'core/profile.html', {
+		'relations':relations, 'profile':profile,
+		'participations':participations,
+		'favorites':favorites,
+		'dadosSeguir':dadosSeguir,
+		'dadosSDV':dadosSDV,
+		'eu':eu,
+		'data':dataQueComecouASeguir,
+		'followings':matrizDeSeguindo,
+		'nfollowings':followings,
+		'followers':matrizDeSeguidores,
+		'nfollowers':followers})
 
 def login_user(request):
     if request.method == "POST":
