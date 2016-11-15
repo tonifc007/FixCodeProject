@@ -7,6 +7,7 @@ from django.contrib.auth.models import Permission, User
 from ckeditor.fields import RichTextField
 import PIL
 from django.http import Http404
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def user_directory_profileimage(instance, filename):
@@ -124,6 +125,45 @@ class Followers(models.Model):
 
 	def __str__(self):
 		return self.user.username + ' esta seguindo ' + self.following.username
+
+	def get_dados_seguidor(self, usuarioLogado, usuarioVisitado):
+		if usuarioVisitado != usuarioLogado:
+			try:
+				procurarRegistro = Followers.objects.get(user=usuarioLogado, following=usuarioVisitado)
+				if procurarRegistro:
+					return 1
+			except ObjectDoesNotExist:
+				return 2
+		else:
+			return 0
+	
+	def get_data_que_comecou_seguir(self, usuarioLogado, usuarioVisitado):
+		if self.get_dados_seguidor(usuarioLogado, usuarioVisitado) == 1:
+			procurarRegistro = Followers.objects.get(user=usuarioLogado, following=usuarioVisitado)
+			return procurarRegistro.data
+		return None
+
+	def relacao_de_seguindo_decrescente(self, usuario):
+		#buscar seguindo pra por na página
+		relacao = Followers.objects.filter(user=usuario)
+		followings = []
+
+		for pessoa in relacao:
+			followings.append(pessoa.following)
+
+		#invertendo para os ultmos serem os primeiros
+		return followings[::-1]
+
+	def relacao_de_seguidores_decrescente(self, usuario):
+		#buscar seguindo pra por na página
+		relacao = Followers.objects.filter(following=usuario)
+		followers = []
+
+		for pessoa in relacao:
+			followers.append(pessoa.user)
+
+		#invertendo para os ultmos serem os primeiros
+		return followers[::-1]
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>

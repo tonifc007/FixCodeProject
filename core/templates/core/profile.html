@@ -1,6 +1,11 @@
-{% extends 'core/baselogado.html' %}
 {% load staticfiles %}
+
 {% load aux_tags %}
+{% if request.user.is_authenticated %}
+	{% extends 'core/baselogado.html' %}
+{% else %}
+	kkkkkkkkkkkk
+{% endif %}
 {% block titulo %}{{ user.first_name }} - FixCode{% endblock %}
 {% block user %}{{user.first_name}}{% endblock %}
 {% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
@@ -25,7 +30,7 @@
 							{% if profile.imagem_perfil %}
 								<img class="img-responsive thumbnail" src="{{ profile.imagem_perfil.url }}">
 							{% else %}
-								<img src="{% static 'core/imagens/default.png' %}">
+								<img class="img-responsive thumbnail" src="{% static 'core/imagens/default.png' %}">
 							{% endif %}
 							<div id="dad">
 								{% if profile.user == request.user %}
@@ -64,7 +69,7 @@
 					</div>
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading"><h4 class="titp">Seguidores ({{nfollowers|length}})</h4></div>
+					<div class="panel-heading"><h4 class="titp">Seguidores ({{numerofollowers|length}})</h4></div>
 						<div class="panel-body">
 						    {% for pessoa in nfollowers %}
 						    	<div class="col-xs-4 col-sm-6 col-md-4 col-lg-4">
@@ -87,7 +92,7 @@
 					  </div>
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading"><h4 class="titp">Seguindo ({{nfollowings|length}})</h4></div>
+					<div class="panel-heading"><h4 class="titp">Seguindo ({{numerofollowings|length}})</h4></div>
 						<div class="panel-body">
 						    {% for pessoa in nfollowings %}
 						    	<div class="col-xs-4 col-sm-6 col-md-4 col-lg-4">
@@ -116,44 +121,77 @@
 				
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<ul class="nav nav-tabs nav-justified">
-						  <li role="presentation" class="active"><a href="{% url 'core:profile' profile.user.username %}">Posts<span class="badge pull-right">{{ profile.user|quant_post }}</span></a></li>
-						  <li role="presentation"><a href="{% url 'core:participations' profile.user.username %}">Participações<span class="badge pull-right">{{ participations.count }}</span></a></li>
-						  <li role="presentation"><a href="{% url 'core:favorites' profile.user.username %}">Favoritos<span class="badge pull-right">{{ favorites.count }}</span></a></li>
-						  <li role="presentation"><a href="{% url 'core:following' profile.user.username %}">Seguidores<span class="badge pull-right">{{ nfollowers|length }}</span></a></li>
-						  <li role="presentation"><a href="{% url 'core:follower' profile.user.username %}">Seguindo<span class="badge pull-right">{{ nfollowings|length }}</span></a></li>
+						<ul class="nav nav-tabs nav-justified navpad">
+						  <li role="presentation" class="active"><a href="{% url 'core:profile' profile.user.username %}">Posts ({{ profile.user|quant_post }})</a></li>
+						  <li role="presentation"><a href="{% url 'core:participations' profile.user.username %}">Participações ({{ participations.count }})</a></li>
+						  <li role="presentation"><a href="{% url 'core:favorites' profile.user.username %}">Favoritos ({{ favorites.count }})</a></li>
+						  <li role="presentation"><a href="{% url 'core:following' profile.user.username %}">Seguidores ({{ numerofollowers|length }})</a></li>
+						  <li role="presentation"><a href="{% url 'core:follower' profile.user.username %}">Seguindo ({{ numerofollowings|length }})</a></li>
 						</ul>
 						
 						{% if relations %}
-							<h2>Posts: </h2>
+							
 						{% for post in relations %}
-							<p>----------------</p>
-							<p>{{ post.titulo }}</p>
-							<p>{{ post.user }}</p>
-							<p>{{ post.data }}</p>
-							<p>{{ post.post|safe }}</p>
-							<a href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
-							<p>-----------------</p>
-
+							<div class="panel panel-default" style="background-color: #f5f5f5;">
+								<div class="panel-body">
+									<div class="media-body">
+								    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:post_detail' post.pk %}">{{ post.titulo }}</a></h4>
+								    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
+								    	{% if post.data|subtempo == 0 %}
+								  			hoje
+								  		{% elif post.data|subtempo == 1 %}
+								  			ontem
+								  		{% else %}
+								  			Há {{ post.data|subtempo }} dias
+								  		{% endif %}
+								  		- <span class="glyphicon glyphicon-tags"></span>
+								  		{% for tag in post.area.all %}
+								  			{% if tag == post.area.all.last %}
+								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+								  			{% else %}
+								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+								  			{% endif %}
+								  		{% endfor %}
+								    </small>
+								    <p>{{ post.post|safe }}</p>
+								    	<a class="btn btn-success btn-sm col-xs-4 col-sm-4 col-md-4 col-lg-4 col-lg-offset-2" href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
+							    
+								    	<p class="col-xs-8 col-sm-8 col-md-8 col-lg-6 comentf">
+								    	{% if post.pk|quant_coment == 0 %}
+								    		<span class="glyphicon glyphicon-comment"></span> Não há nenhum comentário
+								    	{% else %}
+								    		<span class="glyphicon glyphicon-comment"></span> Há {{ post.pk|quant_coment }} comentários neste post
+								    	{% endif %}
+								    	</p>
+								    	
+								    	
+								    
+								</div>
+								</div>
+							</div>
 						{% endfor %}
-						<div class="pagination">
-						    <span class="step-links">
-						        {% if relations.has_previous %}
-						            <a href="?page={{ relations.previous_page_number }}">anterior</a>
-						        {% endif %}
 
-						        <span class="current">
-						            Página {{ relations.number }} de {{ relations.paginator.num_pages }}.
-						        </span>
-
-						        {% if relations.has_next %}
-						            <a href="?page={{ relations.next_page_number }}">próximo</a>
-						        {% endif %}
-						    </span>
-						</div>
-						{% else %}
-							<h2>Nao ha nenhum post</h2>
-						{% endif %}
+						<nav aria-label="Page navigation">
+						  <ul class="pager">
+						    {% if relations.has_previous %}
+						    	<li class="previous"><a href="?page={{ relations.previous_page_number }}"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+						    {% else %}
+						    	<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+					        {% endif %}
+						    Página {{ relations.number }} de {{ relations.paginator.num_pages }}.
+						    {% if relations.has_next %}
+						    	<li class="next"><a href="?page={{ relations.next_page_number }}">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+						    {% else %}
+						    	<li class="next disabled"><a href="#">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+					        {% endif %}
+						  </ul>
+						</nav>
+					{% else %}
+						<h1>:/</h1>
+						<h3>Olá {{ user.first_name }}!</h3>
+						<h5>Me parece que {{profile.user.first_name}} ainda não postou nada por aquí.</h5>
+						<p>Que tal a caixa de pesquisa? :)</p>
+					{% endif %}
 					</div>
 				</div>
 			</div>

@@ -247,69 +247,28 @@ def profile(request, username):
 	participations = Participations.objects.filter(user=use)
 	favorites = Favorites.objects.filter(user=use)
 	profile = get_object_or_404(Profile, user=use)
-	eu = get_object_or_404(Profile, user=request.user)
+	
+	instanciaSeguidor = Followers()
 
-	if request.user.is_authenticated():
-		dataQueComecouASeguir = None
-		if use != request.user:
-			try:
-				procurarRegistro = Followers.objects.get(user=request.user, following=use)
-				if procurarRegistro:
-					dadosSeguir = 1
-					dataQueComecouASeguir = procurarRegistro.data
-			except ObjectDoesNotExist:
-				dadosSeguir = 2
-		else:
-			dadosSeguir = 0
-
-		if use != request.user:
-			try:
-				procurarRegistroSDV = Followers.objects.get(user=use, following=request.user)
-				if procurarRegistroSDV:
-					dadosSDV = 1
-			except ObjectDoesNotExist:
-				dadosSDV = 2
-		else:
-			dadosSDV = 0
+	if request.user.is_authenticated():	
+		eu = get_object_or_404(Profile, user=request.user)	
+		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
+		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
+		data_comecou_seguir = instanciaSeguidor.get_data_que_comecou_seguir(request.user, use)
 	else:
 		dadosSeguir = 0
 		dadosSDV = 0
+		eu = None
+		data_comecou_seguir = None
 
-	#buscar seguindo pra por na página
-	relacao = Followers.objects.filter(user=use)
-	followings = []
+	
 
-	for pessoa in relacao:
-		followings.append(pessoa.following)
-
-	#invertendo para os ultmos serem os primeiros
-	followings = followings[::-1]
-
-	#formação da matriz 3x3
-	matrizDeSeguindo = list()
-	for i in range(3):
-		matrizDeSeguindo.append(followings[i*3:(i+1)*3])
-
-
-
-	#buscar seguidores pra por na pagina
-	relacaoSeguidores = Followers.objects.filter(following=use)
-	followers = []
-
-	for pessoaS in relacaoSeguidores:
-		followers.append(pessoaS.user)
-
-	#invertendo para os ultmos serem os primeiros
-	followers = followers[::-1]
-
-	#formação da matriz 3x3
-	matrizDeSeguidores = list()
-	for i in range(3):
-		matrizDeSeguidores.append(followers[i*3:(i+1)*3])
+	followings = instanciaSeguidor.relacao_de_seguindo_decrescente(use)
+	followers = instanciaSeguidor.relacao_de_seguidores_decrescente(use)
 
 	posts = Post.objects.filter(user=use, exibir_perfil=True)
 
-	paginator = Paginator(posts, 5)
+	paginator = Paginator(posts[::-1], 5)
 	page = request.GET.get('page')
 	print(page)
 	print("Estou requisitando a {} página" .format(page))
@@ -328,11 +287,11 @@ def profile(request, username):
 		'dadosSeguir':dadosSeguir,
 		'dadosSDV':dadosSDV,
 		'eu':eu,
-		'data':dataQueComecouASeguir,
-		'followings':matrizDeSeguindo,
-		'nfollowings':followings,
-		'followers':matrizDeSeguidores,
-		'nfollowers':followers})
+		'data':data_comecou_seguir,
+		'numerofollowings':followings,
+		'numerofollowers':followers,
+		'nfollowings':followings[0:9],
+		'nfollowers':followers[0:9]})
 
 def login_user(request):
     if request.method == "POST":
