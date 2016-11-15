@@ -250,10 +250,10 @@ def profile(request, username):
 	
 	instanciaSeguidor = Followers()
 
-	if request.user.is_authenticated():	
-		eu = get_object_or_404(Profile, user=request.user)	
+	if request.user.is_authenticated():		
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
+		eu = get_object_or_404(Profile, user=request.user)
 		data_comecou_seguir = instanciaSeguidor.get_data_que_comecou_seguir(request.user, use)
 	else:
 		dadosSeguir = 0

@@ -1,14 +1,16 @@
+{% extends 'core/base.html' %}
 {% load staticfiles %}
-
 {% load aux_tags %}
-{% if request.user.is_authenticated %}
-	{% extends 'core/baselogado.html' %}
-{% else %}
-	kkkkkkkkkkkk
-{% endif %}
-{% block titulo %}{{ user.first_name }} - FixCode{% endblock %}
+{% block titulo %}{{ profile.user.first_name }} - FixCode{% endblock %}
 {% block user %}{{user.first_name}}{% endblock %}
 {% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
+
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="#">Feedback</a></li>
+{% endblock %}
 
 {% block imagemperfil %}
 	{% if eu.imagem_perfil %}
@@ -86,7 +88,7 @@
 
 							<div class="col-lg-12">
 								<ul class="nav" role="tablist">
-								  <li role="presentation"><a href="{% url 'core:follower' user.username %}" class="vertodos">Ver todos >></a></li>
+								  <li role="presentation"><a href="{% url 'core:follower' profile.user.username %}" class="vertodos">Ver todos >></a></li>
 								</ul>
 							</div>
 					  </div>
@@ -109,7 +111,7 @@
 
 						<div class="col-lg-12">
 							<ul class="nav" role="tablist">
-							  <li role="presentation"><a href="{% url 'core:follower' user.username %}" class="vertodos">Ver todos >></a></li>
+							  <li role="presentation"><a href="{% url 'core:follower' profile.user.username %}" class="vertodos">Ver todos >></a></li>
 							</ul>
 						</div>
 							

@@ -1,79 +1,14 @@
-{% extends 'core/basevisitante.html' %}
+{% extends 'core/base.html' %}
 {% load staticfiles %}
-
+{% block titulo %}Cadastro - FixCode{% endblock %}
+{% block menu %}
+<li class="active"><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="#">Feedback</a></li>
+{% endblock %}
 {% block body %}
-<link rel="stylesheet" type="text/css" href="{% static 'core/css/estiloregister.css' %}">
-<body>
-	<nav class="navbar navbar-default">
-	  <div class="container-fluid">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header">
-		  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topNavBar">
 
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-		  </button>
-		  <a href="/"><img src="{% static 'core/imagens/logothumb.png' %}" class="navbar-brand" alt="logofix"></a>
-		</div>
-
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse" id="topNavBar">
-		  <ul class="nav navbar-nav">
-		  	<li class="active"><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
-			<li><a href="#">Sobre</a></li>
-			<li><a href="#">Ajuda</a></li>
-			<li><a href="#">Feedback</a></li>
-			
-		  </ul>
-
-		  <ul class="nav navbar-nav navbar-right">
-			  {% if error_message == false %}
-			<li>
-				<form class="navbar-form navbar-right col-xs-12" action="{% url 'core:login_user' %}" method="post">
-					{% csrf_token %}
-					<div class="form-group">
-						<label class="sr-only" for="user">
-							user:
-						</label>
-						<input type="text" class="form-control" id="user" placeholder="Username" name="username">
-					</div>
-					<div class="form-group">
-						<label class="sr-only" for="senha">
-							senha:
-						</label>
-						<input type="password" class="form-control" id="senha" placeholder="Senha" name="senha">
-					</div>
-					<button type="submit" class="btn btn-success btn-sm" id="entrar">Entrar</button>
-				</form>
-			</li>
-			{% else %}
-			<p class="navbar-text">Usuário e/ou senha incorreto(s)</p>
-			<li>
-				<form class="navbar-form navbar-right col-xs-12" action="{% url 'core:login_user' %}" method="post">
-					{% csrf_token %}
-					<div class="form-group has-error">
-						<label class="sr-only" for="user">
-							user:
-						</label>
-						<input type="text" class="form-control" id="user" placeholder="Username" name="username">
-					</div>
-					<div class="form-group has-error">
-						<label class="sr-only" for="senha">
-							senha:
-						</label>
-						<input type="password" class="form-control" id="senha" placeholder="Senha" name="senha">
-					</div>
-					<button type="submit" class="btn btn-success btn-sm" id="entrar">Entrar</button>
-				</form>
-			</li>
-
-			{% endif %}
-
-		  </ul>
-		</div><!-- /.navbar-collapse -->
-	  </div><!-- /.container-fluid -->
-	</nav>
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -146,27 +81,5 @@
 		</div>
 		</div>
 	</div>
-
-	<div class="container-fluid" id="container-rodape">
-		<div class="container text-center">
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-					<p>FixCode</p>
-				</div>
-				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-">
-					<p>&reg; copyright 2016 FixCode comunity</p><br>
-					<a href="#">Sobre</a> - 
-					<a href="#">Cadastre-se</a> - 
-					<a href="#">Ajuda</a> - 
-					<a href="#">Blog</a>
-					<p></p>
-				</div>
-				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-					<p>Redes sociais: <a href="#">Facebook</a> <a href="#">Youtube</a></p>
-				</div>
-			</div>
-		</div>
-	</div>
-
 </body>
 {% endblock %}

@@ -1,7 +1,15 @@
-{% extends 'core/baselogado.html' %}
+{% extends 'core/base.html' %}
 {% load staticfiles %}
 {% block titulo %}Editar perfil{% endblock %}
 {% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
+
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="#">Feedback</a></li>
+{% endblock %}
 
 {% block imagemperfil %}
 	{% if profile.imagem_perfil %}
