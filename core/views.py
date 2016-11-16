@@ -242,7 +242,6 @@ def edit_details_profile(request):
 	return render(request, 'core/edit_profile.html', {'form': form, 'user':request.user, 'profile':detalhes})
 
 def profile(request, username):
-	print("Requisitou o perfil de {}".format(username))
 	use = get_object_or_404(User, username=username)
 	participations = Participations.objects.filter(user=use)
 	favorites = Favorites.objects.filter(user=use)
@@ -256,12 +255,8 @@ def profile(request, username):
 		eu = get_object_or_404(Profile, user=request.user)
 		data_comecou_seguir = instanciaSeguidor.get_data_que_comecou_seguir(request.user, use)
 	else:
-		dadosSeguir = 0
-		dadosSDV = 0
-		eu = None
-		data_comecou_seguir = None
-
-	
+		dadosSeguir = dadosSDV = 0
+		eu = data_comecou_seguir = None
 
 	followings = instanciaSeguidor.relacao_de_seguindo_decrescente(use)
 	followers = instanciaSeguidor.relacao_de_seguidores_decrescente(use)
@@ -590,27 +585,49 @@ def inativeNotifyMyFixies(request, pk):
 
 
 def participations(request, username):
-	if not request.user.is_authenticated():
-		return render(request, 'core/login.html')
+	use = get_object_or_404(User, username=username)
+	participations = Participations.objects.filter(user=use)
+	favorites = Favorites.objects.filter(user=use)
+	profile = get_object_or_404(Profile, user=use)
+	
+	instanciaSeguidor = Followers()
+
+	if request.user.is_authenticated():		
+		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
+		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
+		eu = get_object_or_404(Profile, user=request.user)
+		data_comecou_seguir = instanciaSeguidor.get_data_que_comecou_seguir(request.user, use)
 	else:
-		user = get_object_or_404(User, username=username)
-		myparticipations = Participations.objects.filter(user=user)
-		print(user)
-		paginator = Paginator(myparticipations, 5)
+		dadosSeguir = dadosSDV = 0
+		eu = data_comecou_seguir = None
 
-		if user == request.user:
-			chave = True
-		else:
-			chave = False
+	followings = instanciaSeguidor.relacao_de_seguindo_decrescente(use)
+	followers = instanciaSeguidor.relacao_de_seguidores_decrescente(use)
 
-		page = request.GET.get('page')
-		try:
-			pagina = paginator.page(page)
-		except PageNotAnInteger:
-			pagina = paginator.page(1)
-		except EmptyPage:
-			pagina = paginator.page(paginator.num_pages)
-		return render(request, 'core/participations.html', {'pagina':pagina, 'chave': chave, 'user': user})
+	paginator = Paginator(participations[::-1], 5)
+	page = request.GET.get('page')
+	print(page)
+	print("Estou requisitando a {} página" .format(page))
+
+	try:
+		relations = paginator.page(page)
+		print(relations)
+	except PageNotAnInteger:
+		relations = paginator.page(1)
+	except EmptyPage:
+		relations = paginator.page(paginator.num_pages)
+	return render(request, 'core/participations.html', {
+		'relations':relations, 'profile':profile,
+		'participations':participations,
+		'favorites':favorites,
+		'dadosSeguir':dadosSeguir,
+		'dadosSDV':dadosSDV,
+		'eu':eu,
+		'data':data_comecou_seguir,
+		'numerofollowings':followings,
+		'numerofollowers':followers,
+		'nfollowings':followings[0:9],
+		'nfollowers':followers[0:9]})
 
 
 def participationsSemUser(request):

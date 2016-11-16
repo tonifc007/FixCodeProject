@@ -1,53 +1,208 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Participações de {{ user.first_name }} - Fixcode</title>
-</head>
-<body>
+{% extends 'core/base.html' %}
+{% load staticfiles %}
 {% load aux_tags %}
+{% block titulo %}Participações de {{ profile.user.first_name }} - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
 
-{% if chave %}
-	<h2>Minhas participações</h2>
-{% else %}
-	<h2>Participações: de {{ user.username }}</h2>
-{% endif %}
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="#">Feedback</a></li>
+{% endblock %}
 
-{% if pagina %}
-	{% for fix in pagina %}
-		{% if chave %}
-			<p>-------{{ fix.notificacao }} respostas ainda não vistas-----------</p>
-		{% else %}
-			<p>------------------------------------------------------------------</p>
-		{% endif %}		
-		<p>{{ fix.fixie.titulo }}</p>
-		<p>{{ fix.fixie.user }}</p>
-		<p>{{ fix.fixie.pk|quant_coment }} comentários neste fixie</p>
-		<a href="{% url 'core:fix_detail' fix.fixie.pk %}">Responder fix</a>
-		<p>-----------------</p>
-		
-	{% endfor %}
-	<div class="pagination">
-    <span class="step-links">
-        {% if pagina.has_previous %}
-            <a href="?page={{ pagina.previous_page_number }}">anterior</a>
-        {% endif %}
-
-        <span class="current">
-            Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
-        </span>
-
-        {% if pagina.has_next %}
-            <a href="?page={{ pagina.next_page_number }}">próximo</a>
-        {% endif %}
-    </span>
-{% else %}
-	{% if chave %}
-		<h2>Você ainda não participou, comece <a href="#"> por aqui</a></h2>
+{% block imagemperfil %}
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
 	{% else %}
-		<h2>Ainda não há participações deste usuário</h2>
-	{% endif %}
-	
-{% endif %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
 
-</body>
-</html>
+	{% endif %}
+{% endblock %}
+
+
+{% block body %}
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-0 col-md-5 col-lg-4">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="col-xs-8 col-xs-offset-2 col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-lg-8 col-lg-offset-2">
+							{% if profile.imagem_perfil %}
+								<img class="img-responsive thumbnail" src="{{ profile.imagem_perfil.url }}">
+							{% else %}
+								<img class="img-responsive thumbnail" src="{% static 'core/imagens/default.png' %}">
+							{% endif %}
+							<div id="dad">
+								{% if profile.user == request.user %}
+									<a class="btn btn-default btn-block btn-sm" href="{% url 'core:editprofile' %}">Editar perfil</a>
+								{% else %}
+									{% if dadosSeguir is not 0 %}
+										{% if dadosSeguir is 1 %}
+											<button class="btn btn-danger btn-block btn-sm" id="seguimento" onclick="requisicao('{{ profile.user.username }}')"><span class="glyphicon glyphicon-remove"></span> Parar de seguir</button>
+										{% else %}
+											<button class="btn btn-success btn-block btn-sm" id="seguimento" onclick="requisicao('{{ profile.user.username }}')"><span class="glyphicon glyphicon-ok"></span> Seguir</button>
+										{% endif %}
+									{% endif %}
+								{% endif %}
+							</div>
+						</div>
+						<div class="col-lg-12">
+							<h2>{{ profile.user.first_name }}<br>
+								<small>{{ profile.user.username }}</small>
+							</h2>
+							{% if dadosSeguir is 1 %}
+								<small class="pCinzaUser"><span class="glyphicon glyphicon-ok-circle"></span> Você segue {{ profile.user.first_name }} desde {{ data.day }}/{{ data.month }}/{{ data.year }}.</small>
+							{% endif %}
+							{% if dadosSDV is 1 %}
+								<br><small class="pCinzaUser"><span class="glyphicon glyphicon-ok-circle"></span> {{ profile.user.first_name }} segue você.</small>
+							{% endif %}
+							<div><hr></div>
+
+							{% if profile.bio %}
+								<h4><span class="glyphicon glyphicon-info-sign"></span> {{ profile.bio }}</h4>
+							{% endif %}
+							{% if profile.git %}
+								<h4><span><img src="{% static 'core/css/github-logo.png' %}" width="19" height="19"></span> <a href="http://github.com/{{ profile.git }}" target="_blank"> {{ profile.git }} </a></h4>
+							{% endif %}
+								<h4><span class="glyphicon glyphicon-time"></span> Ingressou em {{ profile.user.date_joined.day }}/{{ profile.user.date_joined.month }}/{{ profile.user.date_joined.year }} </a></h4>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading"><h4 class="titp">Seguidores ({{numerofollowers|length}})</h4></div>
+						<div class="panel-body">
+						    {% for pessoa in nfollowers %}
+						    	<div class="col-xs-4 col-sm-6 col-md-4 col-lg-4">
+							    	{% if pessoa|imagemperfil %}
+			    						<a href="{% url 'core:profile' pessoa.username %}"><img src="{{ pessoa|imagemperfil }}" class="img-rounded img-responsive" alt="imgperfil"></a>
+									{% else %}
+										<a href="{% url 'core:profile' pessoa.username %}"><img src="{% static 'core/imagens/default.png' %}" class="img-rounded img-responsive" alt="imgperfil"></a>
+									{% endif %}
+										<a href="{% url 'core:profile' pessoa.username %}">{{ pessoa.first_name }}</a><br>
+								</div>
+								{% empty %}
+									<h4>Seja o primeiro a seguir {{ profile.user.first_name }}. :)</h4>
+							{% endfor %}
+
+							<div class="col-lg-12">
+								<ul class="nav" role="tablist">
+								  <li role="presentation"><a href="{% url 'core:follower' profile.user.username %}" class="vertodos">Ver todos >></a></li>
+								</ul>
+							</div>
+					  </div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading"><h4 class="titp">Seguindo ({{numerofollowings|length}})</h4></div>
+						<div class="panel-body">
+						    {% for pessoa in nfollowings %}
+						    	<div class="col-xs-4 col-sm-6 col-md-4 col-lg-4">
+							    	{% if pessoa|imagemperfil %}
+			    						<a href="{% url 'core:profile' pessoa.username %}"><img src="{{ pessoa|imagemperfil }}" class="img-rounded img-responsive" alt="imgperfil"></a>
+									{% else %}
+										<a href="{% url 'core:profile' pessoa.username %}"><img src="{% static 'core/imagens/default.png' %}" class="img-rounded img-responsive" alt="imgperfil"></a>
+									{% endif %}
+										<a href="{% url 'core:profile' pessoa.username %}">{{ pessoa.first_name }}</a><br>
+								</div>
+								{% empty %}
+									<h4>{{ profile.user.first_name }} ainda não segue ninguém.</h4>
+							{% endfor %}
+
+						<div class="col-lg-12">
+							<ul class="nav" role="tablist">
+							  <li role="presentation"><a href="{% url 'core:follower' profile.user.username %}" class="vertodos">Ver todos >></a></li>
+							</ul>
+						</div>
+							
+					  </div>
+				</div>
+			</div>
+
+			<div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-0 col-md-7 col-lg-8">
+				
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<ul class="nav nav-tabs nav-justified navpad">
+						  <li role="presentation"><a href="{% url 'core:profile' profile.user.username %}">Posts ({{ profile.user|quant_post }})</a></li>
+						  <li role="presentation" class="active"><a href="{% url 'core:participations' profile.user.username %}">Participações ({{ participations.count }})</a></li>
+						  <li role="presentation"><a href="{% url 'core:favorites' profile.user.username %}">Favoritos ({{ favorites.count }})</a></li>
+						  <li role="presentation"><a href="{% url 'core:following' profile.user.username %}">Seguidores ({{ numerofollowers|length }})</a></li>
+						  <li role="presentation"><a href="{% url 'core:follower' profile.user.username %}">Seguindo ({{ numerofollowings|length }})</a></li>
+						</ul>
+						
+						{% if relations %}
+							
+						{% for fix in relations %}
+							<div class="panel panel-default" style="background-color: #f5f5f5;">
+								<div class="panel-body">
+									<div class="media-body">
+								    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' fix.fixie.user %}">{{ fix.fixie.user.first_name }}</a> - <span class="pCinzaUser">{{ fix.fixie.user }}</span></h4>
+								    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
+								    	{% if fix.fixie.data|subtempo == 0 %}
+								  			hoje
+								  		{% elif fix.fixie.data|subtempo == 1 %}
+								  			ontem
+								  		{% else %}
+								  			Há {{ fix.fixie.data|subtempo }} dias
+								  		{% endif %}
+								  		- <span class="glyphicon glyphicon-tags"></span>
+								  		{% for tag in fix.fixie.area.all %}
+								  			{% if tag == fix.fixie.area.all.last %}
+								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+								  			{% else %}
+								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+								  			{% endif %}
+								  		{% endfor %}
+								    </small>
+								    <h3>{{ fix.fixie.titulo }}</h3>
+								    <p>{{ fix.fixie.descricao|safe }}</p>
+								    	<a class="btn btn-primary btn-sm col-xs-4 col-sm-4 col-md-4 col-lg-4 col-lg-offset-2" href="{% url 'core:fix_detail' fix.fixie.pk %}">Responder fix</a>
+							    
+								    	<p class="col-xs-8 col-sm-8 col-md-8 col-lg-6 comentf">
+								    	{% if fix.fixie.pk|quant_coment == 0 %}
+								    		<span class="glyphicon glyphicon-comment"></span> Não há nenhuma resposta
+								    	{% else %}
+								    		<span class="glyphicon glyphicon-comment"></span> Há {{ fix.fixie.pk|quant_coment }} respostas neste fix
+								    	{% endif %}
+								    	</p>
+								    	
+								    	
+								    
+								</div>
+								</div>
+							</div>
+						{% endfor %}
+
+						<nav aria-label="Page navigation">
+						  <ul class="pager">
+						    {% if relations.has_previous %}
+						    	<li class="previous"><a href="?page={{ relations.previous_page_number }}"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+						    {% else %}
+						    	<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+					        {% endif %}
+						    Página {{ relations.number }} de {{ relations.paginator.num_pages }}.
+						    {% if relations.has_next %}
+						    	<li class="next"><a href="?page={{ relations.next_page_number }}">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+						    {% else %}
+						    	<li class="next disabled"><a href="#">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+					        {% endif %}
+						  </ul>
+						</nav>
+					{% else %}
+						<h1>:/</h1>
+						<h3>Olá {{ user.first_name }}!</h3>
+						<h5>Me parece que {{profile.user.first_name}} ainda não postou nada por aquí.</h5>
+						<p>Que tal a caixa de pesquisa? :)</p>
+					{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<script src="{% static 'core/js/main.js' %}"></script>
+{% endblock %}
