@@ -110,3 +110,13 @@ div#dad{
 .navpad{
 	margin-bottom: 10px;
 }
+
+/* espaçamento seguidor/seguindo no index*/
+.tsegindex{
+	margin-top: -10px;
+	margin-bottom: 1px;
+}
+
+.panelsegindex{
+	margin-bottom: 15px;
+}

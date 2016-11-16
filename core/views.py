@@ -918,27 +918,95 @@ def getnotifymyfix(request, pk):
 			return HttpResponse(json.dumps(response_data), content_type="application/json")
 		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
-def following(request, username):
-	userfollow = get_object_or_404(User, username=username)
-	relacao = Followers.objects.filter(user=userfollow)
-	followings = []
-
-	for pessoa in relacao:
-		followings.append(pessoa.following)
-
-	return render(request, 'core/following.html', {'followings':followings, 'userfollow':userfollow})
-
 def follower(request, username):
-	userfollow = get_object_or_404(User, username=username)
-	relacao = Followers.objects.filter(following=userfollow)
+	use = get_object_or_404(User, username=username)
+	participations = Participations.objects.filter(user=use)
+	favorites = Favorites.objects.filter(user=use)
+	profile = get_object_or_404(Profile, user=use)
+	
+	instanciaSeguidor = Followers()
 
-	followers = []
+	if request.user.is_authenticated():		
+		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
+		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
+		eu = get_object_or_404(Profile, user=request.user)
+		data_comecou_seguir = instanciaSeguidor.get_data_que_comecou_seguir(request.user, use)
+	else:
+		dadosSeguir = dadosSDV = 0
+		eu = data_comecou_seguir = None
 
-	for pessoa in relacao:
-		followers.append(pessoa.user)
+	followings = instanciaSeguidor.relacao_de_seguindo_decrescente(use)
+	followers = instanciaSeguidor.relacao_de_seguidores_decrescente(use)
 
-	return render(request, 'core/followers.html', {'followers':followers, 'userfollow':userfollow})
+	paginator = Paginator(followers[::-1], 12)
+	page = request.GET.get('page')
+	print(page)
+	print("Estou requisitando a {} página" .format(page))
 
+	try:
+		relations = paginator.page(page)
+		print(relations)
+	except PageNotAnInteger:
+		relations = paginator.page(1)
+	except EmptyPage:
+		relations = paginator.page(paginator.num_pages)
+	return render(request, 'core/followers.html', {
+		'relations':relations, 'profile':profile,
+		'participations':participations,
+		'favorites':favorites,
+		'dadosSeguir':dadosSeguir,
+		'dadosSDV':dadosSDV,
+		'eu':eu,
+		'data':data_comecou_seguir,
+		'numerofollowings':followings,
+		'numerofollowers':followers,
+		'nfollowings':followings[0:9],
+		'nfollowers':followers[0:9]})
+
+def following(request, username):
+	use = get_object_or_404(User, username=username)
+	participations = Participations.objects.filter(user=use)
+	favorites = Favorites.objects.filter(user=use)
+	profile = get_object_or_404(Profile, user=use)
+	
+	instanciaSeguidor = Followers()
+
+	if request.user.is_authenticated():		
+		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
+		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
+		eu = get_object_or_404(Profile, user=request.user)
+		data_comecou_seguir = instanciaSeguidor.get_data_que_comecou_seguir(request.user, use)
+	else:
+		dadosSeguir = dadosSDV = 0
+		eu = data_comecou_seguir = None
+
+	followings = instanciaSeguidor.relacao_de_seguindo_decrescente(use)
+	followers = instanciaSeguidor.relacao_de_seguidores_decrescente(use)
+
+	paginator = Paginator(followings[::-1], 12)
+	page = request.GET.get('page')
+	print(page)
+	print("Estou requisitando a {} página" .format(page))
+
+	try:
+		relations = paginator.page(page)
+		print(relations)
+	except PageNotAnInteger:
+		relations = paginator.page(1)
+	except EmptyPage:
+		relations = paginator.page(paginator.num_pages)
+	return render(request, 'core/following.html', {
+		'relations':relations, 'profile':profile,
+		'participations':participations,
+		'favorites':favorites,
+		'dadosSeguir':dadosSeguir,
+		'dadosSDV':dadosSDV,
+		'eu':eu,
+		'data':data_comecou_seguir,
+		'numerofollowings':followings,
+		'numerofollowers':followers,
+		'nfollowings':followings[0:9],
+		'nfollowers':followers[0:9]})
 
 def report_coment(request, pk):
 	if not request.user.is_authenticated():

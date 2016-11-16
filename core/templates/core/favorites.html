@@ -1,7 +1,7 @@
 {% extends 'core/base.html' %}
 {% load staticfiles %}
 {% load aux_tags %}
-{% block titulo %}Favoritos de {{ profile.user.first_name }} - FixCode{% endblock %}
+{% block titulo %}{{ profile.user.first_name }} - Favoritos - FixCode{% endblock %}
 {% block user %}{{user.first_name}}{% endblock %}
 {% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
 
@@ -123,12 +123,12 @@
 				
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<ul class="nav nav-tabs nav-justified navpad">
+						<ul class="nav nav-tabs navpad">
 						  <li role="presentation"><a href="{% url 'core:profile' profile.user.username %}">Posts ({{ profile.user|quant_post }})</a></li>
 						  <li role="presentation"><a href="{% url 'core:participations' profile.user.username %}">Participações ({{ participations.count }})</a></li>
 						  <li role="presentation" class="active"><a href="{% url 'core:favorites' profile.user.username %}">Favoritos ({{ favorites.count }})</a></li>
-						  <li role="presentation"><a href="{% url 'core:following' profile.user.username %}">Seguidores ({{ numerofollowers|length }})</a></li>
-						  <li role="presentation"><a href="{% url 'core:follower' profile.user.username %}">Seguindo ({{ numerofollowings|length }})</a></li>
+						  <li role="presentation"><a href="{% url 'core:follower' profile.user.username %}">Seguidores ({{ numerofollowers|length }})</a></li>
+						  <li role="presentation"><a href="{% url 'core:following' profile.user.username %}">Seguindo ({{ numerofollowings|length }})</a></li>
 						</ul>
 						
 						{% if relations %}
