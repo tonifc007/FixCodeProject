@@ -165,6 +165,19 @@ class Followers(models.Model):
 		#invertendo para os ultmos serem os primeiros
 		return followers[::-1]
 
+	def get_dados_seguidor_Logado(self, usuarioVisitado):
+		print "entrou"
+		print("o user logado é {}".format(request.user))
+		if usuarioVisitado != request.user:
+			try:
+				procurarRegistro = Followers.objects.get(user=request.user, following=usuarioVisitado)
+				if procurarRegistro:
+					return 1
+			except ObjectDoesNotExist:
+				return 2
+		else:
+			return 0
+
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return 'user_{0}/uploads/{1}'.format(instance.user.username, filename)

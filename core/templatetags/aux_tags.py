@@ -1,5 +1,5 @@
 from django import template
-from ..models import ComentFixies, Fixies, Profile, Participations, Favorites, Post
+from ..models import ComentFixies, Fixies, Profile, Participations, Favorites, Post, Followers
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
@@ -60,3 +60,10 @@ def quant_fav(value):
 def quant_post(value):
 	f = Post.objects.filter(user=value)
 	return f.count()
+
+@register.filter(name='dados_segue')
+def dados_segue(value):
+	d = Followers()
+	a =  d.get_dados_seguidor_Logado(value)
+	print a
+	return a

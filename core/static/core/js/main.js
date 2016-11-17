@@ -81,6 +81,7 @@ function unfriend(ide) {
     });
 }
 
+
 //AJAX para excluir fix
 
 function alertDelete(ide){
