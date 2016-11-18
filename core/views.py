@@ -284,9 +284,7 @@ def profile(request, username):
 		'eu':eu,
 		'data':data_comecou_seguir,
 		'numerofollowings':followings,
-		'numerofollowers':followers,
-		'nfollowings':followings[0:9],
-		'nfollowers':followers[0:9]})
+		'numerofollowers':followers})
 
 def login_user(request):
     if request.method == "POST":

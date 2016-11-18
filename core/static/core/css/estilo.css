@@ -120,3 +120,20 @@ div#dad{
 .panelsegindex{
 	margin-bottom: 15px;
 }
+
+/* espaçamento do link seguindo seguidor no canto esquerdo do index*/
+
+.linkSeguidores{
+	margin-bottom: -12px;
+}
+
+/* cor dos link segundo e seguidor do canto direito do index*/
+
+.corlisegindex{
+	color: #000000;
+}
+
+.corliseg:hover{
+	color: #000000;
+	transition: 500ms;
+}
