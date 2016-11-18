@@ -1,10 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Meus fixies</title>
-</head>
-<body>
+{% extends 'core/base.html' %}
 {% load aux_tags %}
+{% load staticfiles %}
+{% block titulo %}{{ profile.user.first_name }} - Participações - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
+
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="#">Feedback</a></li>
+{% endblock %}
+
+{% block imagemperfil %}
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
+
+	{% endif %}
+{% endblock %}
+
+
+{% block body %}
 
 {% if delete %}
 	<p>Fix deletado</p>
@@ -39,5 +57,4 @@
 	<h2>Você tem nenhum fixie, comece <a href="#"> por aqui</a></h2>
 {% endif %}
 
-</body>
-</html>
+{% endblock %}

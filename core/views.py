@@ -623,9 +623,7 @@ def participations(request, username):
 		'eu':eu,
 		'data':data_comecou_seguir,
 		'numerofollowings':followings,
-		'numerofollowers':followers,
-		'nfollowings':followings[0:9],
-		'nfollowers':followers[0:9]})
+		'numerofollowers':followers})
 
 
 def participationsSemUser(request):
@@ -957,9 +955,7 @@ def follower(request, username):
 		'eu':eu,
 		'data':data_comecou_seguir,
 		'numerofollowings':followings,
-		'numerofollowers':followers,
-		'nfollowings':followings[0:9],
-		'nfollowers':followers[0:9]})
+		'numerofollowers':followers})
 
 def following(request, username):
 	use = get_object_or_404(User, username=username)
@@ -1002,9 +998,7 @@ def following(request, username):
 		'eu':eu,
 		'data':data_comecou_seguir,
 		'numerofollowings':followings,
-		'numerofollowers':followers,
-		'nfollowings':followings[0:9],
-		'nfollowers':followers[0:9]})
+		'numerofollowers':followers})
 
 def report_coment(request, pk):
 	if not request.user.is_authenticated():
