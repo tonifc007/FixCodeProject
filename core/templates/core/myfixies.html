@@ -1,7 +1,7 @@
 {% extends 'core/base.html' %}
 {% load aux_tags %}
 {% load staticfiles %}
-{% block titulo %}{{ profile.user.first_name }} - Participações - FixCode{% endblock %}
+{% block titulo %}{{ profile.user.first_name }} Meus fixies - FixCode{% endblock %}
 {% block user %}{{user.first_name}}{% endblock %}
 {% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
 
@@ -24,37 +24,67 @@
 
 {% block body %}
 
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-4 col-sm-4 col-md-4 col-lg-3">
+			<div class="panel panel-default pesqindex">
+				  <div class="panel-body">
+				    <a href="{% url 'core:create_fix' %}" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Novo fix</a>
+				    <ul class="nav" role="tablist">
+					  <li role="presentation" class="ativo"><a href="{% url 'core:myfixies' %}">Meus Fixies <span class="badge pull-right sai">{{ user|quant_fix }}</span></a></li>
+					  <li role="presentation"><a href="{% url 'core:participations' user.username %}">Participações <span class="badge pull-right sai">{{ user|quant_part }}</span></a></li>
+					  <li role="presentation"><a href="{% url 'core:favorites' user.username %}">Favoritos <span class="badge pull-right sai">{{ user|quant_fav }}</span></a></li>
+					</ul>
+				  </div>
+			</div>
+			<div class="panel panel-primary">
+				  <div class="panel-body">
+				  	<ul class="list-group">
+					  <li class="list-group-item">Preste bem atenção na escolha do <b>Username</b>, pois este será usado para fazer login na plataforma</li>
+					  <li class="list-group-item">O <b>Username</b> também integrará o link do seu perfil. exemplo: <i>fixcode/user/<b>diego</b></i>.</li>
+					  <li class="list-group-item">Para maior segurança, forneça uma senha contendo pelo menos letras e numeros num total maior que 8 caracteres. </li>
+					  <li class="list-group-item">Todos os campos são <b>obrigatórios</b>. </li>
+					</ul>
+				  </div>
+			</div>
+		</div>
+		<div class="col-xs-8 col-sm-8 col-md-8 col-lg-9">
+			{% if pagina %}
+			<h2>Fixies: </h2>
+			{% for fixie in pagina %}
+				<p>-------{{ fixie.notificacao }} respostas ainda não vistas---------</p>
+				<p>{{ fixie.titulo }}</p>
+				<p>{{ fixie.user }}</p>
+				<p>{{ fixie.pk|quant_coment }} comentários neste fixie</p>
+				<a href="{% url 'core:fix_detail' fixie.pk %}">Responder fix</a>
+				<p>-----------------</p>
+				
+			{% endfor %}
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if pagina.has_previous %}
+		            <a href="?page={{ pagina.previous_page_number }}">anterior</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
+		        </span>
+
+		        {% if pagina.has_next %}
+		            <a href="?page={{ pagina.next_page_number }}">próximo</a>
+		        {% endif %}
+		    </span>
+		{% else %}
+			<h2>Você tem nenhum fixie, comece <a href="#"> por aqui</a></h2>
+		{% endif %}
+		</div>
+	</div>
+</div>
+
 {% if delete %}
 	<p>Fix deletado</p>
 {% endif %}
 
-{% if pagina %}
-	<h2>Fixies: </h2>
-	{% for fixie in pagina %}
-		<p>-------{{ fixie.notificacao }} respostas ainda não vistas---------</p>
-		<p>{{ fixie.titulo }}</p>
-		<p>{{ fixie.user }}</p>
-		<p>{{ fixie.pk|quant_coment }} comentários neste fixie</p>
-		<a href="{% url 'core:fix_detail' fixie.pk %}">Responder fix</a>
-		<p>-----------------</p>
-		
-	{% endfor %}
-<div class="pagination">
-    <span class="step-links">
-        {% if pagina.has_previous %}
-            <a href="?page={{ pagina.previous_page_number }}">anterior</a>
-        {% endif %}
 
-        <span class="current">
-            Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
-        </span>
-
-        {% if pagina.has_next %}
-            <a href="?page={{ pagina.next_page_number }}">próximo</a>
-        {% endif %}
-    </span>
-{% else %}
-	<h2>Você tem nenhum fixie, comece <a href="#"> por aqui</a></h2>
-{% endif %}
 
 {% endblock %}
