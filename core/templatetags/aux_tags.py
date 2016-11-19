@@ -67,3 +67,15 @@ def dados_segue(value):
 	a =  d.get_dados_seguidor_Logado(value)
 	print a
 	return a
+
+@register.filter(name='quant_FSnotify')
+def quant_FSnotify(value):
+	f = Fixies()
+	quant = f.get_todos_fixies_sem_notificacao(value)
+	return len(quant)
+
+@register.filter(name='quant_FCnotify')
+def quant_FCnotify(value):
+	f = Fixies()
+	quant = f.get_fixies_com_novas_respostas(value)
+	return len(quant)

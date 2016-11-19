@@ -17,9 +17,10 @@ urlpatterns = [
 
 
     #Páginas de fix
-    url(r'^create_fix/$', views.create_fix, name='create_fix'),
+    url(r'^fix/new/$', views.create_fix, name='create_fix'),
     url(r'^fix/(?P<pk>[0-9]+)/$', views.fix_detail, name='fix_detail'),
-    url(r'^myfixies/$', views.my_fixies, name='myfixies'),
+    url(r'^fix/myfixies/$', views.my_fixies, name='myfixies'),
+    url(r'^fix/myfixies/notify/$', views.my_fixiesN, name='myfixiesN'),
     url(r'^profile/(?P<username>\w+)/$', views.profile, name='profile'),
     url(r'^profile/(?P<username>\w+)/participations/$', views.participations, name='participations'),
     url(r'^profile/(?P<username>\w+)/favorites/$', views.favorites, name='favorites'),

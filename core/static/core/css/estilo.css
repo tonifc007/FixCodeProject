@@ -137,3 +137,13 @@ div#dad{
 	color: #000000;
 	transition: 500ms;
 }
+
+/*Deixar links ativos em qualquer instancias de "My"*/
+
+.ativo{
+	background-color: #dbdbdb;
+}
+
+.not{
+	color: red;
+}

@@ -25,7 +25,7 @@ function notificaIndex(){
             if (json != indice && json != 0){
                 console.log('muda');
                 indice = json;
-                $('#notifica').html("<a class='btn btn-primary btn-block' style='margin-bottom: 6px;' href='/myfixies/'>Você tem "+json+" fixie(s) com novas respostas.</a>");
+                $('#notifica').html("<a class='btn btn-primary btn-block' style='margin-bottom: 6px;' href='/fix/myfixies/notify/'>Você tem "+json+" fixie(s) com novas respostas.</a>");
 
             }
         },

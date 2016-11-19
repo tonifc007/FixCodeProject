@@ -24,8 +24,8 @@
 {% block panel %}
 <ul class="nav nav-tabs navpad">
 
-  <li role="presentation"><a href="{% url 'core:myfixiesN' %}">Notificações ({{ user|quant_FCnotify }})</a></li>
-  <li role="presentation" class="active"><a href="{% url 'core:myfixies' %}">Meus fixies ({{ user|quant_FSnotify }})</a></li>
+  <li role="presentation" class="active"><a href="{% url 'core:myfixiesN' %}">Notificações ({{ user|quant_FCnotify }})</a></li>
+  <li role="presentation"><a href="{% url 'core:myfixies' %}">Meus fixies ({{ user|quant_FSnotify }})</a></li>
 </ul>
   {% if pagina %}
 	{% for fixie in pagina %}
@@ -72,7 +72,7 @@
 		    	{% if fixie.pk|quant_coment == 0 %}
 		    		<span class="glyphicon glyphicon-comment"></span> Não há nenhum comentário
 		    	{% else %}
-		    		<span class="glyphicon glyphicon-comment"></span> Há {{ fixie.pk|quant_coment }} comentários neste fixie
+		    		<span class="glyphicon glyphicon-comment"></span> Há {{ fixie.pk|quant_coment }} comentários neste fixie  -<span class="not"> {{ fixie.notificacao }} novo(s)</span>
 		    	{% endif %}
 		    	</p>
 		    	

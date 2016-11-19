@@ -90,6 +90,22 @@ class Fixies(models.Model):
 	def __str__(self):
 		return self.titulo
 
+	def get_todos_fixies_sem_notificacao(self, usuarioLogado):
+		fixies = Fixies.objects.filter(user=usuarioLogado)
+		lista = list()
+		for f in fixies:
+			if f.notificacao == 0:
+				lista.append(f)
+		return lista[::-1]
+
+	def get_fixies_com_novas_respostas(self, usuarioLogado):
+		fixies = Fixies.objects.filter(user=usuarioLogado)
+		lista = list()
+		for f in fixies:
+			if f.notificacao > 0 and f.ativa_notificacao == True:
+				lista.append(f)
+		return lista[::-1]
+
 class ComentFixies(models.Model):
 	user = models.ForeignKey(User, default=1)
 	fixie = models.ForeignKey(Fixies)

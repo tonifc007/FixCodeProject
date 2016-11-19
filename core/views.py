@@ -529,7 +529,9 @@ def my_fixies(request, delete=False):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
-		fixies = Fixies.objects.filter(user=request.user)
+		instanciaFixies = Fixies()
+		eu = get_object_or_404(Profile, user=request.user)
+		fixies = instanciaFixies.get_todos_fixies_sem_notificacao(request.user)
 		paginator = Paginator(fixies, 5)
 
 		page = request.GET.get('page')
@@ -539,7 +541,25 @@ def my_fixies(request, delete=False):
 			pagina = paginator.page(1)
 		except EmptyPage:
 			pagina = paginator.page(paginator.num_pages)
-		return render(request, 'core/myfixies.html', {'pagina': pagina, 'delete':delete})
+		return render(request, 'core/myfixies.html', {'pagina': pagina, 'delete':delete, 'eu':eu})
+
+def my_fixiesN(request, delete=False):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		instanciaFixies = Fixies()
+		eu = get_object_or_404(Profile, user=request.user)
+		fixies = instanciaFixies.get_fixies_com_novas_respostas(request.user)
+		paginator = Paginator(fixies, 5)
+
+		page = request.GET.get('page')
+		try:
+			pagina = paginator.page(page)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPage:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/myfixiesN.html', {'pagina': pagina, 'delete':delete, 'eu':eu})
 
 def inativeNotifyMyFixies(request, pk):
 	if not request.user.is_authenticated():
