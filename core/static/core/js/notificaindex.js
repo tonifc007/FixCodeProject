@@ -53,7 +53,7 @@ function notificaIndexParticipation(){
             if (json != indicePart && json != 0){
                 console.log('muda');
                 indicePart = json;
-                $('#notificaParticipacao').html("<a class='btn btn-warning btn-block' style='margin-bottom: 6px;' href='participations/'>Você tem "+json+" participação(es) com novas respostas.</a>");
+                $('#notificaParticipacao').html("<a class='btn btn-warning btn-block' style='margin-bottom: 6px;' href='/fix/participations/notify/'>Você tem "+json+" participação(es) com novas respostas.</a>");
             }
         },
 

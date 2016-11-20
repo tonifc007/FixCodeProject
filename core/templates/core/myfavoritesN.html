@@ -1,7 +1,7 @@
 {% extends 'core/basefixies.html' %}
 {% load aux_tags %}
 {% load staticfiles %}
-{% block titulo %}{{ profile.user.first_name }} Meus fixies - FixCode{% endblock %}
+{% block titulo %}{{ profile.user.first_name }} Favoritos - FixCode{% endblock %}
 {% block user %}{{user.first_name}}{% endblock %}
 {% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
 
@@ -22,67 +22,67 @@
 {% endblock %}
 
 {% block bread %}
-<li class="active">Meus Fixies</li>
+<li class="active">Favoritos</li>
 {% endblock %}
 
 {% block itemativo %}
-<li role="presentation" class="ativo"><a href="{% url 'core:myfixiesN' %}">Meus Fixies <span class="badge pull-right sai">{{ user|quant_fix }}</span></a></li>
+<li role="presentation"><a href="{% url 'core:myfixiesN' %}">Meus Fixies <span class="badge pull-right sai">{{ user|quant_fix }}</span></a></li>
 <li role="presentation"><a href="{% url 'core:myparticipationsN'%}">Participações <span class="badge pull-right sai">{{ user|quant_part }}</span></a></li>
-<li role="presentation"><a href="{% url 'core:myfavoritesN' %}">Favoritos <span class="badge pull-right sai">{{ user|quant_fav }}</span></a></li>
+<li role="presentation" class="ativo"><a href="{% url 'core:myfavoritesN' %}">Favoritos <span class="badge pull-right sai">{{ user|quant_fav }}</span></a></li>
 {% endblock %}
 
 {% block panel %}
 <ul class="nav nav-tabs navpad">
 
-  <li role="presentation" class="active"><a href="{% url 'core:myfixiesN' %}">Notificações ({{ user|quant_FCnotify }})</a></li>
-  <li role="presentation"><a href="{% url 'core:myfixies' %}">Meus Fixies ({{ user|quant_FSnotify }})</a></li>
+  <li role="presentation" class="active"><a href="{% url 'core:myfavoritesN' %}">Notificações ({{ user|quant_FaCnotify }})</a></li>
+  <li role="presentation"><a href="{% url 'core:myfavorites' %}">Favoritos ({{ user|quant_FaSnotify }})</a></li>
 </ul>
   {% if pagina %}
 	{% for fixie in pagina %}
 		<div class="panel panel-default">
 		<div class="panel-body">
 		<div class="media-left media-top">
-		    {% if fixie.user|imagemperfil %}
-			<img class="thumbnail media-object" src="{{ fixie.user|imagemperfil }}" width="80" height="80">
+		    {% if fixie.fixie.user|imagemperfil %}
+			<img class="thumbnail media-object" src="{{ fixie.fixie.user|imagemperfil }}" width="80" height="80">
 			{% else %}
-			<img class="thumbnail media-object src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+			<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
 			{% endif %}
 		</div>
 		<div class="media-body">
-		    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' fixie.user.username %}">{{ fixie.user.first_name }}</a> - <span class="pCinzaUser">{{fixie.user.username}}</span></h4>
+		    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' fixie.fixie.user.username %}">{{ fixie.fixie.user.first_name }}</a> - <span class="pCinzaUser">{{fixie.fixie.user.username}}</span></h4>
 		    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
-		    	{% if fixie.data|subtempo == 0 %}
+		    	{% if fixie.fixie.data|subtempo == 0 %}
 		  			hoje
-		  		{% elif fixie.data|subtempo == 1 %}
+		  		{% elif fixie.fixie.data|subtempo == 1 %}
 		  			ontem
 		  		{% else %}
-		  			Há {{ fixie.data|subtempo }} dias
+		  			Há {{ fixie.fixie.data|subtempo }} dias
 		  		{% endif %}
 		  		- <span class="glyphicon glyphicon-tags"></span>
-		  		{% for tag in fixie.area.all %}
-		  			{% if tag == fixie.area.all.last %}
+		  		{% for tag in fixie.fixie.area.all %}
+		  			{% if tag == fixie.fixie.area.all.last %}
 		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
 		  			{% else %}
 		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
 		  			{% endif %}
 		  		{% endfor %}
-		  		{% if fixie.resolvido %}
+		  		{% if fixie.fixie.resolvido %}
 		  			&nbsp;- <span class="glyphicon glyphicon-ok"></span>
 		  			Resolvido
 		  		{% endif %}
 
 		    </small>
-		    <h3>{{ fixie.titulo }}</h3>
-		    <p>{{ fixie.descricao|safe }}</p>
+		    <h3>{{ fixie.fixie.titulo }}</h3>
+		    <p>{{ fixie.fixie.descricao|safe }}</p>
 
 		    	
-		    	<a class="btn btn-default col-lg-4" href="{% url 'core:fix_detail' fixie.pk %}">Detalhar</a>
+		    	<a class="btn btn-default col-lg-4" href="{% url 'core:fix_detail' fixie.fixie.pk %}">Detalhar</a>
 		    
 		    	<p class="col-lg-6 comentf">
-		    	{% if fixie.pk|quant_coment == 0 %}
+		    	{% if fixie.fixie.pk|quant_coment == 0 %}
 		    		<span class="glyphicon glyphicon-comment"></span> Não há nenhum comentário
 		    	{% else %}
-		    		<span class="glyphicon glyphicon-comment"></span> Há {{ fixie.pk|quant_coment }} comentários neste fixie  -<span class="not"> {{ fixie.notificacao }} novo(s)</span>
+		    		<span class="glyphicon glyphicon-comment"></span> Há {{ fixie.fixie.pk|quant_coment }} comentários neste fixie - <span class="not"> {{ fixie.notificacao }} novo(s)</span>
 		    	{% endif %}
 		    	</p>
 		    	
@@ -109,7 +109,8 @@
   </ul>
 </nav>
 {% else %}
-	<h4>Você não tem nenhuma notificação. para acessar todos os seus fixies vá na aba <b>Meus Fixies</b>.</h4>{% endif %}
+	<h4>Você não tem nenhuma notificação. para acessar todos os seus favoritos vá na aba <b>Favoritos</b>.</h4>
+{% endif %}
 
 
 {% endblock %}

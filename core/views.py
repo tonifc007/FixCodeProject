@@ -561,6 +561,78 @@ def my_fixiesN(request, delete=False):
 			pagina = paginator.page(paginator.num_pages)
 		return render(request, 'core/myfixiesN.html', {'pagina': pagina, 'delete':delete, 'eu':eu})
 
+def participationsSemUser(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		instanciaParticipation = Participations()
+		eu = get_object_or_404(Profile, user=request.user)
+		participations = instanciaParticipation.get_participations_sem_notificacao(request.user)
+		paginator = Paginator(participations, 5)
+
+		page = request.GET.get('page')
+		try:
+			pagina = paginator.page(page)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPage:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/myparticipations.html', {'pagina':pagina, 'eu':eu})
+
+def participationsSemUserN(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		instanciaParticipation = Participations()
+		eu = get_object_or_404(Profile, user=request.user)
+		participations = instanciaParticipation.get_participations_com_novas_respostas(request.user)
+		paginator = Paginator(participations, 5)
+
+		page = request.GET.get('page')
+		try:
+			pagina = paginator.page(page)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPage:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/myparticipationsN.html', {'pagina':pagina, 'eu':eu})
+
+def favoritesSemUser(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		instanciaFavorites = Favorites()
+		eu = get_object_or_404(Profile, user=request.user)
+		participations = instanciaFavorites.get_favorites_sem_notificacao(request.user)
+		paginator = Paginator(participations, 5)
+
+		page = request.GET.get('page')
+		try:
+			pagina = paginator.page(page)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPage:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/myfavorites.html', {'pagina':pagina, 'eu':eu})
+
+def favoritesSemUserN(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		instanciaFavorites = Favorites()
+		eu = get_object_or_404(Profile, user=request.user)
+		participations = instanciaFavorites.get_favorites_com_novas_respostas(request.user)
+		paginator = Paginator(participations, 5)
+
+		page = request.GET.get('page')
+		try:
+			pagina = paginator.page(page)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPage:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/myfavoritesN.html', {'pagina':pagina, 'eu':eu})
+
 def inativeNotifyMyFixies(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
@@ -644,23 +716,6 @@ def participations(request, username):
 		'data':data_comecou_seguir,
 		'numerofollowings':followings,
 		'numerofollowers':followers})
-
-
-def participationsSemUser(request):
-	if not request.user.is_authenticated():
-		return render(request, 'core/login.html')
-	else:
-		myparticipations = Participations.objects.filter(user=request.user)
-		paginator = Paginator(myparticipations, 5)
-
-		page = request.GET.get('page')
-		try:
-			pagina = paginator.page(page)
-		except PageNotAnInteger:
-			pagina = paginator.page(1)
-		except EmptyPage:
-			pagina = paginator.page(paginator.num_pages)
-		return render(request, 'core/participations.html', {'pagina':pagina, 'chave': True, 'user': request.user})
 
 
 def getnotifyparticipation(request, pk):

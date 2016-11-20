@@ -91,12 +91,7 @@ class Fixies(models.Model):
 		return self.titulo
 
 	def get_todos_fixies_sem_notificacao(self, usuarioLogado):
-		fixies = Fixies.objects.filter(user=usuarioLogado)
-		lista = list()
-		for f in fixies:
-			if f.notificacao == 0:
-				lista.append(f)
-		return lista[::-1]
+		return Fixies.objects.filter(user=usuarioLogado)[::-1]
 
 	def get_fixies_com_novas_respostas(self, usuarioLogado):
 		fixies = Fixies.objects.filter(user=usuarioLogado)
@@ -125,6 +120,17 @@ class Participations(models.Model):
 	def __str__(self):
 		return self.user.username + ' participa de: ' + self.fixie.titulo
 
+	def get_participations_sem_notificacao(self, usuarioLogado):
+		return Participations.objects.filter(user=usuarioLogado)
+
+	def get_participations_com_novas_respostas(self, usuarioLogado):
+		participacao = Participations.objects.filter(user=usuarioLogado)
+		lista = list()
+		for p in participacao:
+			if p.notificacao > 0 and p.ativa_notificacao == True:
+				lista.append(p)
+		return lista[::-1]
+
 class Favorites(models.Model):
 	user = models.ForeignKey(User)
 	fixie = models.ForeignKey(Fixies)
@@ -132,6 +138,17 @@ class Favorites(models.Model):
 
 	def __str__(self):
 		return self.user.username + ' favoritou: ' + self.fixie.titulo
+
+	def get_favorites_sem_notificacao(self, usuarioLogado):
+		return Favorites.objects.filter(user=usuarioLogado)[::-1]
+
+	def get_favorites_com_novas_respostas(self, usuarioLogado):
+		favoritos = Favorites.objects.filter(user=usuarioLogado)
+		lista = list()
+		for f in favoritos:
+			if f.notificacao > 0:
+				lista.append(f)
+		return lista[::-1]
 
 class Followers(models.Model):
 	user = models.ForeignKey(User, related_name='+')

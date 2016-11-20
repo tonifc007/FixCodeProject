@@ -79,3 +79,27 @@ def quant_FCnotify(value):
 	f = Fixies()
 	quant = f.get_fixies_com_novas_respostas(value)
 	return len(quant)
+
+@register.filter(name='quant_PSnotify')
+def quant_PSnotify(value):
+	f = Participations()
+	quant = f.get_participations_sem_notificacao(value)
+	return len(quant)
+
+@register.filter(name='quant_PCnotify')
+def quant_PCnotify(value):
+	f = Participations()
+	quant = f.get_participations_com_novas_respostas(value)
+	return len(quant)
+
+@register.filter(name='quant_FaSnotify')
+def quant_FaSnotify(value):
+	f = Favorites()
+	quant = f.get_favorites_sem_notificacao(value)
+	return len(quant)
+
+@register.filter(name='quant_FaCnotify')
+def quant_FaCnotify(value):
+	f = Favorites()
+	quant = f.get_favorites_com_novas_respostas(value)
+	return len(quant)

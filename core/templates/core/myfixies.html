@@ -21,11 +21,21 @@
 	{% endif %}
 {% endblock %}
 
+{% block bread %}
+<li class="active">Meus Fixies</li>
+{% endblock %}
+
+{% block itemativo %}
+<li role="presentation" class="ativo"><a href="{% url 'core:myfixiesN' %}">Meus Fixies <span class="badge pull-right sai">{{ user|quant_fix }}</span></a></li>
+<li role="presentation"><a href="{% url 'core:myparticipationsN' %}">Participações <span class="badge pull-right sai">{{ user|quant_part }}</span></a></li>
+<li role="presentation"><a href="{% url 'core:myfavoritesN' %}">Favoritos <span class="badge pull-right sai">{{ user|quant_fav }}</span></a></li>
+{% endblock %}
+
 {% block panel %}
 <ul class="nav nav-tabs navpad">
 
   <li role="presentation"><a href="{% url 'core:myfixiesN' %}">Notificações ({{ user|quant_FCnotify }})</a></li>
-  <li role="presentation" class="active"><a href="{% url 'core:myfixies' %}">Meus fixies ({{ user|quant_FSnotify }})</a></li>
+  <li role="presentation" class="active"><a href="{% url 'core:myfixies' %}">Meus Fixies ({{ user|quant_FSnotify }})</a></li>
 </ul>
   {% if pagina %}
 	{% for fixie in pagina %}
@@ -35,7 +45,7 @@
 		    {% if fixie.user|imagemperfil %}
 			<img class="thumbnail media-object" src="{{ fixie.user|imagemperfil }}" width="80" height="80">
 			{% else %}
-			<img class="thumbnail media-object src="{% static 'core/imagens/default.png' %}" width="100" height="100">
+			<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
 			{% endif %}
 		</div>
 		<div class="media-body">
@@ -83,23 +93,23 @@
 	</div>
 		
 	{% endfor %}
-<div class="pagination">
-    <span class="step-links">
-        {% if pagina.has_previous %}
-            <a href="?page={{ pagina.previous_page_number }}">anterior</a>
-        {% endif %}
-
-        <span class="current">
-            Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
-        </span>
-
-        {% if pagina.has_next %}
-            <a href="?page={{ pagina.next_page_number }}">próximo</a>
-        {% endif %}
-    </span>
+<nav aria-label="Page navigation">
+  <ul class="pager">
+    {% if pagina.has_previous %}
+    	<li class="previous"><a href="?page={{ pagina.previous_page_number }}"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+    {% else %}
+    	<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+    {% endif %}
+    Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
+    {% if pagina.has_next %}
+    	<li class="next"><a href="?page={{ pagina.next_page_number }}">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+    {% else %}
+    	<li class="next disabled"><a href="#">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+    {% endif %}
+  </ul>
+</nav>
 {% else %}
-	<h2>Você tem nenhum fixie, comece <a href="#"> por aqui</a></h2>
+	<h4>Você ainda não tem nenhum fixie, crie um em <b>Novo fix</b>.</h4>
 {% endif %}
-</div>
 
 {% endblock %}

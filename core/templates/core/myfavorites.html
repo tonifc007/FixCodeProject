@@ -1,0 +1,117 @@
+{% extends 'core/basefixies.html' %}
+{% load aux_tags %}
+{% load staticfiles %}
+{% block titulo %}{{ profile.user.first_name }} Favoritos - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
+
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="#">Feedback</a></li>
+{% endblock %}
+
+{% block imagemperfil %}
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
+
+	{% endif %}
+{% endblock %}
+
+{% block bread %}
+<li class="active">Favoritos</li>
+{% endblock %}
+
+{% block itemativo %}
+<li role="presentation"><a href="{% url 'core:myfixiesN' %}">Meus Fixies <span class="badge pull-right sai">{{ user|quant_fix }}</span></a></li>
+<li role="presentation"><a href="{% url 'core:myparticipationsN'%}">Participações <span class="badge pull-right sai">{{ user|quant_part }}</span></a></li>
+<li role="presentation" class="ativo"><a href="{% url 'core:myfavoritesN' %}">Favoritos <span class="badge pull-right sai">{{ user|quant_fav }}</span></a></li>
+{% endblock %}
+
+{% block panel %}
+<ul class="nav nav-tabs navpad">
+
+  <li role="presentation"><a href="{% url 'core:myfavoritesN' %}">Notificações ({{ user|quant_FaCnotify }})</a></li>
+  <li role="presentation" class="active"><a href="{% url 'core:myfavorites' %}">Favoritos ({{ user|quant_FaSnotify }})</a></li>
+</ul>
+  {% if pagina %}
+	{% for fixie in pagina %}
+		<div class="panel panel-default">
+		<div class="panel-body">
+		<div class="media-left media-top">
+		    {% if fixie.fixie.user|imagemperfil %}
+			<img class="thumbnail media-object" src="{{ fixie.fixie.user|imagemperfil }}" width="80" height="80">
+			{% else %}
+			<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+			{% endif %}
+		</div>
+		<div class="media-body">
+		    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' fixie.fixie.user.username %}">{{ fixie.fixie.user.first_name }}</a> - <span class="pCinzaUser">{{fixie.fixie.user.username}}</span></h4>
+		    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
+		    	{% if fixie.fixie.data|subtempo == 0 %}
+		  			hoje
+		  		{% elif fixie.fixie.data|subtempo == 1 %}
+		  			ontem
+		  		{% else %}
+		  			Há {{ fixie.fixie.data|subtempo }} dias
+		  		{% endif %}
+		  		- <span class="glyphicon glyphicon-tags"></span>
+		  		{% for tag in fixie.fixie.area.all %}
+		  			{% if tag == fixie.fixie.area.all.last %}
+		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+		  			{% else %}
+		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+		  			{% endif %}
+		  		{% endfor %}
+		  		{% if fixie.fixie.resolvido %}
+		  			&nbsp;- <span class="glyphicon glyphicon-ok"></span>
+		  			Resolvido
+		  		{% endif %}
+
+		    </small>
+		    <h3>{{ fixie.fixie.titulo }}</h3>
+		    <p>{{ fixie.fixie.descricao|safe }}</p>
+
+		    	
+		    	<a class="btn btn-default col-lg-4" href="{% url 'core:fix_detail' fixie.fixie.pk %}">Detalhar</a>
+		    
+		    	<p class="col-lg-6 comentf">
+		    	{% if fixie.fixie.pk|quant_coment == 0 %}
+		    		<span class="glyphicon glyphicon-comment"></span> Não há nenhum comentário
+		    	{% else %}
+		    		<span class="glyphicon glyphicon-comment"></span> Há {{ fixie.fixie.pk|quant_coment }} comentários neste fixie
+		    	{% endif %}
+		    	</p>
+		    	
+		    	
+		    
+		</div>
+		</div>
+	</div>
+		
+	{% endfor %}
+
+	<nav aria-label="Page navigation">
+		  <ul class="pager">
+		    {% if pagina.has_previous %}
+		    	<li class="previous"><a href="?page={{ pagina.previous_page_number }}"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+		    {% else %}
+		    	<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+	        {% endif %}
+		    Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
+		    {% if pagina.has_next %}
+		    	<li class="next"><a href="?page={{ pagina.next_page_number }}">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+		    {% else %}
+		    	<li class="next disabled"><a href="#">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+	        {% endif %}
+		  </ul>
+		</nav>
+{% else %}
+	<h4>Você ainda não favoritou nenhum fixie.</h4>
+{% endif %}
+
+
+{% endblock %}
