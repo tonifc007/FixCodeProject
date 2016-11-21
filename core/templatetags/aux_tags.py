@@ -2,6 +2,7 @@ from django import template
 from ..models import ComentFixies, Fixies, Profile, Participations, Favorites, Post, Followers, ComentPost
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+import os.path
 
 register = template.Library()
 
@@ -117,3 +118,7 @@ def quant_PCnotify(value):
 	p = Post()
 	quant = p.get_posts_notificados(value)
 	return len(quant)
+
+@register.filter(name='verificaArquivo')
+def verificaArquivo(value):
+	return os.path.isfile(value)

@@ -29,8 +29,8 @@
 {% block panel %}
 <ul class="nav nav-tabs navpad">
 
-  <li role="presentation"><a href="{% url 'core:my_postsN' %}">Notificações ({{ user|quant_PCnotify }})</a></li>
-  <li role="presentation" class="active"><a href="{% url 'core:my_posts' %}">Meus Posts ({{ user|quant_PSnotify }})</a></li>
+  <li role="presentation" class="active"><a href="{% url 'core:my_postsN' %}">Notificações ({{ user|quant_PCnotify }})</a></li>
+  <li role="presentation"><a href="{% url 'core:my_posts' %}">Meus Posts ({{ user|quant_PSnotify }})</a></li>
 </ul>
   {% if pagina %}
 	{% for post in pagina %}
@@ -80,7 +80,7 @@
 		    	{% if post.pk|quant_comentP == 0 %}
 		    		<span class="glyphicon glyphicon-comment"></span> Não há nenhum comentário
 		    	{% else %}
-		    		<span class="glyphicon glyphicon-comment"></span> Há {{ post.pk|quant_comentP }} comentários neste post
+		    		<span class="glyphicon glyphicon-comment"></span> Há {{ post.pk|quant_comentP }} comentários neste post - <span class="not"> {{ fixie.notificacao }} novo(s)</span>
 		    	{% endif %}
 		    	</p>
 		    	
@@ -107,7 +107,7 @@
   </ul>
 </nav>
 {% else %}
-	<h4>Você ainda não tem nenhum post, crie um em <b>Novo post</b>.</h4>
+	<h4>Você não tem nenhuma notificação. para acessar todos os seus posts vá na aba <b>Meus Posts</b>.</h4>
 {% endif %}
 
 {% endblock %}

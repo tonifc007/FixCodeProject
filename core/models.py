@@ -223,7 +223,7 @@ class Post(models.Model):
 	notificacao = models.IntegerField(default=0)
 	ativa_notificacao = models.BooleanField(default=True)
 	exibir_perfil = models.BooleanField(default=True)
-	anexo = models.FileField(blank=True, null=True, upload_to=user_directory_path)
+	anexo = models.FileField(blank=True, upload_to=user_directory_path)
 	area = models.ManyToManyField(Areas)
 
 	def save(self):

@@ -1195,7 +1195,7 @@ def my_postsN(request):
 			pagina = paginator.page(1)
 		except EmptyPage:
 			pagina = paginator.page(paginator.num_pages)
-		return render(request, 'core/myposts.html', {'pagina':pagina, 'eu':eu})
+		return render(request, 'core/mypostsN.html', {'pagina':pagina, 'eu':eu})
 
 def getkeypostprofile(request, pk):
 	if not request.user.is_authenticated():
