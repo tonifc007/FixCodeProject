@@ -309,6 +309,7 @@ def create_fix(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
+		eu = get_object_or_404(Profile, user=request.user)
 		fixie = Fixies()
 		fixie.save()
 		form = FixiesForm(request.POST or None, instance=fixie)
@@ -323,7 +324,7 @@ def create_fix(request):
 			fixie.save()
 			return redirect('/')
 		fixie.delete()
-		return render(request, 'core/createfix.html', {'form':form})
+		return render(request, 'core/createfix.html', {'form':form, 'eu':eu})
 
 def fix_detail(request, pk, aviso=False):
 	if not request.user.is_authenticated():
