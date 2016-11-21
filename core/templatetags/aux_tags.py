@@ -1,5 +1,5 @@
 from django import template
-from ..models import ComentFixies, Fixies, Profile, Participations, Favorites, Post, Followers
+from ..models import ComentFixies, Fixies, Profile, Participations, Favorites, Post, Followers, ComentPost
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
@@ -8,6 +8,10 @@ register = template.Library()
 @register.filter(name='quant_coment')
 def quant_coment(value):
 	return ComentFixies.objects.filter(fixie=value).count()
+
+@register.filter(name='quant_comentP')
+def quant_comentP(value):
+	return ComentPost.objects.filter(post=value).count()
 
 @register.filter(name='l')
 def l(value):
@@ -102,4 +106,14 @@ def quant_FaSnotify(value):
 def quant_FaCnotify(value):
 	f = Favorites()
 	quant = f.get_favorites_com_novas_respostas(value)
+	return len(quant)
+
+@register.filter(name='quant_PSnotify')
+def quant_PSnotify(value):	
+	return len(Post.objects.filter(user=value))
+
+@register.filter(name='quant_PCnotify')
+def quant_PCnotify(value):
+	p = Post()
+	quant = p.get_posts_notificados(value)
 	return len(quant)

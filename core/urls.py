@@ -33,9 +33,10 @@ urlpatterns = [
     url(r'^participations/$', views.participationsSemUser, name='participations'),
 
     #Páginas de post
-    url(r'^create_post/$', views.create_post, name='create_post'),
+    url(r'^post/create_post/$', views.create_post, name='create_post'),
     url(r'^post/(?P<pk>[0-9]+)/$', views.post_detail, name='post_detail'),
-    url(r'^myposts/$', views.my_posts, name='my_posts'),
+    url(r'^post/myposts/$', views.my_posts, name='my_posts'),
+    url(r'^post/myposts/notify/$', views.my_postsN, name='my_postsN'),
     url(r'^post/(?P<pk>[0-9]+)/edit/$', views.edit_post, name='edit_post'),
 
     #Rotas de requisiçoes AJAX - Fixies

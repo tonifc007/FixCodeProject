@@ -1159,20 +1159,43 @@ def my_posts(request):
 		return render(request, 'core/login.html')
 	else:
 		posts = Post.objects.filter(user=request.user)
-
-		paginator = Paginator(posts, 5)
+		eu = get_object_or_404(Profile, user=request.user)
+		paginator = Paginator(posts[::-1], 5)
 		page = request.GET.get('page')
 		print(page)
 		print("Estou requisitando a {} página" .format(page))
 
 		try:
-			relations = paginator.page(page)
-			print(relations)
+			pagina = paginator.page(page)
+			print(pagina)
 		except PageNotAnInteger:
-			relations = paginator.page(1)
+			pagina = paginator.page(1)
+		except EmptyPagepagina:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/myposts.html', {'pagina':pagina, 'eu':eu})
+
+def my_postsN(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		instanciaPost = Post()
+		eu = get_object_or_404(Profile, user=request.user)
+
+		lista = instanciaPost.get_posts_notificados(request.user)
+
+		paginator = Paginator(lista, 5)
+		page = request.GET.get('page')
+		print(page)
+		print("Estou requisitando a {} página" .format(page))
+
+		try:
+			pagina = paginator.page(page)
+			print(pagina)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
 		except EmptyPage:
-			relations = paginator.page(paginator.num_pages)
-		return render(request, 'core/myposts.html', {'relations':relations})
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/myposts.html', {'pagina':pagina, 'eu':eu})
 
 def getkeypostprofile(request, pk):
 	if not request.user.is_authenticated():

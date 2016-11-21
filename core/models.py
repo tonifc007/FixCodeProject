@@ -245,6 +245,16 @@ class Post(models.Model):
 		except: pass
 		super(Post, self).delete()
 
+	def get_posts_notificados(self, usuarioLogado):
+		lista = list()
+
+		posts = Post.objects.filter(user=usuarioLogado)
+
+		for post in posts:
+			if post.notificacao > 0 and post.ativa_notificacao == True:
+				lista.append(post)
+		return lista[::-1]
+
 	def __str__(self):
 		return self.titulo
 

@@ -1,45 +1,110 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Meus posts</title>
-	{% load staticfiles %}
-	<link rel="stylesheet" href="{% static 'core/css/estilohighlight.min.css' %}">
-    <script src="{% static 'core/js/highlight.min.js' %}"></script>
+{% extends 'core/baseposts.html' %}
+{% load aux_tags %}
+{% load staticfiles %}
+{% block titulo %}{{ profile.user.first_name }} Meus posts - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
 
-<script>hljs.initHighlightingOnLoad();</script>
-</head>
-<body>
-	{% if relations %}
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="#">Feedback</a></li>
+{% endblock %}
 
-	<h2>Posts: </h2>
-	{% for post in relations %}
-		<p>----------------</p>
-		<p>{{ post.titulo }}</p>
-		<p>{{ post.user }}</p>
-		<p>{{ post.data }}</p>
-		<p>{{ post.post|safe }}</p>
-		<a href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
-		<p>-----------------</p>
+{% block imagemperfil %}
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
+
+	{% endif %}
+{% endblock %}
+
+{% block bread %}
+<li class="active">Meus Posts</li>
+{% endblock %}
+
+
+{% block panel %}
+<ul class="nav nav-tabs navpad">
+
+  <li role="presentation"><a href="{% url 'core:my_postsN' %}">Notificações ({{ user|quant_PCnotify }})</a></li>
+  <li role="presentation" class="active"><a href="{% url 'core:my_posts' %}">Meus Posts ({{ user|quant_PSnotify }})</a></li>
+</ul>
+  {% if pagina %}
+	{% for post in pagina %}
+		<div class="panel panel-default">
+		<div class="panel-body">
+		<div class="media-left media-top">
+		    {% if post.user|imagemperfil %}
+			<img class="thumbnail media-object" src="{{ post.user|imagemperfil }}" width="80" height="80">
+			{% else %}
+			<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+			{% endif %}
+		</div>
+		<div class="media-body">
+		    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' post.user.username %}">{{ post.user.first_name }}</a> - <span class="pCinzaUser">{{post.user.username}}</span></h4>
+		    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
+		    	{% if post.data|subtempo == 0 %}
+		  			hoje
+		  		{% elif post.data|subtempo == 1 %}
+		  			ontem
+		  		{% else %}
+		  			Há {{ post.data|subtempo }} dias
+		  		{% endif %}
+		  		- <span class="glyphicon glyphicon-tags"></span>
+		  		{% for tag in post.area.all %}
+		  			{% if tag == post.area.all.last %}
+		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+		  			{% else %}
+		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+		  			{% endif %}
+		  		{% endfor %}
+		  		{% if post.resolvido %}
+		  			&nbsp;- <span class="glyphicon glyphicon-ok"></span>
+		  			Resolvido
+		  		{% endif %}
+
+		    </small>
+		    <h3>{{ post.titulo }}</h3>
+		    <p>{{ post.post|safe }}</p>
+
+		    	
+		    	<a class="btn btn-default col-lg-4" href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
+		    
+		    	<p class="col-lg-6 comentf">
+		    	{% if post.pk|quant_comentP == 0 %}
+		    		<span class="glyphicon glyphicon-comment"></span> Não há nenhum comentário
+		    	{% else %}
+		    		<span class="glyphicon glyphicon-comment"></span> Há {{ post.pk|quant_comentP }} comentários neste post
+		    	{% endif %}
+		    	</p>
+		    	
+		    	
+		    
+		</div>
+		</div>
+	</div>
 		
 	{% endfor %}
-	<div class="pagination">
-	    <span class="step-links">
-	        {% if relations.has_previous %}
-	            <a href="?page={{ relations.previous_page_number }}">anterior</a>
-	        {% endif %}
+<nav aria-label="Page navigation">
+  <ul class="pager">
+    {% if pagina.has_previous %}
+    	<li class="previous"><a href="?page={{ pagina.previous_page_number }}"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+    {% else %}
+    	<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+    {% endif %}
+    Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
+    {% if pagina.has_next %}
+    	<li class="next"><a href="?page={{ pagina.next_page_number }}">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+    {% else %}
+    	<li class="next disabled"><a href="#">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% else %}
+	<h4>Você ainda não tem nenhum post, crie um em <b>Novo post</b>.</h4>
+{% endif %}
 
-	        <span class="current">
-	            Página {{ relations.number }} de {{ relations.paginator.num_pages }}.
-	        </span>
-
-	        {% if relations.has_next %}
-	            <a href="?page={{ relations.next_page_number }}">próximo</a>
-	        {% endif %}
-	    </span>
-	</div>
-	{% else %}
-		<h2>Nao ha nenhum post</h2>
-	{% endif %}
-
-</body>
-</html>
+{% endblock %}
