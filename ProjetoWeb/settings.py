@@ -129,7 +129,7 @@ CKEDITOR_CONFIGS = {
             ['Source', '-', 'Bold', 'Italic']
         ],
         'toolbar_YourCustomToolbarConfig': [
-            {'name': 'document', 'items': ['Save', 'NewPage', 'Preview', '-', 'Templates']},
+            {'name': 'document', 'items': ['Save', 'NewPage', '-', 'Templates']},
             {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
             {'name': 'insert',
              'items': ['Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', '-', 'CodeSnippet']},
@@ -137,10 +137,12 @@ CKEDITOR_CONFIGS = {
                 # put the name of your editor.ui.addButton here
                 'Preview',
             ]},
-            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
-            '/',
             {'name': 'basicstyles',
              'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+            
+            '/',
+            
+             {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor', 'Image']},
             {'name': 'paragraph',
              'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
                        'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl']},
@@ -148,7 +150,7 @@ CKEDITOR_CONFIGS = {
         ],
 
         'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
-        # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
+        'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
         'height': 291,
         'width': '100%',
         # 'filebrowserWindowHeight': 725,
@@ -172,6 +174,7 @@ CKEDITOR_CONFIGS = {
                 'dialogui',
                 'elementspath',
                 'codesnippet',
+                'uploadimage',
             ]),
     },
 
@@ -231,6 +234,13 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(tempfile.gettempdir(), 'ck_static')
 MEDIA_ROOT = 'media/'
 
+
+#Configurações do CKEditor
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
+CKEDITOR_RESTRICT_BY_USER = True
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_JQUERY_URL = '//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'
+
+#Observação importante: para que os usuários upem imagens no server, é preciso modificar
+#o urls.py da dependência do "CKEditor" e colocar "login_required()" ao invés de "staff_member_required()".

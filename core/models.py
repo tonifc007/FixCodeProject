@@ -5,6 +5,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import Permission, User
 from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 import PIL
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
@@ -79,7 +80,7 @@ class Profile(models.Model):
 class Fixies(models.Model):
 	user = models.ForeignKey(User, default=1)
 	titulo = models.CharField(max_length=100)
-	descricao = RichTextField(config_name='principal')
+	descricao = RichTextUploadingField(config_name='principal')
 	data = models.DateTimeField(default=timezone.now)
 	resolvido = models.BooleanField(default=False)
 	tem_melhor_resposta = models.BooleanField(default=False)
