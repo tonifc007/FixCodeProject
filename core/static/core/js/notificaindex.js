@@ -11,7 +11,8 @@ setInterval("notificaIndexParticipation()", 2000);
 setTimeout("notificaIndexPosts()", 1);
 setInterval("notificaIndexPosts()", 2000);
 
-
+//Torna todas as imgs dos posts responsivas
+$('.fcc > p > img').addClass('img-responsive');
 
 function notificaIndex(){
 

@@ -175,3 +175,18 @@ div#dad{
 .not{
 	color: red;
 }
+
+/*Para lista de areas em criação de fix e post*/
+.listaArea{
+	list-style-type: none;
+	margin-left: -45px;
+}
+
+.liDeArea{
+	float: left;
+	margin: 4px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #dbdbdb;
+	border-radius: 5px
+}

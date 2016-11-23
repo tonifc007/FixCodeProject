@@ -313,10 +313,12 @@ def create_fix(request):
 		fixie = Fixies()
 		fixie.save()
 		form = FixiesForm(request.POST or None, instance=fixie)
+		#print(form.as_ul)
 		if form.is_valid():
 			fixie = form.save(commit=False)
 			fixie.user = request.user
 			fixie.area = form.cleaned_data['area']
+
 			if fixie.area.count() > 5 or fixie.area.count() == 0:
 				fixie.area.clear()
 				hab = get_object_or_404(Areas,nome_linguagem='Outra linguagem')

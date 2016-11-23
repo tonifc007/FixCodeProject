@@ -77,13 +77,9 @@
 								<div class="media-body">
 								    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' fixie.user.username %}">{{ fixie.user.first_name }}</a> - <span class="pCinzaUser">{{fixie.user.username}}</span></h4>
 								    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
-								    	{% if fixie.data|subtempo == 0 %}
-								  			hoje
-								  		{% elif fixie.data|subtempo == 1 %}
-								  			ontem
-								  		{% else %}
-								  			Há {{ fixie.data|subtempo }} dias
-								  		{% endif %}
+								    	
+								  			Há {{ fixie.data|timesince}}
+								  		
 								  		- <span class="glyphicon glyphicon-tags"></span>
 								  		{% for tag in fixie.area.all %}
 								  			{% if tag == fixie.area.all.last %}
@@ -99,7 +95,7 @@
 
 								    </small>
 								    <h3>{{ fixie.titulo }}</h3>
-								    <p>{{ fixie.descricao|safe }}</p>
+								    <div class="fcc">{{ fixie.descricao|safe|truncatechars_html:300}}</div>
 
 								    	
 								    	<a class="btn btn-default col-lg-4" href="{% url 'core:fix_detail' fixie.pk %}">Responder fix</a>
