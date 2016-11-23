@@ -188,5 +188,14 @@ div#dad{
 	padding-left: 10px;
 	padding-right: 10px;
 	background-color: #dbdbdb;
-	border-radius: 5px
+	border-radius: 5px;
+}
+
+label#lbPost{
+	background-color: #BEBEBE;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-radius: 5px;
 }

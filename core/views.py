@@ -313,7 +313,6 @@ def create_fix(request):
 		fixie = Fixies()
 		fixie.save()
 		form = FixiesForm(request.POST or None, instance=fixie)
-		#print(form.as_ul)
 		if form.is_valid():
 			fixie = form.save(commit=False)
 			fixie.user = request.user
@@ -1106,6 +1105,7 @@ def create_post(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
+		eu = get_object_or_404(Profile, user=request.user)
 		post = Post()
 		post.save()
 		form = PostForm(request.POST or None, instance=post)
@@ -1118,7 +1118,7 @@ def create_post(request):
 				file_type = post.anexo.url.split('.')[-1]
 				file_type = file_type.lower()
 				if file_type not in FILE_TYPES:
-					return render(request, 'core/createpost.html', {'form':form, 'error_message':'Arquivo inválido'})
+					return render(request, 'core/createpost.html', {'form':form, 'error_message':'Arquivo inválido', 'eu':eu})
 			post.area = form.cleaned_data['area']
 			if post.area.count() > 5 or post.area.count() == 0:
 				post.area.clear()
@@ -1127,7 +1127,7 @@ def create_post(request):
 			post.save()
 			return redirect('/post/'+str(post.pk)+'/')
 		post.delete()
-		return render(request, 'core/createpost.html', {'form':form})
+		return render(request, 'core/createpost.html', {'form':form, 'eu':eu})
 
 def post_detail(request, pk):
 	if not request.user.is_authenticated():

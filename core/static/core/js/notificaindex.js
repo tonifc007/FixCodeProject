@@ -12,7 +12,7 @@ setTimeout("notificaIndexPosts()", 1);
 setInterval("notificaIndexPosts()", 2000);
 
 //Torna todas as imgs dos posts responsivas
-$('.fcc > p > img').addClass('img-responsive');
+$('.fcc > p > img').addClass('img-responsive').addClass('thumbnail');
 
 function notificaIndex(){
 

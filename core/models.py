@@ -219,7 +219,7 @@ def user_directory_path(instance, filename):
 class Post(models.Model):
 	user = models.ForeignKey(User, default=1)
 	titulo = models.CharField(max_length=100)
-	post = RichTextField(config_name='principal')
+	post = RichTextUploadingField(config_name='post')
 	data = models.DateTimeField(default=timezone.now)
 	notificacao = models.IntegerField(default=0)
 	ativa_notificacao = models.BooleanField(default=True)

@@ -1,35 +1,105 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Criar post</title>
-	{% load staticfiles %}
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-	<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
-    <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'core/css/estilohighlight.min.css' %}">
-    <script src="{% static 'core/js/highlight.min.js' %}"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
-</head>
-<body>
-<h3>Crie um novo fix</h3>
+{% extends 'core/base.html' %}
+{% load staticfiles %}
+{% load aux_tags %}
+{% block titulo %}Criar Fix - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
 
-{% if error_message %}
-	<p>{{ error_message }}</p>
-{% endif %}
-
-<form method="post" enctype="multipart/form-data">
-	{% csrf_token %}
-	{% for field in form %}
-		{{ field.errors }}
-		{{ field.label_tag }}
-		<br>
-		{{ field }}
-		<br><br>
-	{% endfor %}
-	{% if aviso %}
-	<p>{{ aviso }}</p>
+{% block imagemperfil %}
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
+		
 	{% endif %}
-	<button type="submit">Salvar Post</button>
-</form>
-</body>
-</html>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<ol class="breadcrumb">
+		  <li><a href="/">Home</a></li>
+		  <li class="active">Criar Post</li>
+		</ol>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="col-lg-10 col-lg-offset-1">
+				
+				<div class="panel panel-default">
+				<div class="panel-heading"><h4>Postagem</h4></div>
+				<div class="panel-body">
+					<form action="{% url 'core:create_post' %}" class="form-horizontal" method="post">
+						{% csrf_token %}
+						<div class="form-group">
+							<label for="{{form.titulo.name}}" class="col-xs-1 control-label">{{ form.titulo.label_tag }}</label>
+							<div class="col-xs-11">
+								<input type="text" class="form-control" id=""  name="{{form.titulo.name}}" placeholder="Ex.: Boas práticas com a framework Laravel" value="{{form.titulo.value}}">
+							</div>
+							{% if form.titulo.errors %}
+								<div class="col-xs-12">
+									<p>{{ form.titulo.errors }}</p>
+								</div>
+							{% endif %}							
+						</div>
+						<div class="form-group">
+							<label for="{{form.post.name}}" class="col-xs-1 control-label">{{ form.post.label_tag }}</label>
+							<div class="col-xs-11">
+								{{ form.post }}
+							</div>
+							{% if form.post.errors %}
+								<div class="col-xs-12">
+									<p>{{ form.post.errors }}</p>
+								</div>
+							{% endif %}							
+						</div>
+						<div class="form-group">
+							<label for="{{form.anexo.name}}" class="col-xs-1 control-label">{{ form.anexo.label_tag }}</label>
+							<div class="col-xs-11">
+								{{ form.anexo }}
+								[.zip, .rar, .doc, .pdf, .ppt]
+							</div>
+							{% if form.anexo.errors %}
+								<div class="col-xs-12">
+									<p>{{ form.anexo.errors }}</p>
+								</div>
+							{% endif %}							
+						</div>
+						<div class="form-group">
+							<label for="{{form.area.name}}" class="col-xs-1 control-label">{{ form.area.label_tag }}</label>
+							<div class="col-xs-11">
+								<ul class="listaArea">
+								{% for f in form.area %}
+									<li class="liDeArea">{{f}}</li>
+								{% endfor %}
+								</ul>
+							</div>
+							
+							{% if form.area.errors %}
+								<div class="col-xs-12">
+									<p>{{ form.area.errors }}</p>
+								</div>
+							{% endif %}							
+						</div>
+					<div class="col-xs-3 col-xs-offset-2"><label id="lbPost">{{ form.exibir_perfil }} Exibir no perfil</label></div>		
+					<button class="btn btn-success col-xs-4" type="submit">Postar</button>
+				</form>
+
+
+				</div>
+				</div>
+			
+			</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script src="{% static 'core/js/countChecks.js' %}"></script>
+{% endblock %}
