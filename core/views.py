@@ -332,6 +332,7 @@ def fix_detail(request, pk, aviso=False):
 		return render(request, 'core/login.html')
 
 	else:
+		eu = get_object_or_404(Profile, user=request.user)
 		form = ComentForm(request.POST or None)
 		if form.is_valid():
 			com = form.save(commit=False)
@@ -429,7 +430,7 @@ def fix_detail(request, pk, aviso=False):
 			chave_fav = 0
 
 		coments = ComentFixies.objects.filter(fixie=fixie.pk)
-	return render(request, 'core/fixdetail.html', {'fixie': fixie, 'coments':coments, 'form':form, 'chave':chave, 'chave_fav':chave_fav, 'aviso':aviso, 'chave_de_participacao':chave_de_participacao})
+	return render(request, 'core/fixdetail.html', {'eu': eu,'fixie': fixie, 'coments':coments, 'form':form, 'chave':chave, 'chave_fav':chave_fav, 'aviso':aviso, 'chave_de_participacao':chave_de_participacao})
 
 def best_answer(request, pk):
 	#ufa! essa view quase me mata kkk :')
