@@ -249,12 +249,13 @@ CKEDITOR_CONFIGS = {
                 {'name': 'insert',
                  'items': ['Smiley', 'SpecialChar', 'PageBreak', '-', 'CodeSnippet']},
                 {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+                {'name':'imagem', 'items': ['Image','-','-','-','-','-','-']}
             ],
 
             'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
             # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
-            # 'height': 291,
-            'width': '100%',
+            'height': 140,
+            'width': '160%',
             # 'filebrowserWindowHeight': 725,
             # 'filebrowserWindowWidth': 940,
             # 'toolbarCanCollapse': True,

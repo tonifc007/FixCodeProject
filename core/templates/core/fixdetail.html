@@ -22,6 +22,10 @@
 
 {% block body %}
 
+{% if aviso %}
+	<h4>{{ aviso }}</h4>
+{% endif %}
+
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12">
@@ -80,12 +84,75 @@
 									<span class="glyphicon glyphicon-bell"></span>
 								</button>
 							{% endif %}
+							{% if fixie.resolvido %}
+								<button class="btn btn-default btn-sm" onclick="restore('{{ fixie.pk }}')">
+									<span class="glyphicon glyphicon-repeat"></span>
+									 Restaurar Fix
+								</button>
+								<p>Este fix está resolvido! - <a href="#" onclick="restore('{{ fixie.pk }}')">Restaurar fix</a></p> 
+							{% else %}
+								{% if coments|l != 0 %}
+									<button class="btn btn-default btn-sm" onclick="fixed('{{ fixie.pk }}')">
+									<span class="glyphicon glyphicon-ok"></span>
+									 Marcar como resolvido
+								</button>
+								{% endif %}
+							{% endif %}
 						{% endif %}
 				    	
 				    </div>
+
+				    
 				    
 				    <h3>{{ fixie.titulo }}</h3>
-				    <div class="fcc col-xs-10">{{ fixie.descricao|safe }}</div>
+				    <div class="fcc col-xs-10" style="margin-bottom: 40px;">{{ fixie.descricao|safe }}</div>
+
+				    {% for com in coments %}
+						{% if com.melhor_resposta %}
+						<div class="col-xs-12">
+							<div class="panel panel-primary">
+								<div class="panel-body">
+									<div class="media-left media-top">
+									    {% if com.user|imagemperfil %}
+										<img class="thumbnail media-object" src="{{ com.user|imagemperfil }}" width="80" height="80">
+										{% else %}
+										<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+										{% endif %}
+									</div>
+									<div class="media-body">
+									    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' com.user.username %}">{{ com.user.first_name }}</a> - <span class="pCinzaUser">{{com.user.username}}</span>
+									    <span class="label label-info pull-right"><span class="glyphicon glyphicon glyphicon-certificate"></span> {{ user.first_name }} classificou esta como melhor resposta</span>
+									    </h4>
+									    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
+									    	
+									  			Publicado em {{ com.data }}
+									  		
+									    </small>
+									    <div class="fcc">{{ com.coment|safe}}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% endif %}
+					{% endfor %}
+					<div class="col-xs-12">
+					<hr>
+						{% if chave != False and coments == 0 %}
+							<h4><span class="glyphicon glyphicon-comment"></span>
+							 Seu Fix ainda não foi respondido.
+							</h4>
+						{% elif coments == 0 %}
+							<h4><span class="glyphicon glyphicon-comment"></span>
+							 Seja o primeiro a responder este Fix! :).
+							</h4>
+						{% else %}
+							<h4><span class="glyphicon glyphicon-comment"></span>
+							 Há {{ coments|l }} respostas neste fix:
+							</h4>
+						{% endif %}
+					</div>
+
+
 
 				    	
 				    {% if chave %}
@@ -97,104 +164,102 @@
 						{% endif %}
 					{% endif %}
 
-					{% if aviso %}
-						<h4>{{ aviso }}</h4>
+					{% if chave_fav is 1 %}
+						<p><a href="#" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">Desfavoritar Fix</a></p>
+					{% elif chave_fav is 2 %}
+						<p><a href="#" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">Favoritar Fix</a></p>
 					{% endif %}
 
-					{% if coments %}
-						<h4>Há {{ coments|l }} respostas para este fix:</h4>
+					{% if chave_de_participacao == 1 %}
+						<p><a href="#" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')">Desativar notificação de participação</a></p>
+						<p><a href="#" onclick="deleteparticipation('{{ fixie.pk }}')">Excluir participação</a></p>
+					{% elif chave_de_participacao == 2 %}
+						<p><a href="#" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')">Ativar notificação de participação</a></p>
+						<p><a href="#" onclick="deleteparticipation('{{ fixie.pk }}')">Excluir participação</a></p>
+					{% endif %}
 
-						{% for com in coments %}
-							{% if com.melhor_resposta %}
-								<div style="background-color: yellow;">
-									<p>MELHOR RESPOSTA ESCOLHIDA PELO AUTOR:</p>
-									<p>...................</p>
-									<p><i>{{ com.coment|safe }}</i></p>
-									<p>publicado por: {{ com.user.first_name }}</p>
-									<p>data: {{ com.data }}</p>
-									<p>....................</p>
-								</div>
-								
-							{% endif %}		
-						{% endfor %}
-
-						{% if chave_fav is 1 %}
-							<p><a href="#" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">Desfavoritar Fix</a></p>
-						{% elif chave_fav is 2 %}
-							<p><a href="#" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">Favoritar Fix</a></p>
-						{% endif %}
-
-						{% if chave_de_participacao == 1 %}
-							<p><a href="#" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')">Desativar notificação de participação</a></p>
-							<p><a href="#" onclick="deleteparticipation('{{ fixie.pk }}')">Excluir participação</a></p>
-						{% elif chave_de_participacao == 2 %}
-							<p><a href="#" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')">Ativar notificação de participação</a></p>
-							<p><a href="#" onclick="deleteparticipation('{{ fixie.pk }}')">Excluir participação</a></p>
-						{% endif %}
-
-
-
-						{% if chave %}
-							{% if fixie.resolvido %}
-								<p>Este fix está resolvido! - <a href="#" onclick="restore('{{ fixie.pk }}')">Restaurar fix</a></p> 
-							{% else %}
-								{% if coments.counter != 0 %}
-									<a href="#" onclick="fixed('{{ fixie.pk }}')">Marcar fix como resolvido</a> (Esta opção irá desabilitar novas respostas)
-								{% endif %}
-							{% endif %}
-							
-							{% for com in coments %}
-								<p>...................</p>
-								
-								<p>
-								{% if com.user|imagemperfil %}
-								<img src="{{ com.user|imagemperfil }}" width="100" height="100">
-								{% else %}
-								<img src="{% static 'core/imagens/default.png' %}" width="100" height="100">
-								{% endif %}
-								<a href="{% url 'core:profile' com.user.username %}">{{ com.user.first_name }}</a></p>
-								<p><i>{{ com.coment|safe }}</i> - <a href="" onclick="best_answer('{{ com.pk }}')">Escolher como solução</a> <div id="best{{com.id}}"></div></p>
-								<p>data: {{ com.data }}</p>
-								{% if com.user != request.user %}
-									<p><a href="" onclick="report('{{ com.pk }}')"">Reportar resposta</a></p>
-								{% endif %}
-								<p>....................</p>
-							{% endfor %}
-						{% else %}
-							{% for com in coments %}
-								<p>...................</p>
-								<p>
-								{% if com.user|imagemperfil %}
-								<img src="{{ com.user|imagemperfil }}" width="100" height="100">
-								{% else %}
-								<img src="{% static 'core/imagens/default.png' %}" width="100" height="100">
-								{% endif %}
-								<a href="{% url 'core:profile' com.user.username %}">{{ com.user.first_name }}</a></p>
-								<p><i>{{ com.coment|safe }}</i></p>
-								<p>data: {{ com.data }}</p>
-								<p>....................</p>
-							{% endfor %}
-						{% endif %}
-
-
+					{% if fixie.resolvido %}
+							<p>Este fix está resolvido! - <a href="#" onclick="restore('{{ fixie.pk }}')">Restaurar fix</a></p> 
 					{% else %}
-						<p>Ainda não nenhuma resposta</p>
+						{% if coments.counter != 0 %}
+							<a href="#" onclick="fixed('{{ fixie.pk }}')">Marcar fix como resolvido</a> (Esta opção irá desabilitar novas respostas)
+						{% endif %}
 					{% endif %}
+						
 
+					<div class="col-xs-12">
+							
+					{% for com in coments %}
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<div class="media-left media-top">
+								    {% if com.user|imagemperfil %}
+									<img class="thumbnail media-object" src="{{ com.user|imagemperfil }}" width="80" height="80">
+									{% else %}
+									<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+									{% endif %}
+								</div>
+								<div class="media-body">
+								    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' com.user.username %}">{{ com.user.first_name }}</a> - <span class="pCinzaUser">{{com.user.username}}</span> 
+								    {% if chave %}
+								    	
+								    	<span class="pull-right">
+									    	<div class="dropdown">
+											  <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+											    <span class="caret"></span>
+											  </button>
+											  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+											    <li><a href="#"><span class="glyphicon glyphicon-remove"></span> Reportar resposta</a></l>
+											  </ul>
+											</div>
+
+									    </span>
+									    <span class="pull-right"><button class="btn btn-primary btn-sm" onclick="best_answer('{{ com.pk }}')"><span class="glyphicon glyphicon-thumbs-up"></span> Melhor resposta</button></span>
+								    {% endif %}
+								    </h4>
+								    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
+								    	
+								  			Publicado em {{ com.data }}
+								  		
+								    </small>
+								    <div class="fcc">{{ com.coment|safe}}</div>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
 					{% if fixie.resolvido == False %}
 						<div id="post"></div>
-						<form method="post">
-						{% csrf_token %}
-						{% for field in form %}
-							{{ field.errors }}
-							{{ field.label_tag }}
-							<br>
-							{{ field }}
-							<br><br>
-						{% endfor %}
-						<button type="submit">Responder</button>
+						<h4>Responda este Fix</h4>
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<div class="media-left media-top">
+								    {% if request.user|imagemperfil %}
+									<img class="thumbnail media-object" src="{{ request.user|imagemperfil }}" width="80" height="80">
+									{% else %}
+									<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+									{% endif %}
+								</div>
+								<div class="media-body">
+									
+									<form method="post">
+									{% csrf_token %}
+										
+										{{ form.coment }}
+										
+										
+									
+									<button type="submit">Responder</button>
+								</div>
+							</div>
+						</div>
+
+						
 					{% endif %}
 				    	
+					</div>
+
+
+
 				    	
 				    
 				</div>

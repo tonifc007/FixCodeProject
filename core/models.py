@@ -105,7 +105,7 @@ class Fixies(models.Model):
 class ComentFixies(models.Model):
 	user = models.ForeignKey(User, default=1)
 	fixie = models.ForeignKey(Fixies)
-	coment = RichTextField(config_name='coment')
+	coment = RichTextUploadingField(config_name='coment')
 	data = models.DateTimeField(default=timezone.now)
 	melhor_resposta = models.BooleanField(default=False)
 

@@ -199,3 +199,8 @@ label#lbPost{
 	padding-bottom: 5px;
 	border-radius: 5px;
 }
+
+.best_answer{
+	text-align: center;
+	margin-bottom: -20px;
+}
