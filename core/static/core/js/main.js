@@ -154,7 +154,7 @@ function ativeNotifyMyfix(ide){
 
         // handle a successful response
         success : function(json) {
-            $('#seg').text("Desativar notificações");// remove the value from the input
+            $('#seg').addClass('notifix');
             console.log(json); // log the returned json to the console
             console.log("success"); // another sanity check
         },
@@ -180,7 +180,7 @@ function inativeNotifyMyfix(ide){
 
         // handle a successful response
         success : function(json) {
-            $('#seg').text("Ativar notificações");// remove the value from the input
+            $('#seg').removeClass('notifix');// remove the value from the input
             console.log(json); // log the returned json to the console
             console.log("success"); // another sanity check
         },
@@ -253,7 +253,8 @@ function restore(ide){
 function best_answer(ide){
     console.log("Marcando melhor soluçao");
     console.log(ide);
-    $("#best"+ide).prepend('<img id="theImg" src="http://i665.photobucket.com/albums/vv15/chuyendoday/Icons/LoadingIcon.gif" />');
+    $("#best"+ide).removeClass('btn-primary').addClass('btn-default');
+    $("#best"+ide).html('<img src="/static/core/imagens/loading.gif" width="15" heigth="15">');
     $.ajax({
         url : "best_answer/", // the endpoint
         type : "POST", // http method
@@ -284,30 +285,27 @@ function best_answer(ide){
 function report(ide){
     console.log("Reportando comentário");
     console.log(ide);
-    decisao = confirm("Deseja excluir esta resposta?");
-    if (decisao) {
-        $.ajax({
-            url : "report/", // the endpoint
-            type : "POST", // http method
-            data : { 
-                id : ide,
-                 }, // data sent with the post request
+    $.ajax({
+        url : "report/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
 
-            // handle a successful response
-            success : function(json) {
-                console.log(json); // log the returned json to the console
-                console.log("success"); // another sanity check
-                parent.window.document.location.href = '';
-            },
+        // handle a successful response
+        success : function(json) {
+            console.log(json); // log the returned json to the console
+            console.log("success"); // another sanity check
+            parent.window.document.location.href = '';
+        },
 
-            // handle a non-successful response
-            error : function(xhr,errmsg,err) {
-                console.log(xhr.status + ": " + xhr.responseText);
-               alert("Não foi possível reportar esta resposta")
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("Não foi possível reportar esta resposta")
 
-            }
-        });
-    }
+        }
+    });
 }
 
 //AJAX para desfavoritar fix
@@ -352,7 +350,7 @@ function favorite(ide){
              
         // handle a successful response
         success : function(json) {
-            $('#fav').text("Desfavoritar Fix");
+            $('#fav').addClass('notifix');
         },
 
         // handle a non-successful response
@@ -374,7 +372,7 @@ function unfavorite(ide){
              
         // handle a successful response
         success : function(json) {
-            $('#fav').text("Favoritar Fix");
+            $('#fav').removeClass('notifix');
         },
 
         // handle a non-successful response
