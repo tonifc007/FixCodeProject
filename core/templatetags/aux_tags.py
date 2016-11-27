@@ -85,14 +85,14 @@ def quant_FCnotify(value):
 	quant = f.get_fixies_com_novas_respostas(value)
 	return len(quant)
 
-@register.filter(name='quant_PSnotify')
-def quant_PSnotify(value):
+@register.filter(name='quant_PartSnotify')
+def quant_PartSnotify(value):
 	f = Participations()
 	quant = f.get_participations_sem_notificacao(value)
 	return len(quant)
 
-@register.filter(name='quant_PCnotify')
-def quant_PCnotify(value):
+@register.filter(name='quant_PartCnotify')
+def quant_PartCnotify(value):
 	f = Participations()
 	quant = f.get_participations_com_novas_respostas(value)
 	return len(quant)

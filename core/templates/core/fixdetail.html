@@ -44,22 +44,22 @@
 				    {% if chave %}
 				    
 				    	{% if fixie.ativa_notificacao == True %}
-								<button class="btn btn-default btn-sm notifix" id="seg" onclick="getNotifyMyFix('{{ fixie.pk }}')">
+								<button class="btn btn-default btn-sm notifix" id="seg" onclick="getNotifyMyFix('{{ fixie.pk }}')" data-toggle="tooltip" data-placement="left" title="Notificações ativadas neste fix">
 									<span class="glyphicon glyphicon-bell"></span>
 								</button>
 							{% else %}
-								<button class="btn btn-default btn-sm" id="seg" onclick="getNotifyMyFix('{{ fixie.pk }}')">
+								<button class="btn btn-default btn-sm" id="seg" onclick="getNotifyMyFix('{{ fixie.pk }}')" data-toggle="tooltip" data-placement="left" title="Notificações desativadas neste fix">
 									<span class="glyphicon glyphicon-bell"></span>
 								</button>
 							{% endif %}
 							{% if fixie.resolvido %}
-								<button class="btn btn-default btn-sm" onclick="restore('{{ fixie.pk }}')">
+								<button class="btn btn-default btn-sm" onclick="restore('{{ fixie.pk }}')" data-toggle="tooltip" data-placement="bottom" title="Deixar fix aberto para novas respostas">
 									<span class="glyphicon glyphicon-repeat"></span>
 									 Restaurar Fix
 								</button>
 							{% else %}
 								{% if coments|l != 0 %}
-									<button class="btn btn-success btn-sm" onclick="fixed('{{ fixie.pk }}')">
+									<button class="btn btn-success btn-sm" onclick="fixed('{{ fixie.pk }}')" data-toggle="tooltip" data-placement="bottom" title="Fechar fix para novas respostas">
 									<span class="glyphicon glyphicon-ok"></span>
 									 Marcar como resolvido
 								</button>
@@ -67,11 +67,11 @@
 							{% endif %}
 						{% endif %}
 						{% if chave_fav is 1 %}
-							<button class="btn btn-default btn-sm notifix" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">
+							<button class="btn btn-default btn-sm notifix" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')" data-toggle="tooltip" data-placement="bottom" title="Este fix está nos seus favoritos">
 									<span class="glyphicon glyphicon-star"></span>
 							</button>
 						{% elif chave_fav is 2 %}
-							<button class="btn btn-default btn-sm" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">
+							<button class="btn btn-default btn-sm" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')" data-toggle="tooltip" data-placement="bottom" title="Marque para favoritar e receber notificações deste fix">
 									<span class="glyphicon glyphicon-star"></span>
 							</button>
 						{% endif %}
@@ -89,9 +89,18 @@
 
 				   
 				    {% endif %}
+				    {% if chave_de_participacao == 1 %}
+				    	<button class="btn btn-default btn-sm notifix" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')"  data-toggle="tooltip" data-placement="bottom" title="Notificações de participação ativadas neste fix">
+							<span class="glyphicon glyphicon-bell"></span>
+						</button>
+					{% elif chave_de_participacao == 2 %}
+						<button class="btn btn-default btn-sm" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')" data-toggle="tooltip" data-placement="left" title="Notificações de participação desativadas neste fix">
+							<span class="glyphicon glyphicon-bell"></span>
+						</button>
+					{% endif %}
 				    {% if chave_de_participacao != 0 %}
 				    	<div class="btn-group">
-						  <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+						  <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="Exluir registro de participação">
 						  	<span class="glyphicon glyphicon-cog"></span> 
 						    <span class="caret"></span>
 						  </button>
@@ -185,11 +194,11 @@
 					{% endfor %}
 					<div class="col-xs-12">
 					<hr>
-						{% if chave != False and coments == 0 %}
+						{% if chave != False and coments|l == 0 %}
 							<h4><span class="glyphicon glyphicon-comment"></span>
 							 Seu Fix ainda não foi respondido.
 							</h4>
-						{% elif coments == 0 %}
+						{% elif coments|l == 0 %}
 							<h4><span class="glyphicon glyphicon-comment"></span>
 							 Seja o primeiro a responder este Fix! :).
 							</h4>
@@ -199,26 +208,6 @@
 							</h4>
 						{% endif %}
 					</div>
-
-
-
-				    	
-				    
-
-					{% if chave_fav is 1 %}
-						<p><a href="#" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">Desfavoritar Fix</a></p>
-					{% elif chave_fav is 2 %}
-						<p><a href="#" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">Favoritar Fix</a></p>
-					{% endif %}
-
-					{% if chave_de_participacao == 1 %}
-						<p><a href="#" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')">Desativar notificação de participação</a></p>
-						<p><a href="#" onclick="deleteparticipation('{{ fixie.pk }}')">Excluir participação</a></p>
-					{% elif chave_de_participacao == 2 %}
-						<p><a href="#" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')">Ativar notificação de participação</a></p>
-						<p><a href="#" onclick="deleteparticipation('{{ fixie.pk }}')">Excluir participação</a></p>
-					{% endif %}
-						
 
 					<div class="col-xs-6 col-sm-10 col-md-10 col-lg-12">
 							
@@ -267,7 +256,7 @@
 											</div>
 
 									    </span>
-									    <span class="pull-right"><button class="btn btn-primary btn-sm" id="best{{com.id}}" onclick="best_answer('{{ com.pk }}')"><span class="glyphicon glyphicon-thumbs-up"></span> Melhor resposta</button></span>
+									    <span class="pull-right"><button class="btn btn-primary btn-sm" id="best{{com.id}}" onclick="best_answer('{{ com.pk }}')" data-toggle="tooltip" data-placement="bottom" title="Escolher como melhor resposta"><span class="glyphicon glyphicon-thumbs-up"></span> Melhor resposta</button></span>
 								    {% endif %}
 								    </h4>
 								    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
@@ -318,110 +307,6 @@
 		</div>
 	</div>
 </div>
-
-
---------------------------------------------------------------------------------
-
-	<h1>{{ fixie.titulo }}</h1>
-<h3>por {{ fixie.user.first_name }} - publicado em {{ fixie.data }}</h3>
-<span>{{ fixie.descricao|safe }}</span>
-<p>Tags: {{ fixie.area.all }}</p><br>
-
-{% if chave %}
-	<a href="#" onclick="alertDelete('{{fixie.pk}}')">Deletar fix</a>
-	{% if fixie.ativa_notificacao == True %}
-		<a href="#" id="seg" onclick="getNotifyMyFix('{{ fixie.pk }}')">Desativar notificações</a>
-	{% else %}
-		<a href="#" id="seg" onclick="getNotifyMyFix('{{ fixie.pk }}')">Ativar notificações</a>
-	{% endif %}
-{% endif %}
-
-{% if aviso %}
-	<h4>{{ aviso }}</h4>
-{% endif %}
-
-{% if coments %}
-	<h4>Há {{ coments|l }} respostas para este fix:</h4>
-
-	{% for com in coments %}
-		{% if com.melhor_resposta %}
-			<div style="background-color: yellow;">
-				<p>MELHOR RESPOSTA ESCOLHIDA PELO AUTOR:</p>
-				<p>...................</p>
-				<p><i>{{ com.coment|safe }}</i></p>
-				<p>publicado por: {{ com.user.first_name }}</p>
-				<p>data: {{ com.data }}</p>
-				<p>....................</p>
-			</div>
-			
-		{% endif %}		
-	{% endfor %}
-
-	{% if chave_fav is 1 %}
-		<p><a href="#" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">Desfavoritar Fix</a></p>
-	{% elif chave_fav is 2 %}
-		<p><a href="#" id="fav" onclick="requisicaoFavorite('{{ fixie.pk }}')">Favoritar Fix</a></p>
-	{% endif %}
-
-	{% if chave_de_participacao == 1 %}
-		<p><a href="#" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')">Desativar notificação de participação</a></p>
-		<p><a href="#" onclick="deleteparticipation('{{ fixie.pk }}')">Excluir participação</a></p>
-	{% elif chave_de_participacao == 2 %}
-		<p><a href="#" id="par" onclick="requisicaoNotificacaoParticipacao('{{ fixie.pk }}')">Ativar notificação de participação</a></p>
-		<p><a href="#" onclick="deleteparticipation('{{ fixie.pk }}')">Excluir participação</a></p>
-	{% endif %}
-
-
-
-	{% if chave %}
-		{% if fixie.resolvido %}
-			<p>Este fix está resolvido! - <a href="#" onclick="restore('{{ fixie.pk }}')">Restaurar fix</a></p> 
-		{% else %}
-			{% if coments.counter != 0 %}
-				<a href="#" onclick="fixed('{{ fixie.pk }}')">Marcar fix como resolvido</a> (Esta opção irá desabilitar novas respostas)
-			{% endif %}
-		{% endif %}
-		
-		{% for com in coments %}
-			<p>...................</p>
-			
-			<p>
-			{% if com.user|imagemperfil %}
-			<img src="{{ com.user|imagemperfil }}" width="100" height="100">
-			{% else %}
-			<img src="{% static 'core/imagens/default.png' %}" width="100" height="100">
-			{% endif %}
-			<a href="{% url 'core:profile' com.user.username %}">{{ com.user.first_name }}</a></p>
-			<p><i>{{ com.coment|safe }}</i> - <a href="" onclick="best_answer('{{ com.pk }}')">Escolher como solução</a> <div id="best{{com.id}}"></div></p>
-			<p>data: {{ com.data }}</p>
-			{% if com.user != request.user %}
-				<p><a href="" onclick="report('{{ com.pk }}')"">Reportar resposta</a></p>
-			{% endif %}
-			<p>....................</p>
-		{% endfor %}
-	{% else %}
-		{% for com in coments %}
-			<p>...................</p>
-			<p>
-			{% if com.user|imagemperfil %}
-			<img src="{{ com.user|imagemperfil }}" width="100" height="100">
-			{% else %}
-			<img src="{% static 'core/imagens/default.png' %}" width="100" height="100">
-			{% endif %}
-			<a href="{% url 'core:profile' com.user.username %}">{{ com.user.first_name }}</a></p>
-			<p><i>{{ com.coment|safe }}</i></p>
-			<p>data: {{ com.data }}</p>
-			<p>....................</p>
-		{% endfor %}
-	{% endif %}
-
-
-{% else %}
-	<p>Ainda não nenhuma resposta</p>
-{% endif %}
-
-
-
 
 	<script src="{% static 'core/js/main.js' %}"></script>
 	<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>

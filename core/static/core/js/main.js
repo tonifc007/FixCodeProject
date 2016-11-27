@@ -1,5 +1,8 @@
-//Ajax para seguidores
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
 
+//Ajax para seguidores
 function requisicao(ide) {
 	//console.log("função para saber se existe uma relaçao de seguidor");
 	$.ajax({
@@ -426,7 +429,7 @@ function ativenotifyparticipate(ide){
              
         // handle a successful response
         success : function(json) {
-            $('#par').text("Desativar notificação de participação");
+            $('#par').addClass('notifix');
         },
 
         // handle a non-successful response
@@ -448,7 +451,7 @@ function inativenotifyparticipate(ide){
              
         // handle a successful response
         success : function(json) {
-            $('#par').text("Ativar notificação de participação");
+            $('#par').removeClass('notifix');
         },
 
         // handle a non-successful response

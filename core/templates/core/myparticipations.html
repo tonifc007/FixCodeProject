@@ -34,8 +34,8 @@
 {% block panel %}
 <ul class="nav nav-tabs navpad">
 
-  <li role="presentation"><a href="{% url 'core:myparticipationsN' %}">Notificações ({{ user|quant_PCnotify }})</a></li>
-  <li role="presentation" class="active"><a href="{% url 'core:myparticipations' %}">Participações ({{ user|quant_PSnotify }})</a></li>
+  <li role="presentation"><a href="{% url 'core:myparticipationsN' %}">Notificações ({{ request.user|quant_PartCnotify }})</a></li>
+  <li role="presentation" class="active"><a href="{% url 'core:myparticipations' %}">Participações ({{ request.user|quant_PartSnotify }})</a></li>
 </ul>
   {% if pagina %}
 	{% for fixie in pagina %}
