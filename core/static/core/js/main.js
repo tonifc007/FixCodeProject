@@ -465,30 +465,27 @@ function inativenotifyparticipate(ide){
 function deleteparticipation(ide){
     console.log("Deletando participação");
     console.log(ide);
-    decisao = confirm("Deseja excluir o seu registro de participação neste fix?");
-    if (decisao) {
-        $.ajax({
-            url : "deleteparticipation/", // the endpoint
-            type : "POST", // http method
-            data : { 
-                id : ide,
-                 }, // data sent with the post request
+    $.ajax({
+        url : "deleteparticipation/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
 
-            // handle a successful response
-            success : function(json) {
-                console.log(json); // log the returned json to the console
-                console.log("success"); // another sanity check
-                parent.window.document.location.href = '';
-            },
+        // handle a successful response
+        success : function(json) {
+            console.log(json); // log the returned json to the console
+            console.log("success"); // another sanity check
+            parent.window.document.location.href = '';
+        },
 
-            // handle a non-successful response
-            error : function(xhr,errmsg,err) {
-                console.log(xhr.status + ": " + xhr.responseText);
-               alert("Não foi possível excluir participação");
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("Não foi possível excluir participação");
 
-            }
-        });
-    }
+        }
+    });
 }
 
 //AJAX para mostrar e ocutar post do perfil
