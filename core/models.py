@@ -262,7 +262,7 @@ class Post(models.Model):
 class ComentPost(models.Model):
 	user = models.ForeignKey(User, default=1)
 	post = models.ForeignKey(Post)
-	coment = RichTextField(config_name='coment')
+	coment = models.TextField(verbose_name='Comentário')
 	data = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):

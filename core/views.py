@@ -1134,6 +1134,7 @@ def post_detail(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
+		eu = get_object_or_404(Profile, user=request.user)
 		form = ComentPostForm(request.POST or None)
 		if form.is_valid():
 			com = form.save(commit=False)
@@ -1156,7 +1157,7 @@ def post_detail(request, pk):
 			post.save()
 		coments = ComentPost.objects.filter(post=post)
 
-		return render(request, 'core/postdetail.html', {'post': post, 'coments':coments, 'form':form})
+		return render(request, 'core/postdetail.html', {'post': post, 'coments':coments, 'form':form, 'eu':eu})
 
 def my_posts(request):
 	if not request.user.is_authenticated():
