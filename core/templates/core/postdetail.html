@@ -51,16 +51,20 @@
 							</h2>
 							
 							{% if post.user|imagemperfil %}
-								<img align="left" class="img-circle media-object" src="{{ post.user|imagemperfil }}" width="25" height="25">
+								<img align="left" class="img-circle media-object" src="{{ post.user|imagemperfil }}" width="40" height="40">
 							{% else %}
 								<img class="img-circle media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
 							{% endif %}
 							<a class="titulopindex tituloPost" href="{% url 'core:profile' post.user.username %}">{{ post.user.first_name }}</a>
-							<small class="pCinza subtituloPost"><span class="glyphicon glyphicon-time"></span> 
+							<p class="pCinza"><small><span class="glyphicon glyphicon-calendar"></span> 
 				    	
-						  			{{ post.data }}
+						  			{{ post.data|date }}
+						  	{% if post.anexo.path|verificaArquivo != False %}
+					  			&nbsp;- <span class="glyphicon glyphicon-link"></span>Anexo
+					  		{% endif %}
 
-						    </small>
+						  	</small>
+						    </p>
 							
 						</div>						
 					</div>

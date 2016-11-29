@@ -1116,6 +1116,7 @@ def create_post(request):
 			post.anexo = request.FILES.get('anexo', False)
 			print post.anexo
 			if post.anexo != False:
+				print "Usuário upou algo!"
 				file_type = post.anexo.url.split('.')[-1]
 				file_type = file_type.lower()
 				if file_type not in FILE_TYPES:
@@ -1268,6 +1269,7 @@ def edit_post(request, pk):
 				post.anexo = request.FILES.get('anexo', False)
 				print post.anexo
 				if post.anexo != False:
+					print "O usuário postou algo!"
 					file_type = post.anexo.url.split('.')[-1]
 					file_type = file_type.lower()
 					if file_type not in FILE_TYPES:
