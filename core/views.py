@@ -1136,6 +1136,7 @@ def post_detail(request, pk):
 		return render(request, 'core/login.html')
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
+
 		form = ComentPostForm(request.POST or None)
 		if form.is_valid():
 			com = form.save(commit=False)
@@ -1151,6 +1152,7 @@ def post_detail(request, pk):
 			return redirect('/post/'+pk+'/#post')
 
 		post = get_object_or_404(Post, pk=pk)
+		donoDoPost = get_object_or_404(Profile, user=post.user)
 
 		if post.user == request.user:
 			print('este fix é deste usuario')
@@ -1158,7 +1160,7 @@ def post_detail(request, pk):
 			post.save()
 		coments = ComentPost.objects.filter(post=post)
 
-		return render(request, 'core/postdetail.html', {'post': post, 'coments':coments, 'form':form, 'eu':eu})
+		return render(request, 'core/postdetail.html', {'post': post, 'coments':coments, 'form':form, 'eu':eu, 'donoDoPost':donoDoPost})
 
 def my_posts(request):
 	if not request.user.is_authenticated():

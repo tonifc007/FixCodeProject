@@ -533,7 +533,8 @@ function ativepostprofile(ide){
              
         // handle a successful response
         success : function(json) {
-            $('#req').text("Ocultar post do perfil");
+            $('#req').addClass('notifix');
+            $('#req > span').removeClass('glyphicon-unchecked').addClass('glyphicon-check');
         },
 
         // handle a non-successful response
@@ -555,7 +556,8 @@ function inativepostprofile(ide){
              
         // handle a successful response
         success : function(json) {
-            $('#req').text("Exibir post no perfil");
+            $('#req').removeClass('notifix');
+            $('#req > span').removeClass('glyphicon-check').addClass('glyphicon-unchecked');
         },
 
         // handle a non-successful response
@@ -568,31 +570,29 @@ function inativepostprofile(ide){
 }
 
 function alertDeletePost(ide){
-    decisao = confirm("Deseja excluir este post?");
-    if (decisao) {
-        console.log("confirmou");
-        $.ajax({
-        url : "delete_post/", // the endpoint
-        type : "POST", // http method
-        data : { 
-            id : ide,
-             }, // data sent with the post request
 
-        // handle a successful response
-        success : function(json) {
-            window.location.replace("/myposts/");
-            console.log(json); // log the returned json to the console
-            console.log("success"); // another sanity check
-        },
+    console.log("confirmou");
+    $.ajax({
+    url : "delete_post/", // the endpoint
+    type : "POST", // http method
+    data : { 
+        id : ide,
+         }, // data sent with the post request
 
-        // handle a non-successful response
-        error : function(xhr,errmsg,err) {
-            console.log(xhr.status + ": " + xhr.responseText);
-           alert("deu errado")
+    // handle a successful response
+    success : function(json) {
+        window.location.replace("/myposts/");
+        console.log(json); // log the returned json to the console
+        console.log("success"); // another sanity check
+    },
 
-        }
-    });
+    // handle a non-successful response
+    error : function(xhr,errmsg,err) {
+        console.log(xhr.status + ": " + xhr.responseText);
+       alert("deu errado")
+
     }
+});
 }
 
 
@@ -636,7 +636,7 @@ function ativenotifypost(ide){
              
         // handle a successful response
         success : function(json) {
-            $('#reqP').text("Desativar notificações deste post");
+            $('#reqP').addClass('notifix');
         },
 
         // handle a non-successful response
@@ -658,7 +658,7 @@ function inativenotifypost(ide){
              
         // handle a successful response
         success : function(json) {
-            $('#reqP').text("Ativar notificações deste post");
+            $('#reqP').removeClass('notifix');
         },
 
         // handle a non-successful response

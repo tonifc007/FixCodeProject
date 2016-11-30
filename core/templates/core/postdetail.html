@@ -34,14 +34,14 @@
 									{% endif %}							
 									{% if post.user == request.user %}
 										{% if post.ativa_notificacao == True %}
-											<button class="btn btn-default btn-sm notifix"><span class="glyphicon glyphicon-bell"></span></button>
+											<button class="btn btn-default btn-sm notifix" id="reqP" onclick="requisicaoChaveAtivacaoPost('{{ post.pk }}')"><span class="glyphicon glyphicon-bell"></span></button>
 										{% else %}
-											<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-bell"></span></button>
+											<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-bell" id="reqP" onclick="requisicaoChaveAtivacaoPost('{{ post.pk }}')"></span></button>
 										{% endif %}
 										{% if post.exibir_perfil == True %}
-											<button class="btn btn-default btn-sm notifix"><span class="glyphicon glyphicon-check"></span></button>
+											<button class="btn btn-default btn-sm notifix" id="req" onclick="requisicaoChavePostPerfil('{{ post.pk }}')"><span class="glyphicon glyphicon-check"></span></button>
 										{% else %}
-											<button class="btn btn-default btn-sm notifix"><span class="glyphicon glyphicon-unchecked"></span></button>
+											<button class="btn btn-default btn-sm" id="req" onclick="requisicaoChavePostPerfil('{{ post.pk }}')"><span class="glyphicon glyphicon-unchecked"></span></button>
 										{% endif %}
 										<div class="btn-group">
 										  <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -54,8 +54,27 @@
 												<li><a href="/media/{{ post.anexo }}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span>   Anexo ({{ post.anexo|extarquivo }} - {{ post.anexo.path|nomearquivo }})</a></li>
 												{% endif %}
 											{% endif %}
-										    <li><a href="#"><span class="glyphicon glyphicon-trash"></span>   Deletar Fix</a></li>
+										    
+										    <li class="hoverLiFix" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-remove"></span> Excluir postagem</li>
 										  </ul>
+										</div>
+										<!-- Modal -->
+										<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+										  <div class="modal-dialog" role="document">
+										    <div class="modal-content">
+										      <div class="modal-header">
+										        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										        <h4 class="modal-title" id="myModalLabel">Excluir postagem</h4>
+										      </div>
+										      <div class="modal-body">
+										        <small>Deseja deletar esta postagem?</small>
+										      </div>
+										      <div class="modal-footer">
+										        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+										        <button type="button" class="btn btn-primary" onclick="alertDeletePost('{{ fixie.pk }}')">Excluir</button>
+										      </div>
+										    </div>
+										  </div>
 										</div>
 
 									{% endif %}
@@ -82,7 +101,139 @@
 						    <div class="estiloPostagem">
 						    	{{ post.post|safe }}
 						    </div>
+						    <div>
+						    <p class="pCinzaUser">
+						    	<small>
+						    		<span class="glyphicon glyphicon-tags"></span>&nbsp; Tags:
+								  		{% for tag in post.area.all %}
+								  			{% if tag == post.area.all.last %}
+								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+								  			{% else %}
+								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+								  			{% endif %}
+								  		{% endfor %}
+								</small>
+						    </p>
+						    </div>
+						    <div class="painelAutor">
+						    <div class="panel panel-default">
+						    	<div class="panel-heading">Sobre o autor:</div>
+								<div class="panel-body">
+								<div class="media-left media-top">
+								    {% if post.user|imagemperfil %}
+									<img class="thumbnail media-object" src="{{ post.user|imagemperfil }}" width="80" height="80">
+									{% else %}
+									<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+									{% endif %}
+								</div>
+								<div class="media-body">
+								    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' post.user.username %}">{{ post.user.first_name }}</a> - <span class="pCinzaUser">{{post.user.username}}</span></h4>
+								    {% if donoDoPost.bio %}
+								    	<p>{{ donoDoPost.bio }}</p>
+								    {% endif %}
+								    {% if donoDoPost.git %}
+								    	<p><img src="{% static 'core/css/github-logo.png' %}" width="17" height="17"> <a href="http://github.com/{{ donoDoPost.git }}" target="_blank"> {{ donoDoPost.git }} </a></p>
+								    {% endif %}
+								    							    	
+								    
+								</div>
+								</div>
+							</div>
+							</div>
+							<hr/>
+							{% if coments|l == 0 %}
+								<h4><span class="glyphicon glyphicon-comment"></span>
+								 Seja o primeiro a comentar! :).
+								</h4>
+							{% else %}
+								<h4><span class="glyphicon glyphicon-comment"></span>
+								 {{ coments|l }} comentários:
+								</h4>
+							{% endif %}
+							{% for com in coments %}
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<div class="media-left media-top">
+										    {% if com.user|imagemperfil %}
+											<img class="thumbnail media-object" src="{{ com.user|imagemperfil }}" width="80" height="80">
+											{% else %}
+											<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+											{% endif %}
+										</div>
+										<div class="media-body">
+										    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' com.user.username %}">{{ com.user.first_name }}</a> - <span class="pCinzaUser">{{com.user.username}}</span> 
+										    {% if post.user == request.user %}
+										    	
+										    	<span class="pull-right">
+											    	<div class="dropdown">
+													  <button class="btn btn-default btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+													    <span class="caret"></span>
+													  </button>
+													  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+													    <li class="hoverLiFix" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-remove"></span> Reportar comentário</li>
+													  </ul>
+													</div>
+													<!-- Modal -->
+													<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+													  <div class="modal-dialog" role="document">
+													    <div class="modal-content">
+													      <div class="modal-header">
+													        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+													        <h4 class="modal-title" id="myModalLabel">Deletar resposta</h4>
+													      </div>
+													      <div class="modal-body">
+													        Deseja deletar
+													        "{{ com.coment|safe}}"
+													       feita por {{ com.user.first_name }}?
+													      </div>
+													      <div class="modal-footer">
+													        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+													        <button type="button" class="btn btn-primary" onclick="report('{{ com.pk }}')">Deletar</button>
+													      </div>
+													    </div>
+													  </div>
+													</div>
+
+											    </span>
+										    {% endif %}
+										    </h4>
+										    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
+										    	
+										  			Publicado em {{ com.data }}
+										  		
+										    </small>
+										    <div class="fcc">{{ com.coment|safe}}</div>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+							{% if request.user %}
+							<div id="post"></div>
+							<h4>Comente:</h4>
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<div class="media-left media-top">
+									    {% if request.user|imagemperfil %}
+										<img class="thumbnail media-object" src="{{ request.user|imagemperfil }}" width="80" height="80">
+										{% else %}
+										<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+										{% endif %}
+									</div>
+									<div class="media-body">
+										
+										<form method="post">
+										{% csrf_token %}
+											<textarea class="form-control" rows="4" name="{{form.coment.name}}" placeholder="Escreva aqui seu comentário."></textarea>
+											
+											<button class="btn btn-success col-xs-4 col-xs-offset-3 botaoPost" type="submit">Comentar</button>
+
+									</div>
+								</div>
+							</div>
+
 							
+						{% endif %}
+
 						</div>						
 					</div>
 				</div>
@@ -137,20 +288,6 @@
 {% else %}
 	<p>Ainda não nenhuma resposta</p>
 {% endif %}
-
-	<div id="post"></div>
-	<form method="post">
-	{% csrf_token %}
-	{% for field in form %}
-		{{ field.errors }}
-		{{ field.label_tag }}
-		<br>
-		{{ field }}
-		<br><br>
-	{% endfor %}
-	<button type="submit">Comentar</button>
-
-
 
 
 	<script src="{% static 'core/js/main.js' %}"></script>

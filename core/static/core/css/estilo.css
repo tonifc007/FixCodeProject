@@ -222,6 +222,7 @@ label#lbPost{
 
 .hoverLiFix{
 	padding: 5px;
+	text-align: center;
 }
 .hoverLiFix:hover{
 	background-color: #f5f5f5;
@@ -242,4 +243,12 @@ label#lbPost{
 .estiloPostagem > p{
 	font-family: serif;
 	font-size: 14pt;
+}
+
+.painelAutor{
+	margin-top: 50px;
+}
+
+.botaoPost{
+	margin-top: 5px;
 }
