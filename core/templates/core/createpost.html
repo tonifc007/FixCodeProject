@@ -34,7 +34,7 @@
 				<div class="panel panel-default">
 				<div class="panel-heading"><h4>Postagem</h4></div>
 				<div class="panel-body">
-					<form action="{% url 'core:create_post' %}" class="form-horizontal" method="post">
+					<form enctype="multipart/form-data" action="{% url 'core:create_post' %}" class="form-horizontal" method="post">
 						{% csrf_token %}
 						<div class="form-group">
 							<label for="{{form.titulo.name}}" class="col-xs-1 control-label">{{ form.titulo.label_tag }}</label>

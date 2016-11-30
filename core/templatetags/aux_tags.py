@@ -3,7 +3,7 @@ from ..models import ComentFixies, Fixies, Profile, Participations, Favorites, P
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 import os.path
-
+import os
 register = template.Library()
 
 @register.filter(name='quant_coment')
@@ -20,7 +20,20 @@ def l(value):
 
 @register.filter(name='nomearquivo')
 def nomearquivo(value):
-	return value.url.split('/')[-1]
+	bytes = float(os.path.getsize(value))
+	print("Tamanho do arquivo: {}".format(bytes))
+	if bytes < 1024:
+		return ("%.2f bytes" % round(bytes,2))
+	if bytes < 1024 * 1024:
+		bytes = bytes/1024
+		return ("%.1f KB" % round(bytes,2))
+	if bytes < 1024 * 1024 * 1024:
+		bytes = bytes / (1024 * 1024)
+		return ("%.1f MB" % round(bytes,2))
+
+@register.filter(name='extarquivo')
+def extarquivo(value):
+	return value.url.split('.')[-1]
 
 @register.filter(name='imagemperfil')
 def imagemperfil(value):

@@ -35,12 +35,14 @@ class ComentForm(forms.ModelForm):
 
 class EditProfile(forms.ModelForm):
 	habilidades = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Areas.objects.all())
+	
 	class Meta:
 		model = Profile
 		fields = ('imagem_perfil', 'bio', 'git', 'habilidades',)
 
 class PostForm(forms.ModelForm):
 	area = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Areas.objects.all())
+	
 	class Meta:
 		model = Post
 		fields = ('titulo', 'post','anexo', 'exibir_perfil','area')

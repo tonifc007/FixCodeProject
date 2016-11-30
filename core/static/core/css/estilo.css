@@ -238,3 +238,8 @@ label#lbPost{
 	margin-right: -10px;
 	
 }
+
+.estiloPostagem > p{
+	font-family: serif;
+	font-size: 14pt;
+}
