@@ -1261,9 +1261,10 @@ def edit_post(request, pk):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
+		eu = get_object_or_404(Profile, user=request.user)
 		post = get_object_or_404(Post, pk=pk)
 		if post.user == request.user:
-			form = PostForm(request.POST, instance=post)
+			form = PostForm(request.POST or None, instance=post)
 			if form.is_valid():
 				post = form.save(commit=False)
 				post.user = request.user
@@ -1275,12 +1276,12 @@ def edit_post(request, pk):
 					file_type = post.anexo.url.split('.')[-1]
 					file_type = file_type.lower()
 					if file_type not in FILE_TYPES:
-						return render(request, 'core/createpost.html', {'form':form, 'error_message':'Arquivo inválido'})
+						return render(request, 'core/editpost.html', {'form':form, 'error_message':'Arquivo inválido', 'edit':True, 'post':post, 'eu':eu})
 				else:
 					post.anexo = var
 				post.save()
 				return redirect('/post/'+pk+'/')
-			return render(request, 'core/createpost.html', {'form':form})
+			return render(request, 'core/editpost.html', {'form':form, 'edit':True, 'post':post, 'eu':eu})
 		else:
 			raise Http404
 
