@@ -572,27 +572,27 @@ function inativepostprofile(ide){
 function alertDeletePost(ide){
 
     console.log("confirmou");
-    $.ajax({
-    url : "delete_post/", // the endpoint
-    type : "POST", // http method
-    data : { 
-        id : ide,
-         }, // data sent with the post request
+        $.ajax({
+        url : "delete_post/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
 
-    // handle a successful response
-    success : function(json) {
-        window.location.replace("/myposts/");
-        console.log(json); // log the returned json to the console
-        console.log("success"); // another sanity check
-    },
+        // handle a successful response
+        success : function(json) {
+            window.location.replace("/post/myposts/");
+            console.log(json); // log the returned json to the console
+            console.log("success"); // another sanity check
+        },
 
-    // handle a non-successful response
-    error : function(xhr,errmsg,err) {
-        console.log(xhr.status + ": " + xhr.responseText);
-       alert("deu errado")
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado")
 
-    }
-});
+        }
+    });
 }
 
 
@@ -673,30 +673,29 @@ function inativenotifypost(ide){
 function report_coment_post(ide){
     console.log("Reportando comentário");
     console.log(ide);
-    decisao = confirm("Deseja excluir esta comentário?");
-    if (decisao) {
-        $.ajax({
-            url : "report/", // the endpoint
-            type : "POST", // http method
-            data : { 
-                id : ide,
-                 }, // data sent with the post request
 
-            // handle a successful response
-            success : function(json) {
-                console.log(json); // log the returned json to the console
-                console.log("success"); // another sanity check
-                parent.window.document.location.href = '';
-            },
+    $.ajax({
+        url : "report/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
 
-            // handle a non-successful response
-            error : function(xhr,errmsg,err) {
-                console.log(xhr.status + ": " + xhr.responseText);
-               alert("Não foi possível reportar esta resposta")
+        // handle a successful response
+        success : function(json) {
+            console.log(json); // log the returned json to the console
+            console.log("success"); // another sanity check
+            parent.window.document.location.href = '';
+        },
 
-            }
-        });
-    }
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("Não foi possível reportar esta resposta")
+
+        }
+    });
+    
 }
 
 

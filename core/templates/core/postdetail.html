@@ -54,6 +54,7 @@
 												<li><a href="/media/{{ post.anexo }}" target="_blank"><span class="glyphicon glyphicon-download-alt"></span>   Anexo ({{ post.anexo|extarquivo }} - {{ post.anexo.path|nomearquivo }})</a></li>
 												{% endif %}
 											{% endif %}
+											<li class="hoverLiFix"><a href="{% url 'core:edit_post' post.pk %}"><span class="glyphicon glyphicon-edit"></span> Editar postagem</a></li>
 										    
 										    <li class="hoverLiFix" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-remove"></span> Excluir postagem</li>
 										  </ul>
@@ -71,7 +72,7 @@
 										      </div>
 										      <div class="modal-footer">
 										        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-										        <button type="button" class="btn btn-primary" onclick="alertDeletePost('{{ fixie.pk }}')">Excluir</button>
+										        <button type="button" class="btn btn-primary" onclick="alertDeletePost('{{ post.pk }}')">Excluir</button>
 										      </div>
 										    </div>
 										  </div>
@@ -170,25 +171,25 @@
 													    <span class="caret"></span>
 													  </button>
 													  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-													    <li class="hoverLiFix" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-remove"></span> Reportar comentário</li>
+													    <li class="hoverLiFix" data-toggle="modal" data-target="#myModalComent{{com.pk}}"><span class="glyphicon glyphicon-remove"></span> Reportar comentário</li>
 													  </ul>
 													</div>
 													<!-- Modal -->
-													<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+													<div class="modal fade" id="myModalComent{{com.pk}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 													  <div class="modal-dialog" role="document">
 													    <div class="modal-content">
 													      <div class="modal-header">
 													        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-													        <h4 class="modal-title" id="myModalLabel">Deletar resposta</h4>
+													        <h4 class="modal-title" id="myModalLabel">Deletar comentário</h4>
 													      </div>
 													      <div class="modal-body">
 													        Deseja deletar
-													        "{{ com.coment|safe}}"
+													        "{{ com.coment|safe }}"
 													       feita por {{ com.user.first_name }}?
 													      </div>
 													      <div class="modal-footer">
 													        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-													        <button type="button" class="btn btn-primary" onclick="report('{{ com.pk }}')">Deletar</button>
+													        <button type="button" class="btn btn-primary" onclick="report_coment_post('{{ com.pk }}')">Deletar</button>
 													      </div>
 													    </div>
 													  </div>

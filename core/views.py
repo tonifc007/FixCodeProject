@@ -1263,7 +1263,7 @@ def edit_post(request, pk):
 	else:
 		post = get_object_or_404(Post, pk=pk)
 		if post.user == request.user:
-			form = PostForm(request.POST or None, instance=post)
+			form = PostForm(request.POST, instance=post)
 			if form.is_valid():
 				post = form.save(commit=False)
 				post.user = request.user

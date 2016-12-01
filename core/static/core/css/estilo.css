@@ -252,3 +252,24 @@ label#lbPost{
 .botaoPost{
 	margin-top: 5px;
 }
+
+.linkEdtarPost > li > span{
+	text-decoration: none;
+	color: black;
+}
+
+.linkEditarPost:hover{
+	text-decoration-color: black;
+	text-decoration: none;
+	color: black;
+}
+
+.linkEditarPost:active{
+	text-decoration: none;
+	color: black;
+}
+
+.linkEditarPost:visited{
+	text-decoration: none;
+	color: black;
+}
