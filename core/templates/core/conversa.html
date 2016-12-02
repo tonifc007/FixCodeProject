@@ -1,0 +1,19 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Inbox - {{ userVisitado.first_name }}</title>
+	<script language="javascript" src="{% static 'core/css/bootstrap/js/jquery-3.1.0.min.js' %}"></script>   
+</head>
+<body>
+	{% for message in mensagens%}
+		{% if message.emissor == request.user %}
+			<p>(eu) - {{ message.texto }}</p>
+		{% else %}
+			<p>({{ userVisitado.first_name }}) - {{ message.texto }}</p>
+		{% endif %}
+	{% endfor %}
+	<div id="#newmessage"></div>
+	<script language="javascript" src="{% static 'core/js/visibility.js' %}"></script>
+</body>
+</html>

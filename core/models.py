@@ -267,3 +267,40 @@ class ComentPost(models.Model):
 
 	def __str__(self):
 		return '~' + self.coment + '~ em ~' + self.post.titulo + '~'
+
+class Message(models.Model):
+	emissor = models.ForeignKey(User, related_name='+')
+	receptor = models.ForeignKey(User)
+	data = models.DateTimeField(default=timezone.now)
+	texto = models.TextField(verbose_name='Mensagem')
+	visualisada = models.BooleanField(default=False)
+
+	def __str__(self):
+		return 'Mensagem de ' + self.emissor.first_name +' para '+self.receptor.first_name
+
+	def get_all_messages(self, usuarioLogado, usuarioVisitado):
+		ms = list()
+
+		mlog = Message.objects.filter(emissor=usuarioLogado, receptor=usuarioVisitado)
+		mvis = Message.objects.filter(emissor=usuarioVisitado, receptor=usuarioLogado)
+
+
+
+		for m in mlog:ms.append(m)
+		for m in mvis:
+			if m.visualisada == False:
+				m.visualisada = True
+				m.save()
+			ms.append(m)
+
+		return sorted(ms, key=lambda inst: inst.data)
+
+	def get_messages_not_view(self, usuarioLogado, usuarioVisitado):
+		a = list()
+		mvis = Message.objects.filter(emissor=usuarioVisitado, receptor=usuarioLogado)
+
+		for m in mvis:
+			if m.visualisada == False:
+				a.append(m)
+
+		return a

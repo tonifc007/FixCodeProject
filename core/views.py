@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
-from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, ComentPost, Areas
+from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, ComentPost, Areas, Message
 from django.contrib.auth import authenticate, login, logout, get_user
 from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile, PostForm, ComentPostForm
 from django.http import Http404
@@ -1373,3 +1373,29 @@ def report_coment_post(request, pk):
 					response_data = "Comentário reportado com sucesso"
 			return HttpResponse(json.dumps(response_data), content_type="application/json")
 		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+
+def sala(request, pkreceptor):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		instanciaMessage = Message()
+		userVisitado = get_object_or_404(User, pk=pkreceptor)
+		if request.user == userVisitado:
+			return render(request, 'core/conversaAlone.html')
+		mensagens = instanciaMessage.get_all_messages(request.user, userVisitado)
+
+		return render(request, 'core/conversa.html', {'mensagens':mensagens, 'userVisitado':userVisitado})
+
+
+def messages_not_view(request, pkreceptor):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		instanciaMessage = Message()
+		userVisitado = get_object_or_404(User, pk=pkreceptor)
+		if request.user == userVisitado:
+			return render(request, 'core/conversaAlone.html')
+		mensagens = instanciaMessage.get_messages_not_view(request.user, userVisitado)
+		return HttpResponse(json.dumps(mensagens), content_type="application/json")
+		

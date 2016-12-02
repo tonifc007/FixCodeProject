@@ -76,4 +76,8 @@ urlpatterns = [
     url(r'^profile/(?P<username>\w+)/follower/$', views.followajax, name='followajax'),
     url(r'^profile/(?P<username>\w+)/unfollower/$', views.unfollowajax, name='unfollowajax'),
 
+    #Paginas de inbox
+    url(r'^inbox/message/(?P<pkreceptor>[0-9]+)/$', views.sala, name='sala'),
+    url(r'^inbox/message/(?P<pkreceptor>[0-9]+)/notview/$', views.messages_not_view, name='messages_not_view'),
+
 ]
