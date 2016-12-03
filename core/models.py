@@ -284,8 +284,6 @@ class Message(models.Model):
 		mlog = Message.objects.filter(emissor=usuarioLogado, receptor=usuarioVisitado)
 		mvis = Message.objects.filter(emissor=usuarioVisitado, receptor=usuarioLogado)
 
-
-
 		for m in mlog:ms.append(m)
 		for m in mvis:
 			if m.visualisada == False:
@@ -301,6 +299,21 @@ class Message(models.Model):
 
 		for m in mvis:
 			if m.visualisada == False:
-				a.append(m)
-
+				a.append(([m.texto], ["{}/{} - {}:{}:{}".format(m.data.month, m.data.day, m.data.hour, m.data.minute, m.data.second)]))
 		return a
+
+	def set_le_mensagens(self, usuarioLogado, usuarioVisitado):
+		mvis = Message.objects.filter(emissor=usuarioVisitado, receptor=usuarioLogado)
+		for m in mvis:
+			if m.visualisada == False:
+				m.visualisada = True
+				m.save()
+		return True
+
+	def send_message(self, usuarioLogado, usuarioVisitado, mensagem):
+		newMessage = Message()
+		newMessage.texto = mensagem
+		newMessage.emissor = usuarioLogado
+		newMessage.receptor = usuarioVisitado
+		newMessage.save()
+		return newMessage.texto

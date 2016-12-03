@@ -1379,13 +1379,14 @@ def sala(request, pkreceptor):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
+		eu = get_object_or_404(Profile, user=request.user)
 		instanciaMessage = Message()
 		userVisitado = get_object_or_404(User, pk=pkreceptor)
 		if request.user == userVisitado:
-			return render(request, 'core/conversaAlone.html')
+			return render(request, 'core/conversaAlone.html', {'eu':eu})
 		mensagens = instanciaMessage.get_all_messages(request.user, userVisitado)
 
-		return render(request, 'core/conversa.html', {'mensagens':mensagens, 'userVisitado':userVisitado})
+		return render(request, 'core/conversa.html', {'mensagens':mensagens, 'userVisitado':userVisitado, 'eu':eu})
 
 
 def messages_not_view(request, pkreceptor):
@@ -1397,5 +1398,32 @@ def messages_not_view(request, pkreceptor):
 		if request.user == userVisitado:
 			return render(request, 'core/conversaAlone.html')
 		mensagens = instanciaMessage.get_messages_not_view(request.user, userVisitado)
+		print(mensagens)
 		return HttpResponse(json.dumps(mensagens), content_type="application/json")
+
+def read_messages(request, pkreceptor):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		instanciaMessage = Message()
+		userVisitado = get_object_or_404(User, pk=pkreceptor)
+		if request.user == userVisitado:
+			return render(request, 'core/conversaAlone.html')
+		mensagens = instanciaMessage.set_le_mensagens(request.user, userVisitado)
+		print(mensagens)
+		return HttpResponse(json.dumps("Mensagens lidas com sucesso"), content_type="application/json")
 		
+def send_message(request, pkreceptor):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			mensagem = request.POST.get('id')
+			print mensagem			
+			instanciaMessage = Message()
+			userVisitado = get_object_or_404(User, pk=pkreceptor)
+			if request.user == userVisitado:
+				return render(request, 'core/conversaAlone.html')
+			resultado = instanciaMessage.send_message(request.user, userVisitado, mensagem)
+			return HttpResponse(json.dumps(resultado), content_type="application/json")
+		return HttpResponse(json.dumps(False), content_type="application/json")

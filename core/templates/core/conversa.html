@@ -1,19 +1,59 @@
+{% extends 'core/base.html' %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Inbox - {{ userVisitado.first_name }}</title>
-	<script language="javascript" src="{% static 'core/css/bootstrap/js/jquery-3.1.0.min.js' %}"></script>   
-</head>
-<body>
-	{% for message in mensagens%}
-		{% if message.emissor == request.user %}
-			<p>(eu) - {{ message.texto }}</p>
-		{% else %}
-			<p>({{ userVisitado.first_name }}) - {{ message.texto }}</p>
-		{% endif %}
-	{% endfor %}
-	<div id="#newmessage"></div>
-	<script language="javascript" src="{% static 'core/js/visibility.js' %}"></script>
-</body>
-</html>
+{% load aux_tags %}
+{% block titulo %}Inbox - {{ userVisitado.first_name }} - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
+
+{% block imagemperfil %}
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
+		
+	{% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<ol class="breadcrumb">
+		  <li><a href="/">Home</a></li>
+		  <li class="active">Inbox</li>
+		</ol>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="col-lg-10 col-lg-offset-1">
+			<ul class="list-group">
+				
+				{% for message in mensagens%}
+					{% if message.emissor == request.user %}
+						<li class="list-group-item list-group-item-info" style="text-align: right;">(eu) - {{ message.texto }}</li>
+					{% else %}
+						<li class="list-group-item">{{ message.texto }}</li>
+					{% endif %}
+				{% endfor %}
+				<div id="newmessage"></div>
+				
+				<textarea id="campo" rows="4" cols="50"></textarea>
+			</ul>
+				<br>
+				<button id="benviar" onclick="mandaMensagem()">Enviar mensagem</button>
+
+				
+				
+			</div>
+			</div>
+		</div>
+	</div>
+</div>
+	
+ <script language="javascript" src="{% static 'core/js/visibility.js' %}"></script>
+{% endblock %}
+

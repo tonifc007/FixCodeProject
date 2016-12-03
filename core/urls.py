@@ -79,5 +79,7 @@ urlpatterns = [
     #Paginas de inbox
     url(r'^inbox/message/(?P<pkreceptor>[0-9]+)/$', views.sala, name='sala'),
     url(r'^inbox/message/(?P<pkreceptor>[0-9]+)/notview/$', views.messages_not_view, name='messages_not_view'),
+    url(r'^inbox/message/(?P<pkreceptor>[0-9]+)/read/$', views.read_messages, name='read_messages'),
+    url(r'^inbox/message/(?P<pkreceptor>[0-9]+)/send/$', views.send_message, name='send_message'),
 
 ]
