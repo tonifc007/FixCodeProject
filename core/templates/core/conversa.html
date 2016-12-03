@@ -10,7 +10,7 @@
 		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
 	{% else %}
 		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
-		
+
 	{% endif %}
 {% endblock %}
 
@@ -26,34 +26,67 @@
 	</div>
 </div>
 
-<div class="container">
+<div class="container-fluid">
 	<div class="row">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<div class="col-lg-10 col-lg-offset-1">
-			<ul class="list-group">
-				
-				{% for message in mensagens%}
-					{% if message.emissor == request.user %}
-						<li class="list-group-item list-group-item-info" style="text-align: right;">(eu) - {{ message.texto }}</li>
-					{% else %}
-						<li class="list-group-item">{{ message.texto }}</li>
-					{% endif %}
-				{% endfor %}
+		<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+			<div class="col-xs-8 col-xs-offset-2 col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3 col-lg-12 col-lg-offset-1">
+				{% if profileVisitado.imagem_perfil %}
+					<img class="img-thumbnail img-responsive img-circle" src="{{ profileVisitado.imagem_perfil.url }}">
+				{% else %}
+					<img class="img-responsive thumbnail" src="{% static 'core/imagens/default.png' %}">
+				{% endif %}
+			</div>
+			<div class="col-lg-12 col-lg-offset-1">
+				<h2>{{ profileVisitado.user.first_name }}<br>
+					<small>{{ profileVisitado.user.username }}</small>
+				</h2>
+				{% if profileVisitado.bio %}
+					<h4><span class="glyphicon glyphicon-info-sign"></span> {{ profileVisitado.bio }}</h4>
+				{% endif %}
+				{% if profileVisitado.git %}
+					<h4><span><img src="{% static 'core/css/github-logo.png' %}" width="19" height="19"></span> <a href="http://github.com/{{ profileVisitado.git }}" target="_blank"> {{ profileVisitado.git }} </a></h4>
+				{% endif %}
+			</div>
+		</div>
+		<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+
+				<div class="panel panel-default">
+				  <div class="panel-body">
+				    Basic panel example
+					{% for message in mensagens%}
+						{% if message.emissor != request.user %}
+
+								<p class="msg-receptor">
+									{{ message.texto }}
+								</p>
+
+
+						{% else %}
+						<div class="col-xs-12">
+							<p class="msg-emissor pull-right">
+								{{ message.texto }}
+							</p>
+						</div>
+
+						{% endif %}
+					{% endfor %}
+				  </div>
+				</div>
+
 				<div id="newmessage"></div>
-				
 				<textarea id="campo" rows="4" cols="50"></textarea>
-			</ul>
+
 				<br>
 				<button id="benviar" onclick="mandaMensagem()">Enviar mensagem</button>
 
-				
-				
-			</div>
+
+
+
+
 			</div>
 		</div>
 	</div>
 </div>
-	
+
  <script language="javascript" src="{% static 'core/js/visibility.js' %}"></script>
 {% endblock %}
-

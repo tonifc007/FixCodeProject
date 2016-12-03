@@ -65,7 +65,7 @@ def index(request):
 		#invertendo para os ultmos serem os primeiros
 		followings = followings[::-1]
 
-		
+
 
 		#sistema de paginação
 		paginator = Paginator(fixies, 5)
@@ -177,7 +177,7 @@ def settings(request):
 		#form = UserFormRegister(request.POST or None, instance=request.user)
 		if request.POST:
 			print 'entrou na funçao'
-			
+
 			name = request.POST.get('first_name')
 			lastname = request.POST.get('last_name')
 			#username = request.POST.get('username')
@@ -207,7 +207,7 @@ def settings(request):
 			user = authenticate(username=request.user.username, password=password)
 			login(request, user)
 			return redirect('/profile/'+user.username+'/')
-		return render(request, 'core/settings.html', {'profile':detalhes}) 
+		return render(request, 'core/settings.html', {'profile':detalhes})
 
 def edit_details_profile(request):
 	if not request.user.is_authenticated():
@@ -246,10 +246,10 @@ def profile(request, username):
 	participations = Participations.objects.filter(user=use)
 	favorites = Favorites.objects.filter(user=use)
 	profile = get_object_or_404(Profile, user=use)
-	
+
 	instanciaSeguidor = Followers()
 
-	if request.user.is_authenticated():		
+	if request.user.is_authenticated():
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
 		eu = get_object_or_404(Profile, user=request.user)
@@ -682,10 +682,10 @@ def participations(request, username):
 	participations = Participations.objects.filter(user=use)
 	favorites = Favorites.objects.filter(user=use)
 	profile = get_object_or_404(Profile, user=use)
-	
+
 	instanciaSeguidor = Followers()
 
-	if request.user.is_authenticated():		
+	if request.user.is_authenticated():
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
 		eu = get_object_or_404(Profile, user=request.user)
@@ -871,10 +871,10 @@ def favorites(request, username):
 	participations = Participations.objects.filter(user=use)
 	favorites = Favorites.objects.filter(user=use)
 	profile = get_object_or_404(Profile, user=use)
-	
+
 	instanciaSeguidor = Followers()
 
-	if request.user.is_authenticated():		
+	if request.user.is_authenticated():
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
 		eu = get_object_or_404(Profile, user=request.user)
@@ -997,10 +997,10 @@ def follower(request, username):
 	participations = Participations.objects.filter(user=use)
 	favorites = Favorites.objects.filter(user=use)
 	profile = get_object_or_404(Profile, user=use)
-	
+
 	instanciaSeguidor = Followers()
 
-	if request.user.is_authenticated():		
+	if request.user.is_authenticated():
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
 		eu = get_object_or_404(Profile, user=request.user)
@@ -1040,10 +1040,10 @@ def following(request, username):
 	participations = Participations.objects.filter(user=use)
 	favorites = Favorites.objects.filter(user=use)
 	profile = get_object_or_404(Profile, user=use)
-	
+
 	instanciaSeguidor = Followers()
 
-	if request.user.is_authenticated():		
+	if request.user.is_authenticated():
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
 		eu = get_object_or_404(Profile, user=request.user)
@@ -1382,11 +1382,12 @@ def sala(request, pkreceptor):
 		eu = get_object_or_404(Profile, user=request.user)
 		instanciaMessage = Message()
 		userVisitado = get_object_or_404(User, pk=pkreceptor)
+		profileVisitado = get_object_or_404(Profile, user=userVisitado)
 		if request.user == userVisitado:
 			return render(request, 'core/conversaAlone.html', {'eu':eu})
 		mensagens = instanciaMessage.get_all_messages(request.user, userVisitado)
 
-		return render(request, 'core/conversa.html', {'mensagens':mensagens, 'userVisitado':userVisitado, 'eu':eu})
+		return render(request, 'core/conversa.html', {'mensagens':mensagens, 'userVisitado':userVisitado, 'profileVisitado':profileVisitado, 'eu':eu})
 
 
 def messages_not_view(request, pkreceptor):
@@ -1412,14 +1413,14 @@ def read_messages(request, pkreceptor):
 		mensagens = instanciaMessage.set_le_mensagens(request.user, userVisitado)
 		print(mensagens)
 		return HttpResponse(json.dumps("Mensagens lidas com sucesso"), content_type="application/json")
-		
+
 def send_message(request, pkreceptor):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
 		if request.method == 'POST':
 			mensagem = request.POST.get('id')
-			print mensagem			
+			print mensagem
 			instanciaMessage = Message()
 			userVisitado = get_object_or_404(User, pk=pkreceptor)
 			if request.user == userVisitado:
