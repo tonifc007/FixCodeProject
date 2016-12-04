@@ -53,27 +53,35 @@
 				<div class="panel panel-default">
 				  <div class="panel-body">
 				    Basic panel example
-					{% for message in mensagens%}
-						{% if message.emissor != request.user %}
+					<div class="nano">
+						<div class="nano-content">
+							{% for message in mensagens%}
+								{% if message.emissor != request.user %}
 
-								<p class="msg-receptor">
-									{{ message.texto }}
-								</p>
+										<p class="msg-receptor">
+											{{ message.texto }}
+										</p>
 
 
-						{% else %}
-						<div class="col-xs-12">
-							<p class="msg-emissor pull-right">
-								{{ message.texto }}
-							</p>
+								{% else %}
+								<div class="col-xs-12">
+									<p class="msg-emissor pull-right">
+										{{ message.texto }}
+									</p>
+								</div>
+
+								{% endif %}
+							{% endfor %}
+
+							<div id="newmessage"></div>
 						</div>
 
-						{% endif %}
-					{% endfor %}
+					</div>
+
 				  </div>
 				</div>
 
-				<div id="newmessage"></div>
+
 				<textarea id="campo" rows="4" cols="50"></textarea>
 
 				<br>
