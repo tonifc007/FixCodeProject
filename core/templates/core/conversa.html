@@ -52,17 +52,16 @@
 
 				<div class="panel panel-default">
 				  <div class="panel-body">
-				    Basic panel example
+					  <div class="">
+					  	<a href="{% url 'core:profile' profileVisitado.user.username %}">{{ profileVisitado.user.first_name }}</a> - último login a {{ profileVisitado.user.last_login|timesince }}{% if profileVisitado.user.login %} - online {% endif %}
+					  </div>
 					<div class="nano">
 						<div class="nano-content">
-							{% for message in mensagens%}
+							{% for message in mensagens %}
 								{% if message.emissor != request.user %}
-
 										<p class="msg-receptor">
 											{{ message.texto }}
 										</p>
-
-
 								{% else %}
 								<div class="col-xs-12">
 									<p class="msg-emissor pull-right">
@@ -79,17 +78,22 @@
 					</div>
 
 				  </div>
+				  <div class="panel-footer pfotin">
+
+					  <div class="form-group">
+						  <textarea id="campo" class="form-control" rows="2" placeholder="Digite aqui sua mensagem..."></textarea>
+
+						  <button id="benviar" class="btn btn-primary btn-sm pull-right botaomsg" onclick="mandaMensagem()">Enviar mensagem</button>
+						  <div class="col-xs-3 pull-right botaomsg">
+						  	 <input type="checkbox" name="press-enter" value="enter" id="checkenter" checked="true"> Enviar ao pressionar enter.
+						  </div>
+
+					  </div>
+
+
+
+				  </div>
 				</div>
-
-
-				<textarea id="campo" rows="4" cols="50"></textarea>
-
-				<br>
-				<button id="benviar" onclick="mandaMensagem()">Enviar mensagem</button>
-
-
-
-
 
 			</div>
 		</div>

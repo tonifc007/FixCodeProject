@@ -1,6 +1,15 @@
 setTimeout("getNovasMensagens()", 1);
 setInterval("getNovasMensagens()", 2000);
 
+$(document).keypress(function(e) {
+    if(e.which == 13){
+        if ($("#campo").val() !== "" && $("#checkenter").is(':checked')) {
+            console.log("Botão enter foi apertado");
+        }
+
+    };
+});
+
 function getNovasMensagens(){
 
     $.ajax({
@@ -16,7 +25,7 @@ function getNovasMensagens(){
                 $('#newmessage').append("<p style='color: red;'>"+ json[i][0] +"</p>");
             }
             leMensagens();
-   
+
         },
 
         // handle a non-successful response
@@ -56,10 +65,10 @@ function mandaMensagem(){
         $.ajax({
             url : "send/", // the endpoint
             type : "POST", // http method
-            data : { 
+            data : {
                 id : campo,
                  }, // data sent with the post request
-                 
+
             // handle a successful response
             success : function(json) {
                 if (json != false){
@@ -111,4 +120,4 @@ function getCookie(name) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         }
-    }); 
+    });

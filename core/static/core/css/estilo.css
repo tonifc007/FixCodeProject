@@ -302,13 +302,21 @@ label#lbPost{
     border-radius: 10px;
 }
 
+.pfotin{
+    padding-bottom: 35px;
+}
+
+.botaomsg{
+    margin-top: 10px;
+}
+
 /*Nano scroller*/
 
 /** initial setup **/
 .nano {
   position : relative;
   width    : 100%;
-  height   : 500px;
+  height   : 300px;
   overflow : hidden;
 }
 .nano > .nano-content {
