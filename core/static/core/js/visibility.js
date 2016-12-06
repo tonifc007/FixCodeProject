@@ -1,5 +1,7 @@
 setTimeout("getNovasMensagens()", 1);
 setInterval("getNovasMensagens()", 2000);
+setTimeout("verificadispo()", 1);
+setInterval("verificadispo()", 5000);
 
 $(document).keypress(function(e) {
     if(e.which == 13){
@@ -9,6 +11,32 @@ $(document).keypress(function(e) {
 
     };
 });
+
+function verificadispo() {
+    //console.log("função para saber se existe uma relaçao de seguidor");
+    console.log(a);
+    $.ajax({
+
+        url : "/verificadispo/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : a,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            $("#on").html(json);
+            console.log("Tempo de diferença: " + json);
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           
+
+        }
+    });
+}
 
 function getNovasMensagens(){
 

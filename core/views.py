@@ -286,6 +286,29 @@ def profile(request, username):
 		'numerofollowings':followings,
 		'numerofollowers':followers})
 
+def atualizaVisto(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		usuario = get_object_or_404(Profile, user=request.user)
+		instanciaProfile = Profile()
+		instanciaProfile.atualiza_visto(usuario)
+		return HttpResponse(json.dumps("Visto por ultimo deste usuário atualizado"), content_type="application/json")
+
+def verificaDispo(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			pkprofile = request.POST.get('id')
+			profile = get_object_or_404(Profile, pk=pkprofile)
+			instanciaProfile = Profile()
+			diferenca = instanciaProfile.verificaDispo(profile)
+			print diferenca
+			return HttpResponse(json.dumps(str(diferenca)), content_type="application/json")
+		return HttpResponse(json.dumps(False), content_type="application/json")
+
+
 def login_user(request):
     if request.method == "POST":
         username = request.POST['username']

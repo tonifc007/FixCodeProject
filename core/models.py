@@ -1,7 +1,7 @@
 # -*- coding: utf 8 -*-
 from __future__ import unicode_literals
 
-from django.db import models  
+from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import Permission, User
 from ckeditor.fields import RichTextField
@@ -9,6 +9,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 import PIL
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime
 
 
 def user_directory_profileimage(instance, filename):
@@ -29,6 +30,7 @@ class Profile(models.Model):
 	imagem_perfil = models.ImageField(blank=True, null=True, upload_to=user_directory_profileimage)
 	data_cadastro = models.DateTimeField(default=timezone.now)
 	habilidades = models.ManyToManyField(Areas)
+	visto_por_ultimo = models.DateTimeField(default=timezone.now)
 
 	def save(self):
 		try:
@@ -39,7 +41,7 @@ class Profile(models.Model):
 			else:
 				self.imagem_perfil = this.imagem_perfil
 		except: pass
-		
+
 		if self.habilidades.count() > 5:
 			raise Http404
 		super(Profile, self).save()
@@ -73,6 +75,17 @@ class Profile(models.Model):
 				this.imagem_perfil.delete(save=False)
 		except: pass
 		super(Profile, self).delete()
+
+	def atualiza_visto(self, usuarioLogado):
+		usuarioLogado.visto_por_ultimo = timezone.now()
+		usuarioLogado.save()
+		return usuarioLogado.visto_por_ultimo
+
+	def verificaDispo(self, usuarioVisitado):
+		diferenca = timezone.now() - usuarioVisitado.visto_por_ultimo
+		if diferenca.total_seconds() <= 10:
+			return "Online"
+		return "Ultima vez online: " + str(usuarioVisitado.visto_por_ultimo.day) + "/" + str(usuarioVisitado.visto_por_ultimo.month) + "/" + str(usuarioVisitado.visto_por_ultimo.year) + " às " + str(usuarioVisitado.visto_por_ultimo.hour) + ":" + str(usuarioVisitado.visto_por_ultimo.minute)
 
 	def __str__(self):
 		return self.user.username
@@ -170,7 +183,7 @@ class Followers(models.Model):
 				return 2
 		else:
 			return 0
-	
+
 	def get_data_que_comecou_seguir(self, usuarioLogado, usuarioVisitado):
 		if self.get_dados_seguidor(usuarioLogado, usuarioVisitado) == 1:
 			procurarRegistro = Followers.objects.get(user=usuarioLogado, following=usuarioVisitado)

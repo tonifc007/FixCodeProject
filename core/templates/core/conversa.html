@@ -15,6 +15,9 @@
 {% endblock %}
 
 {% block body %}
+<script type="text/javascript">
+	var a = {{ profileVisitado.pk }}
+</script>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -53,7 +56,16 @@
 				<div class="panel panel-default">
 				  <div class="panel-body">
 					  <div class="">
-					  	<a href="{% url 'core:profile' profileVisitado.user.username %}">{{ profileVisitado.user.first_name }}</a> - último login a {{ profileVisitado.user.last_login|timesince }}{% if profileVisitado.user.login %} - online {% endif %}
+					  	<a href="{% url 'core:profile' profileVisitado.user.username %}">{{ profileVisitado.user.first_name }}</a>  <div id="on"></div>
+					  	<div class="btn-group pull-right">
+						  <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+						  	<span class="glyphicon glyphicon-cog"></span> 
+						    <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+						    <li><a href="#"><span class="glyphicon glyphicon-trash"></span>   Deletar Fix</a></li>
+						  </ul>
+						</div>
 					  </div>
 					<div class="nano">
 						<div class="nano-content">

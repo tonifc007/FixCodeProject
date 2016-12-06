@@ -1,3 +1,28 @@
+setTimeout("atualizaVisto()", 1);
+setInterval("atualizaVisto()", 10000);
+
+function atualizaVisto(){
+
+    $.ajax({
+        url : "/atualizaVisto/", // the endpoint
+        type : "GET", // http method
+
+        success : function(json) {
+            console.log(json); // log the returned json to the console
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+            console.log('offline');
+
+        }
+    });
+
+}
+
+console.log("Variavel do user é: "+ a);
+
 console.log("Global carregado");
 
 $('.estiloPostagem > p > img').addClass('thumbnail');

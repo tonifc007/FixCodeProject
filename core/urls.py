@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^notificaIndex/$', views.notificaIndex, name='notifica'),
     url(r'^notificaIndexParticipation/$', views.notificaIndexParticipation, name='notificaParticipation'),
     url(r'^notificaIndexPosts/$', views.notificaIndexPosts, name='notificaPosts'),
+    url(r'^atualizaVisto/$', views.atualizaVisto, name='atualizaVisto'),
+    url(r'^verificadispo/$', views.verificaDispo, name='verificaDispo'),
 
 
     #Páginas de fix
