@@ -25,7 +25,13 @@ function verificadispo() {
              
         // handle a successful response
         success : function(json) {
-            $("#on").html(json);
+            if (json == "Online") {
+                $("#on").html("<p style='color: #FFD700'; text-align: center; >Online</p>");
+            }
+            else{
+              $("#on").html(json);  
+            }
+            
             console.log("Tempo de diferença: " + json);
         },
 

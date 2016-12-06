@@ -54,9 +54,11 @@
 		<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
 
 				<div class="panel panel-default">
-				  <div class="panel-body">
-					  <div class="">
-					  	<a href="{% url 'core:profile' profileVisitado.user.username %}">{{ profileVisitado.user.first_name }}</a>  <div id="on"></div>
+				<div class="panel-heading estilobsuperior">
+					<div class="col-xs-12">
+					  	<a class="col-xs-4" href="{% url 'core:profile' profileVisitado.user.username %}">{{ profileVisitado.user.first_name }}</a>  
+					  	<span>
+					  	
 					  	<div class="btn-group pull-right">
 						  <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 						  	<span class="glyphicon glyphicon-cog"></span> 
@@ -66,7 +68,11 @@
 						    <li><a href="#"><span class="glyphicon glyphicon-trash"></span>   Deletar Fix</a></li>
 						  </ul>
 						</div>
+						</span>
+						<div id="on" class="dispost"></div>
 					  </div>
+				</div>
+				  <div class="panel-body">
 					<div class="nano">
 						<div class="nano-content">
 							{% for message in mensagens %}
