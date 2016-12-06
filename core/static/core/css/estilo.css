@@ -299,6 +299,7 @@ label#lbPost{
     background-color: blue;
     padding: 10px;
     display: table;
+    max-width: 50%;
     border-radius: 10px;
 }
 

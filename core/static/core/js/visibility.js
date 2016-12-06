@@ -6,7 +6,7 @@ setInterval("verificadispo()", 5000);
 $(document).keypress(function(e) {
     if(e.which == 13){
         if ($("#campo").val() !== "" && $("#checkenter").is(':checked')) {
-            console.log("Botão enter foi apertado");
+            mandaMensagem();
         }
 
     };
@@ -56,7 +56,8 @@ function getNovasMensagens(){
             console.log('muda');
             for (var i = 0; i < json.length; i++) {
                 console.log(json[i][0])
-                $('#newmessage').append("<p style='color: red;'>"+ json[i][0] +"</p>");
+                $('#newmessage').append("<p class='msg-receptor'>"+ json[i][0] +"</p>");
+                goToFinal();
             }
             leMensagens();
 
@@ -106,11 +107,15 @@ function mandaMensagem(){
             // handle a successful response
             success : function(json) {
                 if (json != false){
-                    $('#newmessage').append("<p style='color: blue;'>(eu) - "+ json +"</p>");
+                    $('#newmessage').append("<div class='col-xs-12'><p class='msg-emissor pull-right'>"+ json +"</p></div>");
+                    goToFinal();
+                    $("#campo").val('');
                 }
                 else{
                     alert("Não foi possivel enviar mensagem")
                 }
+                
+
             },
 
             // handle a non-successful response
@@ -119,8 +124,16 @@ function mandaMensagem(){
                alert("deu errado");
 
             }
+        
         });
     }
+
+
+}
+
+function goToFinal(){
+    $(".nano").nanoScroller({ flash: true });
+    $(".nano").nanoScroller({ scroll: 'bottom' });
 }
 
 //Cookies globais padrões para utilização do AJAX
@@ -155,3 +168,5 @@ function getCookie(name) {
             }
         }
     });
+
+$(".nano").nanoScroller({ scroll: 'bottom' });
