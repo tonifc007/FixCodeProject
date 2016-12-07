@@ -3,6 +3,8 @@ setInterval("getNovasMensagens()", 2000);
 setTimeout("verificadispo()", 1);
 setInterval("verificadispo()", 5000);
 
+
+//Comando para quando o enter for apertado no Bate-papo
 $(document).keypress(function(e) {
     if(e.which == 13){
         if ($("#campo").val() !== "" && $("#checkenter").is(':checked')) {
