@@ -133,6 +133,8 @@ function mandaMensagem(){
 
 }
 
+
+//Função para ir para o final do bate-papo
 function goToFinal(){
     $(".nano").nanoScroller({ flash: true });
     $(".nano").nanoScroller({ scroll: 'bottom' });
