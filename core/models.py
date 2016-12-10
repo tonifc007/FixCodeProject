@@ -85,7 +85,18 @@ class Profile(models.Model):
 		diferenca = timezone.now() - usuarioVisitado.visto_por_ultimo
 		if diferenca.total_seconds() <= 10:
 			return "Online"
-		return "Ultima vez online: " + str(usuarioVisitado.visto_por_ultimo.day) + "/" + str(usuarioVisitado.visto_por_ultimo.month) + "/" + str(usuarioVisitado.visto_por_ultimo.year) + " às " + str(usuarioVisitado.visto_por_ultimo.hour) + ":" + str(usuarioVisitado.visto_por_ultimo.minute)
+		return "Ultima vez online: " + self.formataData(usuarioVisitado.visto_por_ultimo)
+
+	def formataData(self, data):
+		return self.menor_que_10(data.day) + "/" + self.menor_que_10(data.month) + "/" + str(data.year) + " às " + self.menor_que_10(data.hour) + ":" + self.menor_que_10(data.minute)
+
+	def formataDataChat(self, data):
+		return self.menor_que_10(data.day) + "/" + self.menor_que_10(data.month) + "/" + str(data.year) + " às " + self.menor_que_10(data.hour) + ":" + self.menor_que_10(data.minute) + ":" + self.menor_que_10(data.second)
+
+	def menor_que_10(self, n):
+		if n < 10:
+			return "0"+ str(n)
+		return str(n)
 
 	def __str__(self):
 		return self.user.username
@@ -293,6 +304,7 @@ class Message(models.Model):
 
 	def get_all_messages(self, usuarioLogado, usuarioVisitado):
 		ms = list()
+		instanciaParaRecuperarData = Profile()
 
 		mlog = Message.objects.filter(emissor=usuarioLogado, receptor=usuarioVisitado)
 		mvis = Message.objects.filter(emissor=usuarioVisitado, receptor=usuarioLogado)
@@ -304,7 +316,32 @@ class Message(models.Model):
 				m.save()
 			ms.append(m)
 
-		return sorted(ms, key=lambda inst: inst.data)
+		lista =  sorted(ms, key=lambda inst: inst.data)
+
+		json = []
+
+		for msg in lista:
+			if msg.emissor == usuarioLogado:
+				a = [0, msg.texto, instanciaParaRecuperarData.formataDataChat(msg.data)]
+			else:
+				a = [1, msg.texto, instanciaParaRecuperarData.formataDataChat(msg.data)]
+			json.append(a)
+		return json
+
+	def get_20_messages(self, usuarioLogado, usuarioVisitado):
+		ms = list()
+
+		mlog = Message.objects.filter(emissor=usuarioLogado, receptor=usuarioVisitado)
+		mvis = Message.objects.filter(emissor=usuarioVisitado, receptor=usuarioLogado)
+
+		for m in mlog:ms.append(m)
+		for m in mvis:
+			if m.visualisada == False:
+				m.visualisada = True
+				m.save()
+			ms.append(m)
+
+		return sorted(ms, key=lambda inst: inst.data)[::-1][0:30][::-1]
 
 	def get_messages_not_view(self, usuarioLogado, usuarioVisitado):
 		a = list()
@@ -329,4 +366,5 @@ class Message(models.Model):
 		newMessage.emissor = usuarioLogado
 		newMessage.receptor = usuarioVisitado
 		newMessage.save()
-		return newMessage.texto
+		instanciaParaRecuperarData = Profile()
+		return[newMessage.texto, instanciaParaRecuperarData.formataDataChat(newMessage.data)]

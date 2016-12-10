@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^notificaIndexPosts/$', views.notificaIndexPosts, name='notificaPosts'),
     url(r'^atualizaVisto/$', views.atualizaVisto, name='atualizaVisto'),
     url(r'^verificadispo/$', views.verificaDispo, name='verificaDispo'),
+    url(r'^allmessages/$', views.all_messages, name='all_messages'),
 
 
     #Páginas de fix

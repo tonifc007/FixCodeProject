@@ -135,3 +135,8 @@ def quant_PCnotify(value):
 @register.filter(name='verificaArquivo')
 def verificaArquivo(value):
 	return os.path.isfile(value)
+
+@register.filter(name='formatDataBP')
+def formatDataBP(value):
+	instanciaProfile = Profile()
+	return instanciaProfile.formataDataChat(value)

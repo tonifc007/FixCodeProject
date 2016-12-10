@@ -1408,7 +1408,7 @@ def sala(request, pkreceptor):
 		profileVisitado = get_object_or_404(Profile, user=userVisitado)
 		if request.user == userVisitado:
 			return render(request, 'core/conversaAlone.html', {'eu':eu})
-		mensagens = instanciaMessage.get_all_messages(request.user, userVisitado)
+		mensagens = instanciaMessage.get_20_messages(request.user, userVisitado)
 
 		return render(request, 'core/conversa.html', {'mensagens':mensagens, 'userVisitado':userVisitado, 'profileVisitado':profileVisitado, 'eu':eu})
 
@@ -1424,6 +1424,20 @@ def messages_not_view(request, pkreceptor):
 		mensagens = instanciaMessage.get_messages_not_view(request.user, userVisitado)
 		print(mensagens)
 		return HttpResponse(json.dumps(mensagens), content_type="application/json")
+
+def all_messages(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			away = request.POST.get('id')
+			instanciaMessage = Message()
+			userVisitado = get_object_or_404(User, pk=away)
+			if request.user == userVisitado:
+				return render(request, 'core/conversaAlone.html')
+			resultado = instanciaMessage.get_all_messages(request.user, userVisitado)
+			return HttpResponse(json.dumps(resultado), content_type="application/json")
+		return HttpResponse(json.dumps(False), content_type="application/json")
 
 def read_messages(request, pkreceptor):
 	if not request.user.is_authenticated():

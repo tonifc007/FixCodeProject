@@ -129,6 +129,13 @@ div#pcorconfig{
 	.sai{
 		display: none;
 	}
+	
+}
+
+@media screen and (max-width: 790px) {
+	.ladodireitoBP{
+		display: none;
+	}
 }
 
 div#dad{

@@ -3,6 +3,8 @@ setInterval("getNovasMensagens()", 2000);
 setTimeout("verificadispo()", 1);
 setInterval("verificadispo()", 5000);
 
+var oldm = 0;
+
 
 //Comando para quando o enter for apertado no Bate-papo
 $(document).keypress(function(e) {
@@ -28,7 +30,7 @@ function verificadispo() {
         // handle a successful response
         success : function(json) {
             if (json == "Online") {
-                $("#on").html("<p style='color: #FFD700'; text-align: center; >Online</p>");
+                $("#on").html("<span style='color: #FFD700'; text-align: center; >Online</span>");
             }
             else{
               $("#on").html(json);  
@@ -109,7 +111,7 @@ function mandaMensagem(){
             // handle a successful response
             success : function(json) {
                 if (json != false){
-                    $('#newmessage').append("<div class='col-xs-12'><p class='msg-emissor pull-right'>"+ json +"</p></div>");
+                    $('#newmessage').append("<div class='col-xs-12'><p class='msg-emissor pull-right' title='"+ json[1] +"'>"+ json[0] +"</p></div>");
                     goToFinal();
                     $("#campo").val('');
                 }
@@ -139,6 +141,44 @@ function goToFinal(){
     $(".nano").nanoScroller({ flash: true });
     $(".nano").nanoScroller({ scroll: 'bottom' });
 }
+
+//Quando o usuário for procurar mensagens antigas
+$(".nano").bind("scrolltop", function(e){
+    if (oldm == 0){
+        console.log("Topo do chat");
+        console.log(b);
+    
+        $.ajax({
+            url : "/allmessages/", // the endpoint
+            type : "POST", // http method
+            data : { 
+                id : b,
+                 }, // data sent with the post request
+                 
+            // handle a successful response
+            success : function(json) {
+                $('#oldmessages').html("");
+                for (var i = 0; i < json.length; i++) {                    
+                    if (json[i][0] == 0) {
+                        $('#oldmessages').append("<div class='col-xs-12'><p class='msg-emissor pull-right' title='"+ json[i][2] +"'>"+ json[i][1] +"</p></div>");
+                    } else {
+                        $('#oldmessages').append("<p class='msg-receptor'>"+ json[i][1] +"</p>");
+                    }
+                }
+                oldm = 1;
+                $('#oldmessages').append("<div id='newmessage'></div>");
+                
+            },
+    
+            // handle a non-successful response
+            error : function(xhr,errmsg,err) {
+                console.log(xhr.status + ": " + xhr.responseText);
+               
+    
+            }
+        });
+    }
+});
 
 //Cookies globais padrões para utilização do AJAX
 
