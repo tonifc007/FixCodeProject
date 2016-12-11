@@ -218,6 +218,35 @@ function verificaleitura() {
     });
 }
 
+function deletaconversa(iduser) {
+    //console.log("função para saber se existe uma relaçao de seguidor");
+    console.log(iduser);
+    $.ajax({
+
+        url : "/deleta_conversa/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : iduser,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            if(json == true){
+                parent.window.document.location.href = '';
+            }else{
+                alert("Erro ao excluir conversa!")
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           
+
+        }
+    });
+}
+
 //Cookies globais padrões para utilização do AJAX
 
 function getCookie(name) {

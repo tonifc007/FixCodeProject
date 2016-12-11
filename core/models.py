@@ -378,9 +378,14 @@ class Message(models.Model):
 		for m in mlog:ms.append(m)
 		for m in mvis:ms.append(m)
 
-		ultimamsg = sorted(ms, key=lambda inst: inst.data)[-1]
+		if len(ms) == 0:return False
 
+		ultimamsg = sorted(ms, key=lambda inst: inst.data)[-1]
 		if ultimamsg.emissor == usuarioLogado and ultimamsg.visualisada == True:
 			return True
 		return False
 
+	def delete_messages(self, usuarioLogado, usuarioVisitado):
+		Message.objects.filter(emissor=usuarioLogado, receptor=usuarioVisitado).delete()
+		Message.objects.filter(emissor=usuarioVisitado, receptor=usuarioLogado).delete()
+		return True

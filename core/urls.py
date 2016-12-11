@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^verificadispo/$', views.verificaDispo, name='verificaDispo'),
     url(r'^allmessages/$', views.all_messages, name='all_messages'),
     url(r'^verifica_leitura/$', views.verifica_leitura, name='verifica_leitura'),
+    url(r'^deleta_conversa/$', views.deleta_conversa, name='deleta_conversa'),
 
 
     #Páginas de fix
