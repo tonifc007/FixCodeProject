@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^atualizaVisto/$', views.atualizaVisto, name='atualizaVisto'),
     url(r'^verificadispo/$', views.verificaDispo, name='verificaDispo'),
     url(r'^allmessages/$', views.all_messages, name='all_messages'),
+    url(r'^verifica_leitura/$', views.verifica_leitura, name='verifica_leitura'),
 
 
     #Páginas de fix

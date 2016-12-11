@@ -1,10 +1,15 @@
 setTimeout("getNovasMensagens()", 1);
 setInterval("getNovasMensagens()", 2000);
+setTimeout("verificaleitura()", 1);
+setInterval("verificaleitura()", 2000);
 setTimeout("verificadispo()", 1);
 setInterval("verificadispo()", 5000);
 
 var oldm = 0;
 
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 
 //Comando para quando o enter for apertado no Bate-papo
 $(document).keypress(function(e) {
@@ -30,10 +35,10 @@ function verificadispo() {
         // handle a successful response
         success : function(json) {
             if (json == "Online") {
-                $("#on").html("<span style='color: #FFD700'; text-align: center; >Online</span>");
+                $("#on").html("<span style='color: #FFD700'; text-align: center; > Online</span>");
             }
             else{
-              $("#on").html(json);  
+              $("#on").html("<span><span class='glyphicon glyphicon-time'></span> "+json+"</span>");  
             }
             
             console.log("Tempo de diferença: " + json);
@@ -61,6 +66,8 @@ function getNovasMensagens(){
             for (var i = 0; i < json.length; i++) {
                 console.log(json[i][0])
                 $('#newmessage').append("<p class='msg-receptor'>"+ json[i][0] +"</p>");
+                $("#alertavisualizada").html("");
+                $("#informacao").html("");
                 goToFinal();
             }
             leMensagens();
@@ -111,9 +118,11 @@ function mandaMensagem(){
             // handle a successful response
             success : function(json) {
                 if (json != false){
-                    $('#newmessage').append("<div class='col-xs-12'><p class='msg-emissor pull-right' title='"+ json[1] +"'>"+ json[0] +"</p></div>");
+                    $('#newmessage').append("<div class='col-xs-12'><p class='msg-emissor pull-right' data-toggle='tooltip' data-placement='left' title="+ json[1] +">"+ json[0] +"</p></div>");
                     goToFinal();
                     $("#campo").val('');
+                    $("#alertavisualizada").html("");
+                    $("#informacao").html("");
                 }
                 else{
                     alert("Não foi possivel enviar mensagem")
@@ -160,9 +169,9 @@ $(".nano").bind("scrolltop", function(e){
                 $('#oldmessages').html("");
                 for (var i = 0; i < json.length; i++) {                    
                     if (json[i][0] == 0) {
-                        $('#oldmessages').append("<div class='col-xs-12'><p class='msg-emissor pull-right' title='"+ json[i][2] +"'>"+ json[i][1] +"</p></div>");
+                        $('#oldmessages').append("<div class='col-xs-12'><p class='msg-emissor pull-right' data-toggle='tooltip' data-placement='left' title='"+ json[i][2] +"'>"+ json[i][1] +"</p></div>");
                     } else {
-                        $('#oldmessages').append("<p class='msg-receptor'>"+ json[i][1] +"</p>");
+                        $('#oldmessages').append("<p class='msg-receptor' title='"+ json[i][2] +"'>"+ json[i][1] +"</p>");
                     }
                 }
                 oldm = 1;
@@ -179,6 +188,35 @@ $(".nano").bind("scrolltop", function(e){
         });
     }
 });
+
+function verificaleitura() {
+    //console.log("função para saber se existe uma relaçao de seguidor");
+    console.log(b);
+    $.ajax({
+
+        url : "/verifica_leitura/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : b,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            if(json == true){
+                $("#alertavisualizada").html("<span class='glyphicon glyphicon-eye-open'></span> Mensagem visualisada").addClass("pull-right txtvisualisada");
+            }else{
+                $("#alertavisualizada").html("");
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           
+
+        }
+    });
+}
 
 //Cookies globais padrões para utilização do AJAX
 

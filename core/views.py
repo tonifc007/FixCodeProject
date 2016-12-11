@@ -1465,3 +1465,17 @@ def send_message(request, pkreceptor):
 			resultado = instanciaMessage.send_message(request.user, userVisitado, mensagem)
 			return HttpResponse(json.dumps(resultado), content_type="application/json")
 		return HttpResponse(json.dumps(False), content_type="application/json")
+
+def verifica_leitura(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			idvi = request.POST.get('id')
+			instanciaMessage = Message()
+			userVisitado = get_object_or_404(User, pk=idvi)
+			if request.user == userVisitado:
+				return render(request, 'core/conversaAlone.html')
+			resultado = instanciaMessage.verifica_leitura_de_msg(request.user, userVisitado)
+			return HttpResponse(json.dumps(resultado), content_type="application/json")
+		return HttpResponse(json.dumps(False), content_type="application/json")

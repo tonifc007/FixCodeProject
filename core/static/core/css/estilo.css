@@ -321,6 +321,13 @@ label#lbPost{
 .estilobsuperior{
 	padding-bottom: 35px;
 }
+
+.txtvisualisada{
+	font-size: 9pt;
+	margin-top: -10px;
+	margin-bottom: 0px;
+	color: #58CBBC;
+}
 /*Nano scroller*/
 
 /** initial setup **/

@@ -85,7 +85,7 @@ class Profile(models.Model):
 		diferenca = timezone.now() - usuarioVisitado.visto_por_ultimo
 		if diferenca.total_seconds() <= 10:
 			return "Online"
-		return "Ultima vez online: " + self.formataData(usuarioVisitado.visto_por_ultimo)
+		return self.formataData(usuarioVisitado.visto_por_ultimo)
 
 	def formataData(self, data):
 		return self.menor_que_10(data.day) + "/" + self.menor_que_10(data.month) + "/" + str(data.year) + " às " + self.menor_que_10(data.hour) + ":" + self.menor_que_10(data.minute)
@@ -368,3 +368,19 @@ class Message(models.Model):
 		newMessage.save()
 		instanciaParaRecuperarData = Profile()
 		return[newMessage.texto, instanciaParaRecuperarData.formataDataChat(newMessage.data)]
+
+	def verifica_leitura_de_msg(self, usuarioLogado, usuarioVisitado):
+		ms = list()
+
+		mlog = Message.objects.filter(emissor=usuarioLogado, receptor=usuarioVisitado)
+		mvis = Message.objects.filter(emissor=usuarioVisitado, receptor=usuarioLogado)
+
+		for m in mlog:ms.append(m)
+		for m in mvis:ms.append(m)
+
+		ultimamsg = sorted(ms, key=lambda inst: inst.data)[-1]
+
+		if ultimamsg.emissor == usuarioLogado and ultimamsg.visualisada == True:
+			return True
+		return False
+

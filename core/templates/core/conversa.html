@@ -70,9 +70,45 @@
 							    <span class="caret"></span>
 							  </button>
 							  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-							    <li><a href="#"><span class="glyphicon glyphicon-trash"></span>   Deletar conversa</a></li>
-							    <li><a href="">Bloquear {{ profileVisitado.user.first_name }}</a></li>
+							    <li class="hoverLiFix" data-toggle="modal" data-target="#modalExcluir"><span class="glyphicon glyphicon-trash"></span>   Deletar conversa</li>
+							    <li class="hoverLiFix" data-toggle="modal" data-target="#modalBloquear"><span class="glyphicon glyphicon-ban-circle"></span> Bloquear {{ profileVisitado.user.first_name }}</li>
 							  </ul>
+							</div>
+							<!-- Modal -->
+							<div class="modal fade" id="modalExcluir" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+							  <div class="modal-dialog" role="document">
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							        <h4 class="modal-title" id="myModalLabel">Deletar conversa</h4>
+							      </div>
+							      <div class="modal-body">
+							        Ao concluir esta ação, você excluirá esta conversa tanto para você como para {{ profileVisitado.user.first_name }}.
+							      </div>
+							      <div class="modal-footer">
+							        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+							        <button type="button" class="btn btn-danger" onclick="deleteparticipation('{{ fixie.pk }}')">Excluir conversa</button>
+							      </div>
+							    </div>
+							  </div>
+							</div>
+							<!-- Modal -->
+							<div class="modal fade" id="modalBloquear" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+							  <div class="modal-dialog" role="document">
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							        <h4 class="modal-title" id="myModalLabel">Bloquear {{ profileVisitado.user.first_name }}</h4>
+							      </div>
+							      <div class="modal-body">
+							        Ao concluir esta ação, você impedirá {{ profileVisitado.user.first_name }} de participar de seus fixies e post e trocar mensagens com você através do inbox.
+							      </div>
+							      <div class="modal-footer">
+							        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+							        <button type="button" class="btn btn-danger" onclick="deleteparticipation('{{ fixie.pk }}')">Bloquear {{ profileVisitado.user.first_name }}</button>
+							      </div>
+							    </div>
+							  </div>
 							</div>
 					  	</div>
 					  </div>
@@ -82,20 +118,23 @@
 						<div class="nano-content" id="oldmessages">
 							{% for message in mensagens %}
 								{% if message.emissor != request.user %}
-									<p class="msg-receptor" title="{{ message.data|formatDataBP }}">
+									<p class="msg-receptor" data-toggle="tooltip" data-placement="right" title="{{ message.data|formatDataBP }}">
 										{{ message.texto }}
 									</p>
 								{% else %}
 								<div class="col-xs-12">
-									<p class="msg-emissor pull-right" title="{{ message.data|formatDataBP }}">
+									<p class="msg-emissor pull-right" data-toggle="tooltip" data-placement="left" title="{{ message.data|formatDataBP }}">
 										{{ message.texto }}
 									</p>
 								</div>
 
 								{% endif %}
+							{% empty %}
+								<div id="informacao"><h4>Você e {{ profileVisitado.user.first_name }} não tem uma conversa ou esta foi deletada, interaja! :)</h4></div>
 							{% endfor %}
 
 							<div id="newmessage"></div>
+							<div id="alertavisualizada" class="pull-right txtvisualisada"></div>
 						</div>
 
 					</div>
