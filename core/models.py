@@ -302,6 +302,36 @@ class Message(models.Model):
 	def __str__(self):
 		return 'Mensagem de ' + self.emissor.first_name +' para '+self.receptor.first_name
 
+	def count_messages(self, user_loged):
+		tam = 0
+		for message in self.get_users_recently(user_loged):
+			if message[2] == False:
+				tam += 1
+		return tam
+
+	def get_users_recently(self, user_loged):
+		l = list()
+
+		for user_visited in User.objects.all():
+			if self.get_ultimate_message(user_loged, user_visited):
+				read = True
+				if self.get_ultimate_message(user_loged, user_visited).emissor != user_loged and self.get_ultimate_message(user_loged, user_visited).visualisada == False:read = False
+				l.append([user_visited, self.get_ultimate_message(user_loged, user_visited), read])
+		return sorted((sorted(l, key=lambda inst: inst[1].data)[::-1]), key=lambda inst: inst[1].visualisada)
+
+	def get_ultimate_message(self, user_loged, user_visited):
+		ms = list()
+
+		mlog = Message.objects.filter(emissor=user_loged, receptor=user_visited)
+		mvis = Message.objects.filter(emissor=user_visited, receptor=user_loged)
+
+		for m in mlog:ms.append(m)
+		for m in mvis:ms.append(m)
+
+		if len(ms) == 0:return False
+
+		return sorted(ms, key=lambda inst: inst.data)[-1]
+
 	def get_all_messages(self, usuarioLogado, usuarioVisitado):
 		ms = list()
 		instanciaParaRecuperarData = Profile()

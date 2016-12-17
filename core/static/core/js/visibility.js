@@ -190,7 +190,6 @@ $(".nano").bind("scrolltop", function(e){
 });
 
 function verificaleitura() {
-    //console.log("função para saber se existe uma relaçao de seguidor");
     console.log(b);
     $.ajax({
 

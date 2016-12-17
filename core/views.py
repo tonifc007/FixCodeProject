@@ -1493,3 +1493,15 @@ def deleta_conversa(request):
 			resultado = instanciaMessage.delete_messages(request.user, userVisitado)
 			return HttpResponse(json.dumps(resultado), content_type="application/json")
 		return HttpResponse(json.dumps(False), content_type="application/json")
+
+def my_contacts(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		eu = get_object_or_404(Profile, user=request.user)
+		instanciaMessage = Message()
+		instanciaSeguidor = Followers()
+		quantidade_mensagens = instanciaMessage.count_messages(request.user)
+		contatos_recentes = instanciaMessage.get_users_recently(request.user)
+		lista_seguindo = instanciaSeguidor.relacao_de_seguindo_decrescente(request.user)
+		return render(request, 'core/mycontacts.html', {'eu':eu, 'quantidade_mensagens':quantidade_mensagens, 'contatos_recentes':contatos_recentes, 'lista_seguindo':lista_seguindo})
