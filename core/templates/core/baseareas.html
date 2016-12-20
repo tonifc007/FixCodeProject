@@ -28,6 +28,27 @@
 					<ul class="nav" role="tablist">
 						{% block habilidades %}{% endblock %}
 					</ul>
+					<ul class="nav" role="tablist">
+					  <li role="presentation"><button data-toggle="modal" data-target="#modalAreas" type="button" class="btn btn-link">Ver todas as áreas >></button></li>
+					</ul>
+				</div>
+				<!-- Modal -->
+				<div class="modal fade" id="modalAreas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">Todas as áreas:</h4>
+				      </div>
+				      <div class="modal-body">
+				      	<div class="list-group">
+					        {% for area in ii|auxArea %}
+					        	<a href="{% url 'core:search_area_fix' area.pk %}" class="list-group-item">{{ area.nome_linguagem }} <span class="badge pull-right sai">{{ area|quant_Area }}</span></a>
+					        {% endfor %}
+				        </div>  
+				      </div>
+				    </div>
+				  </div>
 				</div>
 			</div>		
 		</div>

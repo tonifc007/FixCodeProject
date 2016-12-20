@@ -89,8 +89,8 @@ urlpatterns = [
     url(r'^inbox/message/(?P<pkreceptor>[0-9]+)/send/$', views.send_message, name='send_message'),
 
     #Páginas de search - areas
-    url(r'^area/(?P<linguagem>\w+)/$', views.search_area_fix, name='search_area_fix'),
-    url(r'^area/(?P<linguagem>\w+)/posts/$', views.search_area_post, name='search_area_posts'),
-    url(r'^area/(?P<linguagem>\w+)/users/$', views.search_area_user, name='search_area_users'),
+    url(r'^area/(?P<linguagem>[0-9]+)/$', views.search_area_fix, name='search_area_fix'),
+    url(r'^area/(?P<linguagem>[0-9]+)/posts/$', views.search_area_post, name='search_area_posts'),
+    url(r'^area/(?P<linguagem>[0-9]+)/users/$', views.search_area_user, name='search_area_users'),
 
 ]

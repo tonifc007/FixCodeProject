@@ -160,3 +160,7 @@ def quant_Area_Post(value):
 def quant_Area_Post(value):
 	instanciaArea = Areas()
 	return len(instanciaArea.busca_user(value))
+
+@register.filter(name='auxArea')
+def auxArea(value):
+	return Areas.objects.all()

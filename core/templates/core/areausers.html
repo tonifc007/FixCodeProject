@@ -22,21 +22,20 @@
 {% endblock %}
 
 {% block bread %}
-<li>Habilidades</li>
 <li class="active">{{ area.nome_linguagem }}</li>
 {% endblock %}
 
 {% block habilidades %}
 	{% for habilidade in habilidades %}
-		<li role="presentation"><a href="{% url 'core:search_area_fix' habilidade.nome_linguagem %}">{{ habilidade.nome_linguagem }} <span class="badge pull-right sai">{{ habilidade|quant_Area }}</span></a></li>
+		<li role="presentation"><a href="{% url 'core:search_area_fix' habilidade.pk %}">{{ habilidade.nome_linguagem }} <span class="badge pull-right sai">{{ habilidade|quant_Area }}</span></a></li>
 	{% endfor %}
 {% endblock %}
 
 {% block tit %} <h4>Resultados para a habilidade {{ area }}</h4> {% endblock %}
 {% block pad %}
-	<li role="presentation"><a href="{% url 'core:search_area_fix' area.nome_linguagem %}">Fixies ({{ area|quant_Area_Fix }})</a></li>
-	<li role="presentation"><a href="{% url 'core:search_area_posts' area.nome_linguagem %}">Posts ({{ area|quant_Area_Post }})</a></li>
-	<li role="presentation" class="active"><a href="{% url 'core:search_area_users' area.nome_linguagem %}">Usuários ({{ area|quant_Area_User }})</a></li>
+	<li role="presentation"><a href="{% url 'core:search_area_fix' area.pk %}">Fixies ({{ area|quant_Area_Fix }})</a></li>
+	<li role="presentation"><a href="{% url 'core:search_area_posts' area.pk %}">Posts ({{ area|quant_Area_Post }})</a></li>
+	<li role="presentation" class="active"><a href="{% url 'core:search_area_users' area.pk %}">Usuários ({{ area|quant_Area_User }})</a></li>
 {% endblock %}
 
 {% block conteudo %}

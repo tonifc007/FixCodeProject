@@ -1512,7 +1512,7 @@ def search_area_fix(request, linguagem):
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
 		instanciaArea = Areas()
-		area = get_object_or_404(Areas, nome_linguagem=linguagem)
+		area = get_object_or_404(Areas, pk=linguagem)
 
 		paginator = Paginator(instanciaArea.busca_fix(area), 5)
 		page = request.GET.get('page')
@@ -1534,7 +1534,7 @@ def search_area_post(request, linguagem):
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
 		instanciaArea = Areas()
-		area = get_object_or_404(Areas, nome_linguagem=linguagem)
+		area = get_object_or_404(Areas, pk=linguagem)
 
 		paginator = Paginator(instanciaArea.busca_post(area), 5)
 		page = request.GET.get('page')
@@ -1556,7 +1556,7 @@ def search_area_user(request, linguagem):
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
 		instanciaArea = Areas()
-		area = get_object_or_404(Areas, nome_linguagem=linguagem)
+		area = get_object_or_404(Areas, pk=linguagem)
 
 		paginator = Paginator(instanciaArea.busca_user(area), 24)
 		page = request.GET.get('page')
