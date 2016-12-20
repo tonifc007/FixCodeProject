@@ -1,0 +1,117 @@
+{% extends 'core/baseareas.html' %}
+{% load aux_tags %}
+{% load staticfiles %}
+{% block titulo %}Habilidade: {{ area.nome_linguagem }} - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
+
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="#">Feedback</a></li>
+{% endblock %}
+
+{% block imagemperfil %}
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
+
+	{% endif %}
+{% endblock %}
+
+{% block bread %}
+<li>Habilidades</li>
+<li class="active">{{ area.nome_linguagem }}</li>
+{% endblock %}
+
+{% block habilidades %}
+	{% for habilidade in habilidades %}
+		<li role="presentation"><a href="{% url 'core:search_area_fix' habilidade.nome_linguagem %}">{{ habilidade.nome_linguagem }} <span class="badge pull-right sai">{{ habilidade|quant_Area }}</span></a></li>
+	{% endfor %}
+{% endblock %}
+
+{% block tit %} <h4>Resultados para a habilidade {{ area }}</h4> {% endblock %}
+{% block pad %}
+	<li role="presentation"><a href="{% url 'core:search_area_fix' area.nome_linguagem %}">Fixies ({{ area|quant_Area_Fix }})</a></li>
+	<li role="presentation" class="active"><a href="{% url 'core:search_area_posts' area.nome_linguagem %}">Posts ({{ area|quant_Area_Post }})</a></li>
+	<li role="presentation"><a href="{% url 'core:search_area_users' area.nome_linguagem %}">Usuários ({{ area|quant_Area_User }})</a></li>
+{% endblock %}
+
+{% block conteudo %}
+	{% for post in pagina %}
+		<div class="panel panel-default">
+		<div class="panel-body">
+		<div class="media-left media-top">
+		    {% if post.user|imagemperfil %}
+			<img class="thumbnail media-object" src="{{ post.user|imagemperfil }}" width="80" height="80">
+			{% else %}
+			<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+			{% endif %}
+		</div>
+		<div class="media-body">
+		    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' post.user.username %}">{{ post.user.first_name }}</a> - <span class="pCinzaUser">{{post.user.username}}</span></h4>
+		    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
+		    	{% if post.data|subtempo == 0 %}
+		  			hoje
+		  		{% elif post.data|subtempo == 1 %}
+		  			ontem
+		  		{% else %}
+		  			Há {{ post.data|subtempo }} dias
+		  		{% endif %}
+		  		- <span class="glyphicon glyphicon-tags"></span>
+		  		{% for tag in post.area.all %}
+		  			{% if tag == post.area.all.last %}
+		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+		  			{% else %}
+		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+		  			{% endif %}
+		  		{% endfor %}
+		  		{% if post.resolvido %}
+		  			&nbsp;- <span class="glyphicon glyphicon-ok"></span>
+		  			Resolvido
+		  		{% endif %}
+		  		{% if post.anexo.path|verificaArquivo != False %}
+		  			&nbsp;- <span class="glyphicon glyphicon-link"></span>Anexo
+		  		{% endif %}
+
+		    </small>
+		    <h3>{{ post.titulo }}</h3>
+		    <p>{{ post.post|safe }}</p>
+
+		    	
+		    	<a class="btn btn-success col-lg-4" href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
+		    
+		    	<p class="col-lg-6 comentf">
+		    	{% if post.pk|quant_comentP == 0 %}
+		    		<span class="glyphicon glyphicon-comment"></span> Não há nenhum comentário
+		    	{% else %}
+		    		<span class="glyphicon glyphicon-comment"></span> Há {{ post.pk|quant_comentP }} comentários neste post
+		    	{% endif %}
+		    	</p>
+		    	
+		    	
+		    
+		</div>
+		</div>
+	</div>
+	{% empty %}
+		<h4>Ainda não há registros.</h4>
+	{% endfor %}
+	<nav aria-label="Page navigation">
+	  <ul class="pager">
+	    {% if pagina.has_previous %}
+	    	<li class="previous"><a href="?page={{ pagina.previous_page_number }}"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+	    {% else %}
+	    	<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+	    {% endif %}
+	    Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
+	    {% if pagina.has_next %}
+	    	<li class="next"><a href="?page={{ pagina.next_page_number }}">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+	    {% else %}
+	    	<li class="next disabled"><a href="#">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+	    {% endif %}
+	  </ul>
+	</nav>
+{% endblock %}

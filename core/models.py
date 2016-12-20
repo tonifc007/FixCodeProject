@@ -22,6 +22,33 @@ class Areas(models.Model):
 	def __str__(self):
 		return self.nome_linguagem
 
+	def busca_fix(self, area):
+		lista = []
+
+		for fix in Fixies.objects.all():
+			for area_de_fix in fix.area.all():
+				if area == area_de_fix:
+					lista.append(fix)
+		return sorted(list(set(lista)), key=lambda inst: inst.data, reverse=True)
+
+	def busca_post(self, area):
+		lista = []
+
+		for post in Post.objects.all():
+			for area_de_post in post.area.all():
+				if area == area_de_post:
+					lista.append(post)
+		return sorted(list(set(lista)), key=lambda inst: inst.data, reverse=True)
+
+	def busca_user(self, area):
+		lista = []
+
+		for profile in Profile.objects.all():
+			for area_de_profile in profile.habilidades.all():
+				if area == area_de_profile:
+					lista.append(profile.user)
+		return sorted(list(set(lista)), key=lambda inst: inst.date_joined, reverse=True)
+
 
 class Profile(models.Model):
 	user = models.OneToOneField(User, related_name='profile')

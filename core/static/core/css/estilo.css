@@ -1,5 +1,7 @@
 /* uso do pace */
 /* This is a compiled file, you should be editing the file in the templates directory */
+
+
 .pace {
   -webkit-pointer-events: none;
   pointer-events: none;
@@ -328,6 +330,23 @@ label#lbPost{
 	margin-bottom: 0px;
 	color: #58CBBC;
 }
+
+/* estilo pagina de contato */
+
+.elementoContato{
+	height: 300px;
+}
+
+.notificacaoCon{
+	color: white;
+	position: absolute;
+	margin-top: -25px;
+	margin-left: 105px;
+	background-color: red;
+	padding: 3px;
+	border-radius: 7px;
+}
+
 /*Nano scroller*/
 
 /** initial setup **/

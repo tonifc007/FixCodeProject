@@ -1505,3 +1505,69 @@ def my_contacts(request):
 		contatos_recentes = instanciaMessage.get_users_recently(request.user)
 		lista_seguindo = instanciaSeguidor.relacao_de_seguindo_decrescente(request.user)
 		return render(request, 'core/mycontacts.html', {'eu':eu, 'quantidade_mensagens':quantidade_mensagens, 'contatos_recentes':contatos_recentes, 'lista_seguindo':lista_seguindo})
+
+def search_area_fix(request, linguagem):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		eu = get_object_or_404(Profile, user=request.user)
+		instanciaArea = Areas()
+		area = get_object_or_404(Areas, nome_linguagem=linguagem)
+
+		paginator = Paginator(instanciaArea.busca_fix(area), 5)
+		page = request.GET.get('page')
+		print(page)
+		print("Estou requisitando a {} página" .format(page))
+
+		try:
+			pagina = paginator.page(page)
+			print(pagina)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPagepagina:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/areafix.html', {'eu':eu, 'pagina':pagina, 'area':area, 'habilidades':eu.habilidades.all()})
+
+def search_area_post(request, linguagem):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		eu = get_object_or_404(Profile, user=request.user)
+		instanciaArea = Areas()
+		area = get_object_or_404(Areas, nome_linguagem=linguagem)
+
+		paginator = Paginator(instanciaArea.busca_post(area), 5)
+		page = request.GET.get('page')
+		print(page)
+		print("Estou requisitando a {} página" .format(page))
+
+		try:
+			pagina = paginator.page(page)
+			print(pagina)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPagepagina:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/areapost.html', {'eu':eu, 'pagina':pagina, 'area':area, 'habilidades':eu.habilidades.all()})
+
+def search_area_user(request, linguagem):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		eu = get_object_or_404(Profile, user=request.user)
+		instanciaArea = Areas()
+		area = get_object_or_404(Areas, nome_linguagem=linguagem)
+
+		paginator = Paginator(instanciaArea.busca_user(area), 24)
+		page = request.GET.get('page')
+		print(page)
+		print("Estou requisitando a {} página" .format(page))
+
+		try:
+			pagina = paginator.page(page)
+			print(pagina)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPagepagina:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/areausers.html', {'eu':eu, 'pagina':pagina, 'area':area, 'habilidades':eu.habilidades.all()})

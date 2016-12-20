@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+{% load aux_tags %}
+{% load staticfiles %}
+{% block titulo %}{% endblock %}
+{% block user %}{% endblock %}
+{% block verperfil %}{% endblock %}
+{% block menu %}{% endblock %}
+{% block imagemperfil %}{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<ol class="breadcrumb">
+		  <li><a href="/">Home</a></li>
+		  {% block bread %}
+		  {% endblock %}
+		</ol>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-4 col-sm-4 col-md-4 col-lg-3">
+			<div class="panel panel-default pesqindex">
+				<div class="panel-heading"><h4 class="titp">Suas habilidades</h4></div>
+				<div class="panel-body">
+					<ul class="nav" role="tablist">
+						{% block habilidades %}{% endblock %}
+					</ul>
+				</div>
+			</div>		
+		</div>
+		<div class="col-xs-8 col-sm-8 col-md-8 col-lg-9">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					{% block tit %}{% endblock %}
+					<ul class="nav nav-tabs navpad">
+					{% block pad %}{% endblock %}
+					</ul>
+					{% block conteudo %}{% endblock %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

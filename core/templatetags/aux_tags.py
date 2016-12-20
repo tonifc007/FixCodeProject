@@ -1,5 +1,5 @@
 from django import template
-from ..models import ComentFixies, Fixies, Profile, Participations, Favorites, Post, Followers, ComentPost
+from ..models import ComentFixies, Fixies, Profile, Participations, Favorites, Post, Followers, ComentPost, Areas
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 import os.path
@@ -140,3 +140,23 @@ def verificaArquivo(value):
 def formatDataBP(value):
 	instanciaProfile = Profile()
 	return instanciaProfile.formataDataChat(value)
+
+@register.filter(name='quant_Area')
+def quant_Area_Fix(value):
+	instanciaArea = Areas()
+	return len(instanciaArea.busca_fix(value))+len(instanciaArea.busca_post(value))
+
+@register.filter(name='quant_Area_Fix')
+def quant_Area_Fix(value):
+	instanciaArea = Areas()
+	return len(instanciaArea.busca_fix(value))
+
+@register.filter(name='quant_Area_Post')
+def quant_Area_Post(value):
+	instanciaArea = Areas()
+	return len(instanciaArea.busca_post(value))
+
+@register.filter(name='quant_Area_User')
+def quant_Area_Post(value):
+	instanciaArea = Areas()
+	return len(instanciaArea.busca_user(value))

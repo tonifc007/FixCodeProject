@@ -1,7 +1,7 @@
 {% extends 'core/base.html' %}
 {% load staticfiles %}
 {% load aux_tags %}
-{% block titulo %}Inbox - FixCode{% endblock %}
+{% block titulo %}{% if quantidade_mensagens %}({{ quantidade_mensagens }}) {% endif %}Inbox - FixCode{% endblock %}
 {% block user %}{{user.first_name}}{% endblock %}
 {% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
 
@@ -15,6 +15,13 @@
 {% endblock %}
 
 {% block body %}
+<style type="text/css">
+	.slick-prev:before,
+    .slick-next:before {
+        color: black;
+    }
+    
+</style>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -29,17 +36,74 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-xs-12">
+			
 			<div class="panel panel-default">
 				<div class="panel-body">
-					<h1>Meus contatos</h1>
-					<h1>Seguindo</h1>
+					
+					<div class="col-xs-12">
+						{% if quantidade_mensagens %}
+							<h3>Meus contatos - <span class="pCinza">Você tem {{ quantidade_mensagens }} novas notificações.</span></h3>
+						{% else %}
+							<h3>Meus contatos - <span class="pCinza">Estes são os últimos usuários com quem você manteve contato.</span></h3>
+						{% endif %}
+						<hr>
+						
+						<div id="slide-contatos">
+						{% for contato in contatos_recentes %}
+							<div class="elementoContato">
+								{% if contato.0|imagemperfil %}
+									<img class="img-thumbnail img-circle" src="{{ contato.0|imagemperfil }}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
+								{% else %}
+									<img class="img-thumbnail img-circle" src="{% static 'core/imagens/default.png' %}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
+								{% endif %}
+								{% if contato.2 == False %}
+									<h3 style="text-align: center;">{{ contato.0.first_name }} <small><span class="label label-default">Não lido</span></small></h3>
+									<a class="btn btn-sm btn-danger" href="{% url 'core:sala' contato.0.pk %}" style="margin-left: 75px;"><span class="glyphicon glyphicon-comment"></span> Mensagem</a>
+								{% else %}
+									<h3 style="text-align: center;">{{ contato.0.first_name }}</h3>
+									<a class="btn btn-sm btn-default" href="{% url 'core:sala' contato.0.pk %}" style="margin-left: 75px;"><span class="glyphicon glyphicon-comment"></span> Mensagem</a>
+								{% endif %}
+								
+
+							</div>
+						{% empty %}
+							<h3>Você ainda não conversou com ninguém.</h3>
+						{% endfor %}
+					</div>
+					</div>
+					<div class="col-xs-12" style="height: 100px">
+					</div>
+					<h3>Seguindo - <span class="pCinza">Estes são os usuários que voce segue. Contate-os. :)</span></h3>
+					<hr>
+					<div class="col-xs-12">
+						<div id="slide-seguindo">
+						{% for contato in lista_seguindo %}
+							<div class="elementoContato">
+								{% if contato|imagemperfil %}
+									<img class="img-thumbnail img-circle" src="{{ contato|imagemperfil }}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
+								{% else %}
+									<img class="img-thumbnail img-circle" src="{% static 'core/imagens/default.png' %}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
+								{% endif %}
+									<h3 style="text-align: center;">{{ contato.first_name }}</h3>
+									<a class="btn btn-sm btn-default" href="{% url 'core:sala' contato.pk %}" style="margin-left: 75px;"><span class="glyphicon glyphicon-comment"></span> Mensagem</a>			
+							</div>
+						{% empty %}
+							<h3>Você ainda não segue ninguém.</h3>
+						{% endfor %}
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
- 
+ <script language="javascript" src="{% static 'core/css/slick/slick.min.js' %}"></script>
+
+{% endblock %}
+{% block scripts %}
+	
 {% endblock %}
 
 
