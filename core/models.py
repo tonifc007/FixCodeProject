@@ -125,6 +125,17 @@ class Profile(models.Model):
 			return "0"+ str(n)
 		return str(n)
 
+	def search_user(self, argumento):
+		lista = list()
+		nome = User.objects.filter(first_name__icontains=argumento)
+		sobrenome = User.objects.filter(last_name__icontains=argumento)
+		username = User.objects.filter(username__icontains=argumento)
+		lista.extend(list(nome))
+		lista.extend(list(sobrenome))
+		lista.extend(list(username))
+
+		return sorted(list(set(lista)), key=lambda inst: inst.date_joined, reverse=True)
+
 	def __str__(self):
 		return self.user.username
 
@@ -152,6 +163,16 @@ class Fixies(models.Model):
 			if f.notificacao > 0 and f.ativa_notificacao == True:
 				lista.append(f)
 		return lista[::-1]
+
+	def search_fix(self, argumento):
+		lista = list()
+		titulo = Fixies.objects.filter(titulo__icontains=argumento)
+		descricao = Fixies.objects.filter(descricao__icontains=argumento)
+		lista.extend(list(titulo))
+		lista.extend(list(descricao))
+
+		return sorted(list(set(lista)), key=lambda inst: inst.data, reverse=True)
+
 
 class ComentFixies(models.Model):
 	user = models.ForeignKey(User, default=1)
@@ -306,6 +327,15 @@ class Post(models.Model):
 			if post.notificacao > 0 and post.ativa_notificacao == True:
 				lista.append(post)
 		return lista[::-1]
+
+	def search_post(self, argumento):
+		lista = list()
+		titulo = Post.objects.filter(titulo__icontains=argumento)
+		descricao = Post.objects.filter(post__icontains=argumento)
+		lista.extend(list(titulo))
+		lista.extend(list(descricao))
+
+		return sorted(list(set(lista)), key=lambda inst: inst.data, reverse=True)
 
 	def __str__(self):
 		return self.titulo

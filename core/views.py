@@ -1571,3 +1571,69 @@ def search_area_user(request, linguagem):
 		except EmptyPagepagina:
 			pagina = paginator.page(paginator.num_pages)
 		return render(request, 'core/areausers.html', {'eu':eu, 'pagina':pagina, 'area':area, 'habilidades':eu.habilidades.all()})
+
+def search_fix(request, argumento):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		eu = get_object_or_404(Profile, user=request.user)
+		instanciaFixies = Fixies()
+		resultado = instanciaFixies.search_fix(argumento)
+
+		paginator = Paginator(resultado, 5)
+		page = request.GET.get('page')
+		print(page)
+		print("Estou requisitando a {} página" .format(page))
+
+		try:
+			pagina = paginator.page(page)
+			print(pagina)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPagepagina:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/searchfix.html', {'eu':eu, 'pagina':pagina, 'argumento':argumento})
+
+def search_post(request, argumento):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		eu = get_object_or_404(Profile, user=request.user)
+		instanciaPost = Post()
+		resultado = instanciaPost.search_post(argumento)
+
+		paginator = Paginator(resultado, 5)
+		page = request.GET.get('page')
+		print(page)
+		print("Estou requisitando a {} página" .format(page))
+
+		try:
+			pagina = paginator.page(page)
+			print(pagina)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPagepagina:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/searchpost.html', {'eu':eu, 'pagina':pagina, 'argumento':argumento})
+
+def search_user(request, argumento):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		eu = get_object_or_404(Profile, user=request.user)
+		instanciaProfile = Profile()
+		resultado = instanciaProfile.search_user(argumento)
+
+		paginator = Paginator(resultado, 30)
+		page = request.GET.get('page')
+		print(page)
+		print("Estou requisitando a {} página" .format(page))
+
+		try:
+			pagina = paginator.page(page)
+			print(pagina)
+		except PageNotAnInteger:
+			pagina = paginator.page(1)
+		except EmptyPagepagina:
+			pagina = paginator.page(paginator.num_pages)
+		return render(request, 'core/searchuser.html', {'eu':eu, 'pagina':pagina, 'argumento':argumento})

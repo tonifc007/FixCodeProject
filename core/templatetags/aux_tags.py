@@ -164,3 +164,25 @@ def quant_Area_Post(value):
 @register.filter(name='auxArea')
 def auxArea(value):
 	return Areas.objects.all()
+
+@register.filter(name='quantSearchFix')
+def quantSearchFix(value):
+	instanciaFixies = Fixies()
+	return len(instanciaFixies.search_fix(value))
+
+@register.filter(name='quantSearchPost')
+def quantSearchPost(value):
+	instanciaPost = Post()
+	return len(instanciaPost.search_post(value))
+
+@register.filter(name='quantSearchUser')
+def quantSearchUser(value):
+	instanciaProfile = Profile()
+	return len(instanciaProfile.search_user(value))
+
+@register.filter(name='quantSearchAll')
+def quantSearchAll(value):
+	instanciaFixies = Fixies()
+	instanciaPost = Post()
+	instanciaProfile = Profile()
+	return len(instanciaFixies.search_fix(value)) + len(instanciaPost.search_post(value)) + len(instanciaProfile.search_user(value))

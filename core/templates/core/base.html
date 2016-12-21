@@ -46,7 +46,7 @@
           </ul>
 
         
-        <form class="navbar-form navbar-left" action="" method="post" id="f">
+        <form class="navbar-form navbar-left"  method="post" id="f">
             {% csrf_token %}
             <div class="input-group col-md-12 col-lg-12 col-lg-offset-4">
                 <label class="sr-only" for="user">
@@ -54,7 +54,7 @@
                 </label>
                 <input type="text" class="form-control" id="pesquisa" placeholder="Procure por usuário, fix, post e etc." name="busca">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" id="bpesquisa"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    <button class="btn btn-default" type="submit" id="bpesquisa"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 </span>
             </div>
         </form>

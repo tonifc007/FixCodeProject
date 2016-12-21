@@ -1,7 +1,20 @@
 setTimeout("atualizaVisto()", 1);
 setInterval("atualizaVisto()", 10000);
+/*
+function search_now(){
+  
+}*/
 
-
+$('#f').submit(function() {
+    var form = $(this);
+    $.post(form.attr('action'), form.serialize(), function(retorno) {
+        if ($("#pesquisa").val() !== "") {
+          console.log($("#pesquisa").val());
+          window.location.replace("/search="+ $("#pesquisa").val() +"");
+        }
+    });
+    return false;
+});
 
 $('#slide-contatos, #slide-seguindo').slick({
   dots: false,

@@ -30,11 +30,11 @@ urlpatterns = [
     url(r'^fix/participations/notify/$', views.participationsSemUserN, name='myparticipationsN'),
     url(r'^fix/favorites/$', views.favoritesSemUser, name='myfavorites'),
     url(r'^fix/favorites/notify/$', views.favoritesSemUserN, name='myfavoritesN'),
-    url(r'^profile/(?P<username>\w+)/$', views.profile, name='profile'),
-    url(r'^profile/(?P<username>\w+)/participations/$', views.participations, name='participations'),
-    url(r'^profile/(?P<username>\w+)/favorites/$', views.favorites, name='favorites'),
-    url(r'^profile/(?P<username>\w+)/following/$', views.following, name='following'),
-    url(r'^profile/(?P<username>\w+)/followers/$', views.follower, name='follower'),
+    url(r'^profile/(?P<username>[\w.@+-]+)/$', views.profile, name='profile'),
+    url(r'^profile/(?P<username>[\w.@+-]+)/participations/$', views.participations, name='participations'),
+    url(r'^profile/(?P<username>[\w.@+-]+)/favorites/$', views.favorites, name='favorites'),
+    url(r'^profile/(?P<username>[\w.@+-]+)/following/$', views.following, name='following'),
+    url(r'^profile/(?P<username>[\w.@+-]+)/followers/$', views.follower, name='follower'),
     url(r'^participations/$', views.participationsSemUser, name='participations'),
 
     #Páginas de post
@@ -92,5 +92,10 @@ urlpatterns = [
     url(r'^area/(?P<linguagem>[0-9]+)/$', views.search_area_fix, name='search_area_fix'),
     url(r'^area/(?P<linguagem>[0-9]+)/posts/$', views.search_area_post, name='search_area_posts'),
     url(r'^area/(?P<linguagem>[0-9]+)/users/$', views.search_area_user, name='search_area_users'),
+
+    #Páginas de search - geral
+    url(r'^search=(?P<argumento>.+)$', views.search_fix, name='search_fix'),
+    url(r'^posts/search=(?P<argumento>.+)$', views.search_post, name='search_post'),
+    url(r'^users/search=(?P<argumento>.+)$', views.search_user, name='search_user'),
 
 ]
