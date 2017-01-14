@@ -129,15 +129,18 @@
 								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
 								  			{% endif %}
 								  		{% endfor %}
+								  		{% if post.anexo.path|verificaArquivo != False %}
+								  			&nbsp;- <span class="glyphicon glyphicon-link"></span>Anexo
+								  		{% endif %}
 								    </small>
-								    <p>{{ post.post|safe }}</p>
+								    <p>{{ post.post|safe|truncatechars_html:300 }}</p>
 								    	<a class="btn btn-success btn-sm col-xs-4 col-sm-4 col-md-4 col-lg-4 col-lg-offset-2" href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
 							    
 								    	<p class="col-xs-8 col-sm-8 col-md-8 col-lg-6 comentf">
-								    	{% if post.pk|quant_coment == 0 %}
+								    	{% if post.pk|quant_comentP == 0 %}
 								    		<span class="glyphicon glyphicon-comment"></span> Não há nenhum comentário
 								    	{% else %}
-								    		<span class="glyphicon glyphicon-comment"></span> Há {{ post.pk|quant_coment }} comentários neste post
+								    		<span class="glyphicon glyphicon-comment"></span> Há {{ post.pk|quant_comentP }} comentários neste post
 								    	{% endif %}
 								    	</p>
 								    	

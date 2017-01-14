@@ -26,9 +26,9 @@
 {% endblock %}
 
 {% block itemativo %}
-<li role="presentation"><a href="{% url 'core:myfixiesN' %}">Meus Fixies <span class="badge pull-right sai">{{ user|quant_fix }}</span></a></li>
-<li role="presentation"><a href="{% url 'core:myparticipationsN'%}">Participações <span class="badge pull-right sai">{{ user|quant_part }}</span></a></li>
-<li role="presentation" class="ativo"><a href="{% url 'core:myfavoritesN' %}">Favoritos <span class="badge pull-right sai">{{ user|quant_fav }}</span></a></li>
+<li role="presentation"><a href="{% url 'core:myfixiesN' %}">Meus Fixies {% if user|quant_fix %}<span class="badge pull-right sai">{{ user|quant_fix }}</span>{% endif %}</a></li>
+<li role="presentation"><a href="{% url 'core:myparticipationsN'%}">Participações {% if user|quant_part %}<span class="badge pull-right sai">{{ user|quant_part }}</span>{% endif %}</a></li>
+<li role="presentation" class="ativo"><a href="{% url 'core:myfavoritesN' %}">Favoritos {% if user|quant_fav %}<span class="badge pull-right sai">{{ user|quant_fav }}</span>{% endif %}</a></li>
 {% endblock %}
 
 {% block panel %}
@@ -61,9 +61,9 @@
 		  		- <span class="glyphicon glyphicon-tags"></span>
 		  		{% for tag in fixie.fixie.area.all %}
 		  			{% if tag == fixie.fixie.area.all.last %}
-		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+		  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>.
 		  			{% else %}
-		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+		  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>,
 		  			{% endif %}
 		  		{% endfor %}
 		  		{% if fixie.fixie.resolvido %}
@@ -73,7 +73,7 @@
 
 		    </small>
 		    <h3>{{ fixie.fixie.titulo }}</h3>
-		    <p>{{ fixie.fixie.descricao|safe }}</p>
+		    <p>{{ fixie.fixie.descricao|safe|truncatechars_html:300 }}</p>
 
 		    	
 		    	<a class="btn btn-default col-lg-4" href="{% url 'core:fix_detail' fixie.fixie.pk %}">Detalhar</a>

@@ -96,7 +96,16 @@ div#pcorconfig{
 
 /*cor de "ver todos" da index*/
 .vertodos{
+	padding: -5px;
+	text-align: center;
 	color: black;
+
+}
+
+.vertodos:hover{
+	color: black;
+	background-color: #f5f5f5;
+	
 }
 
 /*cor das tags no post do ikndex*/
@@ -113,6 +122,12 @@ div#pcorconfig{
 
 .titulopindex{
 	color: #000000;
+}
+
+.borda{
+	border: thin solid #BEBEBE;
+	padding: 5px;
+	margin: 0px 10px 10px 0;
 }
 
 .titulopindex:hover{

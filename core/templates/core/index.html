@@ -24,9 +24,12 @@
 				  <div class="panel-body">
 				    <a href="{% url 'core:create_fix' %}" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Novo fix</a>
 				    <ul class="nav" role="tablist">
-					  <li role="presentation"><a href="{% url 'core:myfixiesN' %}">Meus Fixies <span class="badge pull-right sai">{{ user|quant_fix }}</span></a></li>
-					  <li role="presentation"><a href="{% url 'core:myparticipationsN' %}">Participações <span class="badge pull-right sai">{{ user|quant_part }}</span></a></li>
-					  <li role="presentation"><a href="{% url 'core:myfavoritesN' %}">Favoritos <span class="badge pull-right sai">{{ user|quant_fav }}</span></a></li>
+					  <li role="presentation"><a href="{% url 'core:myfixiesN' %}">Meus Fixies
+					  {% if user|quant_fix > 0 %}
+					   <span class="badge pull-right sai">{{ user|quant_fix }}</span>
+					   {% endif %}</a></li>
+					  <li role="presentation"><a href="{% url 'core:myparticipationsN' %}">Participações {% if user|quant_part > 0 %}<span class="badge pull-right sai">{{ user|quant_part }}</span>{% endif %}</a></li>
+					  <li role="presentation"><a href="{% url 'core:myfavoritesN' %}">Favoritos {% if user|quant_fav > 0 %}<span class="badge pull-right sai">{{ user|quant_fav }}</span>{% endif %}</a></li>
 					</ul>
 				  </div>
 			</div>
@@ -35,23 +38,41 @@
 				  <div class="panel-body">
 				    <a href="{% url 'core:create_post' %}" class="btn btn-success btn-block"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Nova postagem</a>
 				    <ul class="nav" role="tablist">
-					  <li role="presentation"><a href="{% url 'core:my_postsN' %}">Minhas postagens <span class="badge pull-right sai">{{ user|quant_post }}</span></a></li>
+					  <li role="presentation"><a href="{% url 'core:my_postsN' %}">Minhas postagens {% if user|quant_post > 0 %}<span class="badge pull-right sai">{{ user|quant_post }}</span>{% endif %}</a></li>
 					</ul>
 				  </div>
 			</div>
 
 			<div class="panel panel-default pesqindex">
-				<div class="panel-heading"><h4 class="titp">Suas habilidades ({{profile.habilidades.all|length}})</h4></div>
+				<div class="panel-heading"><h4 class="titp">Suas habilidades</h4></div>
 				  <div class="panel-body">
 				  <ul class="nav" role="tablist">
 				  	{% for habilidade in profile.habilidades.all %}
-				  		<li role="presentation"><a href="#">{{ habilidade }} <span class="badge pull-right sai">5</span></a></li>
+				  		<li role="presentation"><a href="{% url 'core:search_area_fix' habilidade.pk %}">{{ habilidade }} {% if habilidade|quant_Area %}<span class="badge pull-right sai">{{ habilidade|quant_Area }}</span>{% endif %}</a></li>
 				  	{% endfor %}
 				  	</ul>
 					<ul class="nav" role="tablist">
-					  <li role="presentation"><a href="{% url 'core:following' user.username %}" class="vertodos">Ver todos >><span class="badge pull-right sai">0</span></a></li>
+					  <li class="hoverLiFix" role="presentation" data-toggle="modal" data-target="#modalAreas">Ver todas as áreas >></li>
 					</ul>
 				  </div>
+				  <!-- Modal -->
+					<div class="modal fade" id="modalAreas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					  <div class="modal-dialog" role="document">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					        <h4 class="modal-title" id="myModalLabel">Todas as áreas:</h4>
+					      </div>
+					      <div class="modal-body">
+					      	<div class="list-group">
+						        {% for area in ii|auxArea %}
+						        	<a href="{% url 'core:search_area_fix' area.pk %}" class="list-group-item">{{ area.nome_linguagem }} {% if area|quant_Area %}<span class="badge pull-right sai">{{ area|quant_Area }}</span>{% endif %}</a>
+						        {% endfor %}
+					        </div>  
+					      </div>
+					    </div>
+					  </div>
+					</div>
 			</div>
 			
 			
@@ -83,9 +104,9 @@
 								  		- <span class="glyphicon glyphicon-tags"></span>
 								  		{% for tag in fixie.area.all %}
 								  			{% if tag == fixie.area.all.last %}
-								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+								  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>.
 								  			{% else %}
-								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+								  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>,
 								  			{% endif %}
 								  		{% endfor %}
 								  		{% if fixie.resolvido %}
@@ -132,15 +153,18 @@
 								  		- <span class="glyphicon glyphicon-tags"></span>
 								  		{% for tag in fixie.area.all %}
 								  			{% if tag == fixie.area.all.last %}
-								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+								  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>.
 								  			{% else %}
-								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+								  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>,
 								  			{% endif %}
 								  		{% endfor %}
+								  		{% if fixie.anexo.path|verificaArquivo != False %}
+								  			&nbsp;- <span class="glyphicon glyphicon-link"></span>Anexo
+								  		{% endif %}
 
 								    </small>
 								    <h3>{{ fixie.titulo }}</h3>
-								    <p>{{ fixie.post|safe }}</p>
+								    <p>{{ fixie.post|safe|truncatechars_html:300 }}</p>
 
 								    	
 								    	<a class="btn btn-default col-lg-4" href="{% url 'core:post_detail' fixie.pk %}">Detalhar</a>
@@ -152,9 +176,6 @@
 								    		<span class="glyphicon glyphicon-comment"></span> Há {{ fixie.pk|quant_comentP }} comentários neste post
 								    	{% endif %}
 								    	</p>
-								    	
-								    	
-								    
 								</div>
 								</div>
 							</div>

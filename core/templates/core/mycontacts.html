@@ -52,9 +52,9 @@
 						{% for contato in contatos_recentes %}
 							<div class="elementoContato">
 								{% if contato.0|imagemperfil %}
-									<img class="img-thumbnail img-circle" src="{{ contato.0|imagemperfil }}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
+									<img class="img-circle borda" src="{{ contato.0|imagemperfil }}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
 								{% else %}
-									<img class="img-thumbnail img-circle" src="{% static 'core/imagens/default.png' %}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
+									<img class="img-circle borda" src="{% static 'core/imagens/default.png' %}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
 								{% endif %}
 								{% if contato.2 == False %}
 									<h3 style="text-align: center;">{{ contato.0.first_name }} <small><span class="label label-default">Não lido</span></small></h3>
@@ -80,9 +80,9 @@
 						{% for contato in lista_seguindo %}
 							<div class="elementoContato">
 								{% if contato|imagemperfil %}
-									<img class="img-thumbnail img-circle" src="{{ contato|imagemperfil }}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
+									<img class="img-circle borda" src="{{ contato|imagemperfil }}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
 								{% else %}
-									<img class="img-thumbnail img-circle" src="{% static 'core/imagens/default.png' %}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
+									<img class="img-circle borda" src="{% static 'core/imagens/default.png' %}" width="150" height="150" style="display: block;margin-left: auto;margin-right: auto;">
 								{% endif %}
 									<h3 style="text-align: center;">{{ contato.first_name }}</h3>
 									<a class="btn btn-sm btn-default" href="{% url 'core:sala' contato.pk %}" style="margin-left: 75px;"><span class="glyphicon glyphicon-comment"></span> Mensagem</a>			

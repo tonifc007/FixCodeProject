@@ -45,6 +45,7 @@
 											<button class="btn btn-success btn-block btn-sm" id="seguimento" onclick="requisicao('{{ profile.user.username }}')"><span class="glyphicon glyphicon-ok"></span> Seguir</button>
 										{% endif %}
 									{% endif %}
+									<a class="btn btn-default btn-block btn-sm" href="{% url 'core:sala' profile.user.pk %}"><span class="glyphicon glyphicon-send"></span> Mandar mensagem</a>
 								{% endif %}
 							</div>
 						</div>
@@ -124,14 +125,18 @@
 								  		- <span class="glyphicon glyphicon-tags"></span>
 								  		{% for tag in fix.fixie.area.all %}
 								  			{% if tag == fix.fixie.area.all.last %}
-								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+								  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>.
 								  			{% else %}
-								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+								  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>,
 								  			{% endif %}
 								  		{% endfor %}
+								  		{% if fix.resolvido %}
+								  			&nbsp;- <span class="glyphicon glyphicon-ok"></span>
+								  			Resolvido
+								  		{% endif %}
 								    </small>
 								    <h3>{{ fix.fixie.titulo }}</h3>
-								    <p>{{ fix.fixie.descricao|safe }}</p>
+								    <p>{{ fix.fixie.descricao|safe|truncatechars_html:300 }}</p>
 								    	<a class="btn btn-primary btn-sm col-xs-4 col-sm-4 col-md-4 col-lg-4 col-lg-offset-2" href="{% url 'core:fix_detail' fix.fixie.pk %}">Responder fix</a>
 							    
 								    	<p class="col-xs-8 col-sm-8 col-md-8 col-lg-6 comentf">

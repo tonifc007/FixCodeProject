@@ -45,6 +45,7 @@
 											<button class="btn btn-success btn-block btn-sm" id="seguimento" onclick="requisicao('{{ profile.user.username }}')"><span class="glyphicon glyphicon-ok"></span> Seguir</button>
 										{% endif %}
 									{% endif %}
+									<a class="btn btn-default btn-block btn-sm" href="{% url 'core:sala' profile.user.pk %}"><span class="glyphicon glyphicon-send"></span> Mandar mensagem</a>
 								{% endif %}
 							</div>
 						</div>
@@ -116,8 +117,8 @@
 								{% else %}
 									<a href="{% url 'core:profile' pessoa.username %}"><img src="{% static 'core/imagens/default.png' %}" class="thumbnail img-responsive" alt="imgperfil"></a>
 								{% endif %}
-							    	<h5 class="tsegindex"><a class="titulopindex" href="{% url 'core:profile' pessoa.username %}">{{ pessoa.first_name }}</a></h5>
-							    	<span class="pCinzaUser">{{ pessoa.username }}</span>
+							    	<h5 class="tsegindex"><a class="titulopindex" href="{% url 'core:profile' pessoa.username %}">{{ pessoa.first_name|truncatechars:12 }}</a></h5>
+							    	<span class="pCinzaUser">{{ pessoa.username|truncatechars:12 }}</span>
 							    	<a class='btn btn-success btn-xs btn-block' href="{% url 'core:profile' pessoa.username %}">Ver perfil</a>
 							</div>
 						{% endfor %}
