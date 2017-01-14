@@ -49,6 +49,48 @@ function friend(ide) {
             $('#seguimento').text("Parar de seguir");// remove the value from the input
             console.log(json); // log the returned json to the console
             console.log("success"); // another sanity check
+            $.notify({
+                // options
+                icon: 'glyphicon glyphicon-info-sign',
+                title: 'Você agora segue este usuário',
+            },{
+                // settings
+                element: 'body',
+                position: null,
+                type: "info",
+                allow_dismiss: true,
+                newest_on_top: false,
+                showProgressbar: false,
+                placement: {
+                    from: "bottom",
+                    align: "left"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 5000,
+                timer: 1000,
+                mouse_over: null,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    
+                    '<div class="progress" data-notify="progressbar">' +
+                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>' 
+            });
         },
 
         // handle a non-successful response
@@ -76,6 +118,48 @@ function unfriend(ide) {
             $('#seguimento').text("Seguir"); // remove the value from the input
             console.log(json); // log the returned json to the console
             console.log("success"); // another sanity check
+            $.notify({
+                // options
+                icon: 'glyphicon glyphicon-danger-sign',
+                title: 'Você não segue mais este usuário',
+            },{
+                // settings
+                element: 'body',
+                position: null,
+                type: "danger",
+                allow_dismiss: true,
+                newest_on_top: false,
+                showProgressbar: false,
+                placement: {
+                    from: "bottom",
+                    align: "left"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 5000,
+                timer: 1000,
+                mouse_over: null,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    
+                    '<div class="progress" data-notify="progressbar">' +
+                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>' 
+            });
         },
 
         // handle a non-successful response
@@ -164,7 +248,7 @@ function ativeNotifyMyfix(ide){
             console.log("success"); // another sanity check
             $.notify({
                 // options
-                icon: 'glyphicon glyphicon-warning-sign',
+                icon: 'glyphicon glyphicon-info-sign',
                 title: 'Notificações ativadas para este fix',
             },{
                 // settings
@@ -197,7 +281,7 @@ function ativeNotifyMyfix(ide){
                     '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
                     '<span data-notify="icon"></span> ' +
                     '<span data-notify="title">{1}</span> ' +
-                    '<span data-notify="message">{2}</span>' +
+                    
                     '<div class="progress" data-notify="progressbar">' +
                         '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
                     '</div>' +
@@ -231,6 +315,48 @@ function inativeNotifyMyfix(ide){
             $('#seg').removeClass('notifix');// remove the value from the input
             console.log(json); // log the returned json to the console
             console.log("success"); // another sanity check
+            $.notify({
+                // options
+                icon: 'glyphicon glyphicon-danger-sign',
+                title: 'Notificações desativadas para este fix',
+            },{
+                // settings
+                element: 'body',
+                position: null,
+                type: "danger",
+                allow_dismiss: true,
+                newest_on_top: false,
+                showProgressbar: false,
+                placement: {
+                    from: "bottom",
+                    align: "left"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 5000,
+                timer: 1000,
+                mouse_over: null,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    
+                    '<div class="progress" data-notify="progressbar">' +
+                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>' 
+            });
         },
 
         // handle a non-successful response
@@ -399,6 +525,48 @@ function favorite(ide){
         // handle a successful response
         success : function(json) {
             $('#fav').addClass('notifix');
+            $.notify({
+                // options
+                icon: 'glyphicon glyphicon-info-sign',
+                title: 'Fix favoritado!',
+            },{
+                // settings
+                element: 'body',
+                position: null,
+                type: "info",
+                allow_dismiss: true,
+                newest_on_top: false,
+                showProgressbar: false,
+                placement: {
+                    from: "bottom",
+                    align: "left"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 5000,
+                timer: 1000,
+                mouse_over: null,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    
+                    '<div class="progress" data-notify="progressbar">' +
+                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>' 
+            });
         },
 
         // handle a non-successful response
@@ -421,6 +589,48 @@ function unfavorite(ide){
         // handle a successful response
         success : function(json) {
             $('#fav').removeClass('notifix');
+            $.notify({
+                // options
+                icon: 'glyphicon glyphicon-danger-sign',
+                title: 'Fix desfavoritado',
+            },{
+                // settings
+                element: 'body',
+                position: null,
+                type: "danger",
+                allow_dismiss: true,
+                newest_on_top: false,
+                showProgressbar: false,
+                placement: {
+                    from: "bottom",
+                    align: "left"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 5000,
+                timer: 1000,
+                mouse_over: null,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    
+                    '<div class="progress" data-notify="progressbar">' +
+                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>' 
+            });
         },
 
         // handle a non-successful response
@@ -475,6 +685,48 @@ function ativenotifyparticipate(ide){
         // handle a successful response
         success : function(json) {
             $('#par').addClass('notifix');
+            $.notify({
+                // options
+                icon: 'glyphicon glyphicon-info-sign',
+                title: 'Você está participando desde fix',
+            },{
+                // settings
+                element: 'body',
+                position: null,
+                type: "info",
+                allow_dismiss: true,
+                newest_on_top: false,
+                showProgressbar: false,
+                placement: {
+                    from: "bottom",
+                    align: "left"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 5000,
+                timer: 1000,
+                mouse_over: null,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    
+                    '<div class="progress" data-notify="progressbar">' +
+                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>' 
+            });
         },
 
         // handle a non-successful response
@@ -497,6 +749,48 @@ function inativenotifyparticipate(ide){
         // handle a successful response
         success : function(json) {
             $('#par').removeClass('notifix');
+            $.notify({
+                // options
+                icon: 'glyphicon glyphicon-danger-sign',
+                title: 'Você retirou participação deste fix',
+            },{
+                // settings
+                element: 'body',
+                position: null,
+                type: "danger",
+                allow_dismiss: true,
+                newest_on_top: false,
+                showProgressbar: false,
+                placement: {
+                    from: "bottom",
+                    align: "left"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 5000,
+                timer: 1000,
+                mouse_over: null,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    
+                    '<div class="progress" data-notify="progressbar">' +
+                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>' 
+            });
         },
 
         // handle a non-successful response
@@ -580,6 +874,48 @@ function ativepostprofile(ide){
         success : function(json) {
             $('#req').addClass('notifix');
             $('#req > span').removeClass('glyphicon-unchecked').addClass('glyphicon-check');
+            $.notify({
+                // options
+                icon: 'glyphicon glyphicon-info-sign',
+                title: 'Este post agora aparece no seu perfil',
+            },{
+                // settings
+                element: 'body',
+                position: null,
+                type: "info",
+                allow_dismiss: true,
+                newest_on_top: false,
+                showProgressbar: false,
+                placement: {
+                    from: "bottom",
+                    align: "left"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 5000,
+                timer: 1000,
+                mouse_over: null,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    
+                    '<div class="progress" data-notify="progressbar">' +
+                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>' 
+            });
         },
 
         // handle a non-successful response
@@ -603,6 +939,48 @@ function inativepostprofile(ide){
         success : function(json) {
             $('#req').removeClass('notifix');
             $('#req > span').removeClass('glyphicon-check').addClass('glyphicon-unchecked');
+            $.notify({
+                // options
+                icon: 'glyphicon glyphicon-danger-sign',
+                title: 'Este post não aparecerá no seu perfil',
+            },{
+                // settings
+                element: 'body',
+                position: null,
+                type: "danger",
+                allow_dismiss: true,
+                newest_on_top: false,
+                showProgressbar: false,
+                placement: {
+                    from: "bottom",
+                    align: "left"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 5000,
+                timer: 1000,
+                mouse_over: null,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    
+                    '<div class="progress" data-notify="progressbar">' +
+                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>' 
+            });
         },
 
         // handle a non-successful response
@@ -654,11 +1032,11 @@ function requisicaoChaveAtivacaoPost(ide) {
         success : function(json) {
             if (json == false){
                 console.log('está falso');
-                ativenotifypost(ide)
+                ativenotifypost(ide);
             }
             else{
                 console.log('está verdadeiro');
-                inativenotifypost(ide)
+                inativenotifypost(ide);
             }
         },
 
@@ -682,6 +1060,48 @@ function ativenotifypost(ide){
         // handle a successful response
         success : function(json) {
             $('#reqP').addClass('notifix');
+            $.notify({
+                // options
+                icon: 'Notificações ativadas para este post',
+                title: 'Fix desfavoritado',
+            },{
+                // settings
+                element: 'body',
+                position: null,
+                type: "info",
+                allow_dismiss: true,
+                newest_on_top: false,
+                showProgressbar: false,
+                placement: {
+                    from: "bottom",
+                    align: "left"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 5000,
+                timer: 1000,
+                mouse_over: null,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    
+                    '<div class="progress" data-notify="progressbar">' +
+                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>' 
+            });
         },
 
         // handle a non-successful response
@@ -704,6 +1124,48 @@ function inativenotifypost(ide){
         // handle a successful response
         success : function(json) {
             $('#reqP').removeClass('notifix');
+            $.notify({
+                // options
+                icon: 'glyphicon glyphicon-danger-sign',
+                title: 'Notificações desativadas para este post',
+            },{
+                // settings
+                element: 'body',
+                position: null,
+                type: "danger",
+                allow_dismiss: true,
+                newest_on_top: false,
+                showProgressbar: false,
+                placement: {
+                    from: "bottom",
+                    align: "left"
+                },
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                delay: 5000,
+                timer: 1000,
+                mouse_over: null,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                },
+                onShow: null,
+                onShown: null,
+                onClose: null,
+                onClosed: null,
+                icon_type: 'class',
+                template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+                    '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                    '<span data-notify="icon"></span> ' +
+                    '<span data-notify="title">{1}</span> ' +
+                    
+                    '<div class="progress" data-notify="progressbar">' +
+                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                    '</div>' +
+                    '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                '</div>' 
+            });
         },
 
         // handle a non-successful response

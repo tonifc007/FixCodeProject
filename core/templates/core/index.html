@@ -126,13 +126,9 @@
 								<div class="media-body">
 								    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' fixie.user.username %}">{{ fixie.user.first_name }}</a> - <span class="pCinzaUser">{{fixie.user.username}}</span></h4>
 								    <small class="pCinza"><span class="glyphicon glyphicon-time"></span> 
-								    	{% if fixie.data|subtempo == 0 %}
-								  			hoje
-								  		{% elif fixie.data|subtempo == 1 %}
-								  			ontem
-								  		{% else %}
-								  			Há {{ fixie.data|subtempo }} dias
-								  		{% endif %}
+								    	
+								  			Há {{ fixie.data|timesince }}
+								  		
 								  		- <span class="glyphicon glyphicon-tags"></span>
 								  		{% for tag in fixie.area.all %}
 								  			{% if tag == fixie.area.all.last %}
@@ -150,10 +146,10 @@
 								    	<a class="btn btn-default col-lg-4" href="{% url 'core:post_detail' fixie.pk %}">Detalhar</a>
 								    
 								    	<p class="col-lg-6 comentf">
-								    	{% if fixie.pk|quant_coment == 0 %}
+								    	{% if fixie.pk|quant_comentP == 0 %}
 								    		<span class="glyphicon glyphicon-comment"></span> Não há nenhum comentário
 								    	{% else %}
-								    		<span class="glyphicon glyphicon-comment"></span> Há {{ fixie.pk|quant_coment }} comentários neste post
+								    		<span class="glyphicon glyphicon-comment"></span> Há {{ fixie.pk|quant_comentP }} comentários neste post
 								    	{% endif %}
 								    	</p>
 								    	
@@ -190,6 +186,20 @@
 			{% endif %}
 		</div>
 		<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 sai">
+			<div class="panel panel-default pesqindex">
+				<div class="panel-heading"><h4 class="titp">Inbox</h4></div>
+				  <div class="panel-body">
+				  	{% if quantidade_mensagens %}
+				  		<p>Você tem novas mensagens de {{ quantidade_mensagens }} usuário(s).</p>
+				  	{% else %}
+				  		<p>Mande mensagens para qualquer usuário FixCode! Use o <span style="color: red;">Inbox</span>.</p>
+				  	{% endif %}
+				  	<a href="{% url 'core:my_contacts' %}" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Inbox</a>
+				  </div>
+			</div>
+			
+
+
 			<div class="panel panel-default pesqindex">
 				<div class="panel-heading"><h4 class="titp">Atividade dos seus amigos</h4></div>
 				  <div class="panel-body">

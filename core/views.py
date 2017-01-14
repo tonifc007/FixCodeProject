@@ -65,6 +65,9 @@ def index(request):
 		#invertendo para os ultmos serem os primeiros
 		followings = followings[::-1]
 
+		instanciaMessage = Message()
+		#quantidade de pessoas que mandaram mensagens
+		quantidade_mensagens = instanciaMessage.count_messages(request.user)
 
 
 		#sistema de paginação
@@ -83,7 +86,7 @@ def index(request):
 		except EmptyPage:
 			relations = paginator.page(paginator.num_pages)
 
-		return render(request, 'core/index.html', {'relations':relations, 'profile':perfil,'comentariosDosSeguindo':comentariosDosSeguindo[0:10]})
+		return render(request, 'core/index.html', {'relations':relations, 'profile':perfil,'comentariosDosSeguindo':comentariosDosSeguindo[0:10], 'quantidade_mensagens':quantidade_mensagens})
 
 def notificaIndex(request):
 	if not request.user.is_authenticated():
