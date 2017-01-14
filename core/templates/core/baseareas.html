@@ -43,7 +43,7 @@
 				      <div class="modal-body">
 				      	<div class="list-group">
 					        {% for area in ii|auxArea %}
-					        	<a href="{% url 'core:search_area_fix' area.pk %}" class="list-group-item">{{ area.nome_linguagem }} <span class="badge pull-right sai">{{ area|quant_Area }}</span></a>
+					        	<a href="{% url 'core:search_area_fix' area.pk %}" class="list-group-item">{{ area.nome_linguagem }} {% if area|quant_Area %}<span class="badge pull-right sai">{{ area|quant_Area }}</span>{% endif %}</a>
 					        {% endfor %}
 				        </div>  
 				      </div>

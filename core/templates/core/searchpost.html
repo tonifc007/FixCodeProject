@@ -56,9 +56,9 @@
 		  		- <span class="glyphicon glyphicon-tags"></span>
 		  		{% for tag in post.area.all %}
 		  			{% if tag == post.area.all.last %}
-		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+		  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>.
 		  			{% else %}
-		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+		  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>,
 		  			{% endif %}
 		  		{% endfor %}
 		  		{% if post.resolvido %}
@@ -71,7 +71,7 @@
 
 		    </small>
 		    <h3>{{ post.titulo }}</h3>
-		    <p>{{ post.post|safe }}</p>
+		    <p>{{ post.post|safe|truncatechars_html:300 }}</p>
 
 		    	
 		    	<a class="btn btn-success col-lg-4" href="{% url 'core:post_detail' post.pk %}">Detalhar</a>

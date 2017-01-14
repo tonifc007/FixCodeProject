@@ -124,9 +124,9 @@
 								  		- <span class="glyphicon glyphicon-tags"></span>
 								  		{% for tag in post.area.all %}
 								  			{% if tag == post.area.all.last %}
-								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+								  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>.
 								  			{% else %}
-								  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+								  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>,
 								  			{% endif %}
 								  		{% endfor %}
 								  		{% if post.anexo.path|verificaArquivo != False %}

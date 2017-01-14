@@ -27,8 +27,8 @@
 
 {% block habilidades %}
 	{% for habilidade in habilidades %}
-		<li role="presentation"><a href="{% url 'core:search_area_fix' habilidade.pk %}">{{ habilidade.nome_linguagem }} <span class="badge pull-right sai">{{ habilidade|quant_Area }}</span></a></li>
-	{% endfor %}
+  		<li role="presentation"><a href="{% url 'core:search_area_fix' habilidade.pk %}">{{ habilidade }} {% if habilidade|quant_Area %}<span class="badge pull-right sai">{{ habilidade|quant_Area }}</span>{% endif %}</a></li>
+  	{% endfor %}
 {% endblock %}
 
 {% block tit %} <h4>Resultados para a habilidade {{ area }}</h4> {% endblock %}
@@ -47,8 +47,8 @@
 			{% else %}
 				<a href="{% url 'core:profile' pessoa.username %}"><img src="{% static 'core/imagens/default.png' %}" class="thumbnail img-responsive" alt="imgperfil"></a>
 			{% endif %}
-		    	<h5 class="tsegindex"><a class="titulopindex" href="{% url 'core:profile' pessoa.username %}">{{ pessoa.first_name }}</a></h5>
-		    	<span class="pCinzaUser">{{ pessoa.username }}</span>
+		    	<h5 class="tsegindex"><a class="titulopindex" href="{% url 'core:profile' pessoa.username %}">{{ pessoa.first_name|truncatechars:12 }}</a></h5>
+		    	<span class="pCinzaUser">{{ pessoa.username|truncatechars:12 }}</span>
 		    	<a class='btn btn-success btn-xs btn-block' href="{% url 'core:profile' pessoa.username %}">Ver perfil</a>
 		</div>
 	{% endfor %}

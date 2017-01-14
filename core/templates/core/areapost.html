@@ -27,8 +27,8 @@
 
 {% block habilidades %}
 	{% for habilidade in habilidades %}
-		<li role="presentation"><a href="{% url 'core:search_area_fix' habilidade.pk %}">{{ habilidade.nome_linguagem }} <span class="badge pull-right sai">{{ habilidade|quant_Area }}</span></a></li>
-	{% endfor %}
+  		<li role="presentation"><a href="{% url 'core:search_area_fix' habilidade.pk %}">{{ habilidade }} {% if habilidade|quant_Area %}<span class="badge pull-right sai">{{ habilidade|quant_Area }}</span>{% endif %}</a></li>
+  	{% endfor %}
 {% endblock %}
 
 {% block tit %} <h4>Resultados para a habilidade {{ area }}</h4> {% endblock %}
@@ -62,9 +62,9 @@
 		  		- <span class="glyphicon glyphicon-tags"></span>
 		  		{% for tag in post.area.all %}
 		  			{% if tag == post.area.all.last %}
-		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>.
+		  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>.
 		  			{% else %}
-		  				&nbsp;<a class="pCinza" href="#">{{ tag }}</a>,
+		  				&nbsp;<a class="pCinza" href="{% url 'core:search_area_fix' tag.pk %}">{{ tag }}</a>,
 		  			{% endif %}
 		  		{% endfor %}
 		  		{% if post.resolvido %}
@@ -77,7 +77,7 @@
 
 		    </small>
 		    <h3>{{ post.titulo }}</h3>
-		    <p>{{ post.post|safe }}</p>
+		    <p>{{ post.post|safe|truncatechars_html:300 }}</p>
 
 		    	
 		    	<a class="btn btn-success col-lg-4" href="{% url 'core:post_detail' post.pk %}">Detalhar</a>
