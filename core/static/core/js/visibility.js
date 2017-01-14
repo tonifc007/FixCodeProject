@@ -86,6 +86,8 @@ function getNovasMensagens(){
 
 function leMensagens(){
 
+    console.log("LENDO MENSAGENS");
+
     $.ajax({
         url : "read/", // the endpoint
         type : "GET", // http method

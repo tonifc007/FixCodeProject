@@ -1,0 +1,112 @@
+{% extends 'core/base.html' %}
+{% load aux_tags %}
+{% load staticfiles %}
+{% block titulo %}Atividades dos seus amigos - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
+
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="#">Feedback</a></li>
+{% endblock %}
+
+{% block imagemperfil %}
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil" width="50" height="60"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil" width="50" height="60"></a>
+
+	{% endif %}
+{% endblock %}
+
+
+{% block body %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<ol class="breadcrumb">
+		  <li><a href="/">Home</a></li>
+		  <li class="active">Atividades dos seus amigos</li>
+		</ol>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="col-lg-8">
+				<div class="panel panel-default">
+					<div class="panel-heading"><h4>Atividades dos seus amigos:</h4></div>
+					<div class="panel-body">					
+						<div class="media-body">
+							
+							{% for com in dados %}
+								<div class="media">
+									<div class="media-left media-middle">
+									{% if com.0|imagemperfil %}			    	
+										
+									<img src="{{ com.0|imagemperfil }}" class="media-object img-circle" alt="imgperfil" width="40" height="40">
+									{% else %}
+									<img src="{% static 'core/imagens/default.png' %}" class="media-object img-circle" alt="imgperfil" >
+									{% endif %}
+									</div>
+									<div class="media-body">
+										<div class="media-heading">
+											{% if com.2 == True %}
+											<span class="glyphicon glyphicon-comment"></span><a href="{% url 'core:profile' com.0.username %}"> {{ com.0.first_name }}</a>
+												participou de
+											{% else %}
+											<span class="glyphicon glyphicon-star" style="color: #DFE703;"></span><a href="{% url 'core:profile' com.0.username %}"> {{ com.0.first_name }}</a>
+												favoritou 
+											{% endif %}
+											 "<a href="{% url 'core:fix_detail' com.1.pk %}">{{ com.1.titulo }}</a>".
+										</div>
+						  				<small class="pCinzaUser"><span class="glyphicon glyphicon-time"></span> Há {{ com.3|timesince }} </small>
+									</div>
+								</div>	
+						  		
+						  	{% empty %}
+						  		<h5>Você ainda não segue ninguém, procure quem seguir na caixa de pesquisa.</h5>
+						{% endfor %}
+							<nav aria-label="Page navigation">
+							  <ul class="pager">
+							    {% if dados.has_previous %}
+							    	<li class="previous"><a href="?page={{ dados.previous_page_number }}"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+							    {% else %}
+							    	<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Página anterior</a></li>
+						        {% endif %}
+							    Página {{ dados.number }} de {{ dados.paginator.num_pages }}.
+							    {% if dados.has_next %}
+							    	<li class="next"><a href="?page={{ dados.next_page_number }}">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+							    {% else %}
+							    	<li class="next disabled"><a href="#">Próxima página <span aria-hidden="true">&rarr;</span></a></li>
+						        {% endif %}
+							  </ul>
+							</nav>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="panel panel-primary">
+				<div class="panel-heading"><h4>Instruções</h4></div>
+					<div class="panel-body">
+						
+						  
+						    <ul class="list-group">
+							  <li class="list-group-item">FixCode mostra o que seus amigos, quem você segue, estão fazendo.</li>
+							  <li class="list-group-item">As ações são quando os usuários comentam em algum Fixie ou favorita.</li>						  
+							</ul>
+						 
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+	
+{% endblock %}

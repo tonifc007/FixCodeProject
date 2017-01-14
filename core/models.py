@@ -208,6 +208,7 @@ class Favorites(models.Model):
 	user = models.ForeignKey(User)
 	fixie = models.ForeignKey(Fixies)
 	notificacao = models.IntegerField(default=0)
+	data = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
 		return self.user.username + ' favoritou: ' + self.fixie.titulo
@@ -283,6 +284,37 @@ class Followers(models.Model):
 				return 2
 		else:
 			return 0
+
+	#----------------------------------------------
+	# FALTA FAZER!!!
+	#----------------------------------------------
+
+	def get_timeline_friends_coments(self, followings):
+		comentariosDosSeguindo = list()
+		for i in followings:
+			print i.first_name
+			comentariosDesteSeguindo = ComentFixies.objects.filter(user=i)
+			for a in comentariosDesteSeguindo:
+				print("{} coment in {}".format(i.first_name, a.fixie.titulo))
+				comentariosDosSeguindo.append([a.user, a.fixie, 1, a.data,])
+
+		return sorted(list(comentariosDosSeguindo), key=lambda inst: inst[3], reverse=True)
+
+	def get_timeline_friends_favorites(self, followings):
+		favoritosDosSeguindo = list()
+		for i in followings:
+			print i.first_name
+			favoritosDesteSeguindo = Favorites.objects.filter(user=i)
+			for a in favoritosDesteSeguindo:
+				print("{} favorite in {}".format(i.first_name, a.fixie.titulo))
+				favoritosDosSeguindo.append([a.user, a.fixie, 2, a.data,])
+
+		return sorted(list(favoritosDosSeguindo), key=lambda inst: inst[3], reverse=True)
+
+	def get_timeline_friends_activities(self, followings):
+		lista = self.get_timeline_friends_coments(followings)
+		lista.extend(self.get_timeline_friends_favorites(followings))
+		return sorted(list(lista), key=lambda inst: inst[3], reverse=True)
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>

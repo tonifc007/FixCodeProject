@@ -7,9 +7,9 @@
 
 {% block imagemperfil %}
 	{% if profile.imagem_perfil %}
-		<a href="{% url 'core:profile' user.username %}"><img src="{{ profile.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil"></a>
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ profile.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil" width="50" height="60"></a>
 	{% else %}
-		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil"></a>
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil" width="50" height="60"></a>
 		
 	{% endif %}
 {% endblock %}
@@ -195,24 +195,24 @@
 				  <div class="panel-body">
 				  	<ul class="list-group">
 				  	{% for com in comentariosDosSeguindo %}
-				  		<a href="#" class="list-group-item">
+				  		<a href="{% url 'core:fix_detail' com.1.pk %}" class="list-group-item">
 				  		<div class="media-left media-middle">
 					        					   
-				  		{% if com.user|imagemperfil %}			    				
-	    				<img src="{{ com.user|imagemperfil }}" class="media-object" alt="imgperfil" width="40" height="40">
+				  		{% if com.0|imagemperfil %}			    				
+	    				<img src="{{ com.0|imagemperfil }}" class="media-object img-circle" alt="imgperfil" width="40" height="40">
 						{% else %}
-						<img src="{% static 'core/imagens/default.png' %}" class="img-rounded img-responsive" alt="imgperfil" >
+						<img src="{% static 'core/imagens/default.png' %}" class="media-object img-circle" alt="imgperfil" >
 						{% endif %}
 						</div>
 						<div class="media-body">
-						{{ com.user.first_name }} participou de "{{ com.fixie.titulo }}" - 
-				  		{% if com.data|subtempo == 0 %}
-				  			<small>hoje</small>
-				  		{% elif com.data|subtempo == 1 %}
-				  			<small>ontem</small>
-				  		{% else %}
-				  			<small>Há {{ com.data|subtempo }} dias</small>
-				  		{% endif %}
+						{{ com.0.first_name }}
+						{% if com.2 == True %}
+							participou de
+						{% else %}
+							favoritou 
+						{% endif %}
+						 "{{ com.1.titulo }}" - 
+				  			<small class="pCinzaUser">Há {{ com.3|timesince }} </small>
 				  		</div>
 				  		</a>
 				  	{% empty %}
@@ -220,7 +220,7 @@
 				  	{% endfor %}
 				  	</ul>
 				  	<ul class="nav" role="tablist">
-					  <li role="presentation"><a href="#" class="vertodos">Ver todos >></a></li>
+					  <li role="presentation"><a href="{% url 'core:friendsactivities' %}" class="vertodos">Ver todos >></a></li>
 					</ul>
 				  </div>
 			</div>

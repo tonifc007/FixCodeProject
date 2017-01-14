@@ -71,21 +71,9 @@ def index(request):
 		paginator = Paginator(fixies, 5)
 		page = request.GET.get('page')
 
-		comentariosDosSeguindo = list()
-		for i in followings:
-			print i.first_name
-			comentariosDesteSeguindo = ComentFixies.objects.filter(user=i)
-			for a in comentariosDesteSeguindo:
-				print("{} coment in {}".format(i.first_name, a.fixie.titulo))
-				comentariosDosSeguindo.append(a)
+		instanciaFollowers = Followers()
 
-		comentariosDosSeguindo = comentariosDosSeguindo[::-1]
-		tempos = list()
-		for i in comentariosDosSeguindo:
-			tempos.append(timezone.now() - i.data)
-
-		comentariosDosSeguindo = comentariosDosSeguindo[0:10]
-		tempos = tempos[0:10]
+		comentariosDosSeguindo = instanciaFollowers.get_timeline_friends_activities(followings)
 
 		try:
 			relations = paginator.page(page)
@@ -95,7 +83,7 @@ def index(request):
 		except EmptyPage:
 			relations = paginator.page(paginator.num_pages)
 
-		return render(request, 'core/index.html', {'relations':relations, 'profile':perfil,'comentariosDosSeguindo':comentariosDosSeguindo})
+		return render(request, 'core/index.html', {'relations':relations, 'profile':perfil,'comentariosDosSeguindo':comentariosDosSeguindo[0:10]})
 
 def notificaIndex(request):
 	if not request.user.is_authenticated():
@@ -285,6 +273,29 @@ def profile(request, username):
 		'data':data_comecou_seguir,
 		'numerofollowings':followings,
 		'numerofollowers':followers})
+
+def friendsactivities(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		eu = get_object_or_404(Profile, user=request.user)
+		instanciaFollowers = Followers()
+		dados = instanciaFollowers.get_timeline_friends_activities(instanciaFollowers.relacao_de_seguindo_decrescente(request.user))
+		
+		paginator = Paginator(dados, 10)
+		page = request.GET.get('page')
+		print(page)
+		print("Estou requisitando a {} página" .format(page))
+
+		try:
+			relations = paginator.page(page)
+			print(relations)
+		except PageNotAnInteger:
+			relations = paginator.page(1)
+		except EmptyPage:
+			relations = paginator.page(paginator.num_pages)
+
+		return render(request, 'core/friendsactivities.html', {'dados': relations, 'eu':eu})
 
 def atualizaVisto(request):
 	if not request.user.is_authenticated():
