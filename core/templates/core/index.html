@@ -16,6 +16,10 @@
 
 {% block body %}
 
+<script type="text/javascript">
+	var pantigo = {{ qposts }};
+</script>
+<script src="{% static 'core/js/quantTimeline.js' %}"></script>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
@@ -78,6 +82,7 @@
 			
 		</div>
 		<div class="col-xs-8 col-sm-6 col-md-6 col-lg-6">
+			<div id="recarrega"></div>
 			<div id="notifica"></div>
 			<div id="notificaParticipacao"></div>
 			<div id="notificaPosts"></div>

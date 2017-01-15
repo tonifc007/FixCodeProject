@@ -20,7 +20,8 @@ urlpatterns = [
     url(r'^allmessages/$', views.all_messages, name='all_messages'),
     url(r'^verifica_leitura/$', views.verifica_leitura, name='verifica_leitura'),
     url(r'^deleta_conversa/$', views.deleta_conversa, name='deleta_conversa'),
-
+    url(r'^notificaall/$', views.notificaAll, name='notificaAll'),
+    url(r'^timeline/$', views.quantTL, name='quantTL'),
 
     #Páginas de fix
     url(r'^fix/new/$', views.create_fix, name='create_fix'),

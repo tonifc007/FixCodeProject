@@ -1,9 +1,16 @@
 setTimeout("atualizaVisto()", 1);
 setInterval("atualizaVisto()", 10000);
+setTimeout("alterTitle()", 1);
+setInterval("alterTitle()", 5000);
+
+
 /*
 function search_now(){
   
 }*/
+
+
+
 
 $('#f').submit(function() {
     var form = $(this);
@@ -15,6 +22,32 @@ $('#f').submit(function() {
     });
     return false;
 });
+
+var instanciaTitulo = document.title;
+
+function alterTitle(){
+
+    $.ajax({
+        url : "/notificaall/", // the endpoint
+        type : "GET", // http method
+
+        success : function(json) {
+            if(json>0){
+              document.title = "("+json+") " + instanciaTitulo;
+            }
+            
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+            console.log('offline');
+
+        }
+    });
+
+}
+
 
 $('#slide-contatos, #slide-seguindo').slick({
   dots: false,

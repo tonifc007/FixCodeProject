@@ -86,7 +86,80 @@ def index(request):
 		except EmptyPage:
 			relations = paginator.page(paginator.num_pages)
 
-		return render(request, 'core/index.html', {'relations':relations, 'profile':perfil,'comentariosDosSeguindo':comentariosDosSeguindo[0:10], 'quantidade_mensagens':quantidade_mensagens})
+		return render(request, 'core/index.html', {'relations':relations, 'profile':perfil,'comentariosDosSeguindo':comentariosDosSeguindo[0:10], 'quantidade_mensagens':quantidade_mensagens, 'qposts': len(fixies)})
+
+def notificaAll(request):
+	if not request.user.is_authenticated():
+		print("foi no if")
+		return render(request, 'core/login.html')
+	else:
+		response_data = 0
+		myfixies = Fixies.objects.filter(user=request.user)
+		
+		for fix in myfixies:
+			if fix.notificacao > 0:
+				response_data += 1
+
+
+		myrelationships = Participations.objects.filter(user=request.user)
+		for fix in myrelationships:
+			if fix.notificacao > 0:
+				response_data += 1
+
+		myposts = Post.objects.filter(user=request.user)
+		for post in myposts:
+			if post.notificacao > 0:
+				print "incrementa"
+				response_data += 1
+
+		instanciaMessage = Message()
+		#quantidade de pessoas que mandaram mensagens
+		response_data += instanciaMessage.count_messages(request.user)
+
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def quantTL(request):
+	if not request.user.is_authenticated():
+		print("foi no if")
+		return render(request, 'core/login.html')
+	else:
+		perfil = get_object_or_404(Profile, user=request.user)
+
+		#todos os fixies e posts mostrados no index ficam guardados nesta variável
+		fixies = []
+
+		#recolhe fixies e posts das habilidades
+		for f in Fixies.objects.all():
+			for f1 in f.area.all():
+				for p in perfil.habilidades.all():
+					if f1 == p:
+						print("{} - {}".format(f1, p))
+						fixies.append(f)
+		for p in Post.objects.all():
+			for p1 in p.area.all():
+				for a in perfil.habilidades.all():
+					if p1 == a:
+						fixies.append(p)
+
+		#recolhe fixies e posts das pessoas que o usuário segue
+		for user in Followers.objects.filter(user=request.user):
+			postsdosseguidos = Post.objects.filter(user=user.following)
+			fixesdosseguidos = Fixies.objects.filter(user=user.following)
+			fixies.extend(list(postsdosseguidos))
+			fixies.extend(list(fixesdosseguidos))
+
+
+		#recolhe seus próprios fixies e posts
+		myfixies = Fixies.objects.filter(user=request.user)
+		myposts = Post.objects.filter(user=request.user)
+		fixies.extend(list(myfixies))
+		fixies.extend(list(myposts))
+
+		response_data = len(set(fixies))
+
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
 def notificaIndex(request):
 	if not request.user.is_authenticated():
