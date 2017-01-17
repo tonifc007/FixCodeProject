@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
-from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, ComentPost, Areas, Message
+from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, ComentPost, Areas, Message, Blocked
 from django.contrib.auth import authenticate, login, logout, get_user
 from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile, PostForm, ComentPostForm
 from django.http import Http404
@@ -19,7 +19,6 @@ def index(request):
 		print("foi no if")
 		return render(request, 'core/login.html')
 	else:
-		print("saiu no if")
 		perfil = get_object_or_404(Profile, user=request.user)
 
 		#todos os fixies e posts mostrados no index ficam guardados nesta variável
@@ -61,9 +60,10 @@ def index(request):
 
 		for pessoa in relacao:
 			followings.append(pessoa.following)
-
+		print "pausa"
 		#invertendo para os ultmos serem os primeiros
 		followings = followings[::-1]
+		print "pausa"
 
 		instanciaMessage = Message()
 		#quantidade de pessoas que mandaram mensagens
@@ -312,18 +312,24 @@ def profile(request, username):
 	profile = get_object_or_404(Profile, user=use)
 
 	instanciaSeguidor = Followers()
+	instanciaBlock = Blocked()
+
+	dadoBlock = 0
 
 	if request.user.is_authenticated():
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
 		eu = get_object_or_404(Profile, user=request.user)
 		data_comecou_seguir = instanciaSeguidor.get_data_que_comecou_seguir(request.user, use)
+		
+		dadoBlock = instanciaBlock.get_dados_esta_block(request.user, use)
+
 	else:
 		dadosSeguir = dadosSDV = 0
 		eu = data_comecou_seguir = None
-
 	followings = instanciaSeguidor.relacao_de_seguindo_decrescente(use)
 	followers = instanciaSeguidor.relacao_de_seguidores_decrescente(use)
+
 
 	posts = Post.objects.filter(user=use, exibir_perfil=True)
 
@@ -348,7 +354,8 @@ def profile(request, username):
 		'eu':eu,
 		'data':data_comecou_seguir,
 		'numerofollowings':followings,
-		'numerofollowers':followers})
+		'numerofollowers':followers,
+		'dadoBlock':dadoBlock})
 
 def friendsactivities(request):
 	if not request.user.is_authenticated():
@@ -795,11 +802,15 @@ def participations(request, username):
 
 	instanciaSeguidor = Followers()
 
+	instanciaBlock = Blocked()
+	dadoBlock = 0
+
 	if request.user.is_authenticated():
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
 		eu = get_object_or_404(Profile, user=request.user)
 		data_comecou_seguir = instanciaSeguidor.get_data_que_comecou_seguir(request.user, use)
+		dadoBlock = instanciaBlock.get_dados_esta_block(request.user, use)
 	else:
 		dadosSeguir = dadosSDV = 0
 		eu = data_comecou_seguir = None
@@ -828,7 +839,8 @@ def participations(request, username):
 		'eu':eu,
 		'data':data_comecou_seguir,
 		'numerofollowings':followings,
-		'numerofollowers':followers})
+		'numerofollowers':followers,
+		'dadoBlock':dadoBlock})
 
 
 def getnotifyparticipation(request, pk):
@@ -984,11 +996,15 @@ def favorites(request, username):
 
 	instanciaSeguidor = Followers()
 
+	instanciaBlock = Blocked()
+	dadoBlock = 0
+
 	if request.user.is_authenticated():
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
 		eu = get_object_or_404(Profile, user=request.user)
 		data_comecou_seguir = instanciaSeguidor.get_data_que_comecou_seguir(request.user, use)
+		dadoBlock = instanciaBlock.get_dados_esta_block(request.user, use)
 	else:
 		dadosSeguir = dadosSDV = 0
 		eu = data_comecou_seguir = None
@@ -1019,7 +1035,8 @@ def favorites(request, username):
 		'numerofollowings':followings,
 		'numerofollowers':followers,
 		'nfollowings':followings[0:9],
-		'nfollowers':followers[0:9]})
+		'nfollowers':followers[0:9],
+		'dadoBlock':dadoBlock})
 
 
 def followajax(request, username):
@@ -1110,11 +1127,16 @@ def follower(request, username):
 
 	instanciaSeguidor = Followers()
 
+	instanciaBlock = Blocked()
+
+	dadoBlock = 0
+
 	if request.user.is_authenticated():
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
 		eu = get_object_or_404(Profile, user=request.user)
 		data_comecou_seguir = instanciaSeguidor.get_data_que_comecou_seguir(request.user, use)
+		dadoBlock = instanciaBlock.get_dados_esta_block(request.user, use)
 	else:
 		dadosSeguir = dadosSDV = 0
 		eu = data_comecou_seguir = None
@@ -1143,7 +1165,8 @@ def follower(request, username):
 		'eu':eu,
 		'data':data_comecou_seguir,
 		'numerofollowings':followings,
-		'numerofollowers':followers})
+		'numerofollowers':followers,
+		'dadoBlock':dadoBlock})
 
 def following(request, username):
 	use = get_object_or_404(User, username=username)
@@ -1152,12 +1175,16 @@ def following(request, username):
 	profile = get_object_or_404(Profile, user=use)
 
 	instanciaSeguidor = Followers()
+	instanciaBlock = Blocked()
+
+	dadoBlock = 0
 
 	if request.user.is_authenticated():
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
 		eu = get_object_or_404(Profile, user=request.user)
 		data_comecou_seguir = instanciaSeguidor.get_data_que_comecou_seguir(request.user, use)
+		dadoBlock = instanciaBlock.get_dados_esta_block(request.user, use)
 	else:
 		dadosSeguir = dadosSDV = 0
 		eu = data_comecou_seguir = None
@@ -1186,7 +1213,32 @@ def following(request, username):
 		'eu':eu,
 		'data':data_comecou_seguir,
 		'numerofollowings':followings,
-		'numerofollowers':followers})
+		'numerofollowers':followers,
+		'dadoBlock':dadoBlock})
+
+def bloquear_user(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			pkuser = request.POST.get('id')
+			user = get_object_or_404(User, username=pkuser)
+			instanciaBlock = Blocked()
+			response_data = instanciaBlock.bloquear(request.user, user)
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
+
+def desbloquear_user(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			pkuser = request.POST.get('id')
+			user = get_object_or_404(User, username=pkuser)
+			instanciaBlock = Blocked()
+			response_data = instanciaBlock.desbloquear(request.user, user)
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
 def report_coment(request, pk):
 	if not request.user.is_authenticated():

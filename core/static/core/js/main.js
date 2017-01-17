@@ -1205,6 +1205,60 @@ function report_coment_post(ide){
     
 }
 
+//bloquar usupario
+
+function bloquear(ide) {
+    $.ajax({
+        url : "/bloquear/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            if (json == true) {
+                parent.window.document.location.href = '';
+            }else{
+                alert("Não foi possível concluir a operação");
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
+function desbloquear(ide) {
+    $.ajax({
+        url : "/desbloquear/", // the endpoint
+        type : "POST", // http method
+        data : { 
+            id : ide,
+             }, // data sent with the post request
+             
+        // handle a successful response
+        success : function(json) {
+            if (json == true) {
+                parent.window.document.location.href = '';
+            }else{
+                alert("Não foi possível concluir a operação");
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           alert("deu errado");
+
+        }
+    });
+}
+
 
 //Cookies globais padrões para utilização do AJAX
 

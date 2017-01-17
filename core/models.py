@@ -227,7 +227,6 @@ class Favorites(models.Model):
 class Followers(models.Model):
 	user = models.ForeignKey(User, related_name='+')
 	following = models.ForeignKey(User)
-	block = models.BooleanField(default=False)
 	data = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):
@@ -285,10 +284,6 @@ class Followers(models.Model):
 		else:
 			return 0
 
-	#----------------------------------------------
-	# FALTA FAZER!!!
-	#----------------------------------------------
-
 	def get_timeline_friends_coments(self, followings):
 		comentariosDosSeguindo = list()
 		for i in followings:
@@ -315,6 +310,68 @@ class Followers(models.Model):
 		lista = self.get_timeline_friends_coments(followings)
 		lista.extend(self.get_timeline_friends_favorites(followings))
 		return sorted(list(lista), key=lambda inst: inst[3], reverse=True)
+
+class Blocked(models.Model):
+	user = models.ForeignKey(User, related_name='+')
+	userblocked = models.ForeignKey(User)
+	data = models.DateTimeField(default=timezone.now)
+
+	def __str__(self):
+		return self.user.username + ' bloqueou ' + self.userblocked.username
+
+	def get_dados_esta_block(self, usuarioLogado, usuarioVisitado):
+		if usuarioVisitado != usuarioLogado:
+			try:
+				procurarRegistro = Blocked.objects.get(user=usuarioLogado, userblocked=usuarioVisitado)
+				if procurarRegistro:
+					return 1
+			except ObjectDoesNotExist:
+				return 2
+		else:
+			return 0
+
+	def get_data_que_comecou_bloquear(self, usuarioLogado, usuarioVisitado):
+		if self.get_dados_esta_block(usuarioLogado, usuarioVisitado) == 1:
+			procurarRegistro = Blocked.objects.get(user=usuarioLogado, userblocked=usuarioVisitado)
+			return procurarRegistro.data
+		return None
+
+	def relacao_de_bloqueados_decrescente(self, usuario):
+		#buscar seguindo pra por na página
+		relacao = Blocked.objects.filter(user=usuario)
+		blocks = []
+
+		for pessoa in relacao:
+			blocks.append(pessoa.userblocked)
+
+		#invertendo para os ultmos serem os primeiros
+		return blocks[::-1]
+
+	def bloquear(self, usuarioLogado, usuarioVisitado):
+		if usuarioVisitado != usuarioLogado:
+			try:
+				procurarRegistro = Blocked.objects.get(user=usuarioLogado, userblocked=usuarioVisitado)
+				if procurarRegistro:
+					print("{} já segue {}".format(usuarioLogado.username, usuarioVisitado.username))
+					return False
+			except ObjectDoesNotExist:
+				novoRegistro = Blocked()
+				novoRegistro.user = usuarioLogado
+				novoRegistro.userblocked = usuarioVisitado
+				novoRegistro.save()
+				return True
+		return False
+
+	def desbloquear(self, usuarioLogado, usuarioVisitado):
+		if usuarioVisitado != usuarioLogado:
+			try:
+				procurarRegistro = Blocked.objects.get(user=usuarioLogado, userblocked=usuarioVisitado)
+				if procurarRegistro:
+					procurarRegistro.delete()
+					return True
+			except ObjectDoesNotExist:
+				return False
+		return False
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -392,6 +449,7 @@ class Message(models.Model):
 		return 'Mensagem de ' + self.emissor.first_name +' para '+self.receptor.first_name
 
 	def count_messages(self, user_loged):
+		print "Contando mensagens"
 		tam = 0
 		for message in self.get_users_recently(user_loged):
 			if message[2] == False:

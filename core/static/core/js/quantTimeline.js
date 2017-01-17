@@ -1,4 +1,4 @@
-setTimeout("alterTL()", 1);
+setTimeout("alterTL()", 10);
 setInterval("alterTL()", 5000);
 
 function alterTL(){

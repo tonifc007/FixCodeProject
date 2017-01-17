@@ -32,6 +32,8 @@ urlpatterns = [
     url(r'^fix/participations/notify/$', views.participationsSemUserN, name='myparticipationsN'),
     url(r'^fix/favorites/$', views.favoritesSemUser, name='myfavorites'),
     url(r'^fix/favorites/notify/$', views.favoritesSemUserN, name='myfavoritesN'),
+
+    #Páginas de profile
     url(r'^profile/(?P<username>[\w.@+-]+)/$', views.profile, name='profile'),
     url(r'^profile/(?P<username>[\w.@+-]+)/participations/$', views.participations, name='participations'),
     url(r'^profile/(?P<username>[\w.@+-]+)/favorites/$', views.favorites, name='favorites'),
@@ -82,6 +84,8 @@ urlpatterns = [
     url(r'^profile/(?P<username>\w+)/getrelationship/$', views.getrelationship, name='getrelationship'),
     url(r'^profile/(?P<username>\w+)/follower/$', views.followajax, name='followajax'),
     url(r'^profile/(?P<username>\w+)/unfollower/$', views.unfollowajax, name='unfollowajax'),
+    url(r'^bloquear/$', views.bloquear_user, name='bloquear'),
+    url(r'^desbloquear/$', views.desbloquear_user, name='desbloquear'),
 
     #Paginas de inbox
     url(r'^inbox/$', views.my_contacts, name='my_contacts'),

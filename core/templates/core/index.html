@@ -16,9 +16,7 @@
 
 {% block body %}
 
-<script type="text/javascript">
-	var pantigo = {{ qposts }};
-</script>
+
 <script src="{% static 'core/js/quantTimeline.js' %}"></script>
 <div class="container-fluid">
 	<div class="row">
@@ -264,8 +262,13 @@
 	</div>
 </div>
 
+{% block scripts %}
+	<script type="text/javascript">
+		var pantigo = {{ qposts }};
+	</script>
+	<script src="{% static 'core/js/main.js' %}"></script>
+	<script src="{% static 'core/js/notificaindex.js' %}"></script>
+{% endblock %}
 
-<script src="{% static 'core/js/main.js' %}"></script>
-<script src="{% static 'core/js/notificaindex.js' %}"></script>
 
 {% endblock %}
