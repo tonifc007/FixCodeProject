@@ -1,0 +1,92 @@
+{% extends 'core/base.html' %}
+{% load aux_tags %}
+{% load staticfiles %}
+{% block titulo %}Lista de bloqueio - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block verperfil %}{% url 'core:profile' user.username %}{% endblock %}
+
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="#">Feedback</a></li>
+{% endblock %}
+
+{% block imagemperfil %}
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil" width="50" height="60"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil" width="50" height="60"></a>
+
+	{% endif %}
+{% endblock %}
+
+
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<ol class="breadcrumb">
+		  <li><a href="/">Home</a></li>
+		  <li><a href="/editprofile/">Edição de perfil</a></li>
+		  <li><a href="/editprofile/settings/">Configurações de conta</a></li>
+		  <li class="active">Lista de bloqueados</li>
+		</ol>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="col-lg-8">
+				<div class="panel panel-default">
+					<div class="panel-heading"><h4>Lista de bloqueio:</h4></div>
+					<div class="panel-body">					
+						<div class="media-body">
+							
+							{% for com in lista %}
+								<div class="media">
+									<div class="media-left media-middle">
+									{% if com|imagemperfil %}			    	
+										
+									<img src="{{ com|imagemperfil }}" class="media-object img-circle" alt="imgperfil" width="25" height="25">
+									{% else %}
+									<img src="{% static 'core/imagens/default.png' %}" class="media-object img-circle" alt="imgperfil" width="25" height="25">
+									{% endif %}
+									</div>
+									<div class="media-body">
+										<div class="media-heading">							
+											<span class="glyphicon glyphicon-ban-circle"></span><a href="{% url 'core:profile' com.username %}"> {{ com.first_name }}</a>
+										</div>
+									</div>
+								</div>	
+						  		
+						  	{% empty %}
+						  		<h5>Você ainda não bloqueou ninguém. :)</h5>
+						{% endfor %}
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="panel panel-primary">
+				<div class="panel-heading"><h4>Instruções</h4></div>
+					<div class="panel-body">
+						
+						  
+						    <ul class="list-group">
+							  <li class="list-group-item">Você tem a opção de bloquear usuários no FixCode.</li>
+							  <li class="list-group-item">Para fazer uso da ferramenta basta ir no perfil do usuário escolhido e ir em <b>Bloquear usuário</b>. Ainda na mesma página, o ato do desbloqueio pode ser efetuado.</li>
+							  <li class="list-group-item">O bloqueio impede tanto que o usuário indesejado interaja nos seus Fixies e Posts, como também que o mesmo mande mensagens pela plataforma de Inbox.</li>						  
+							</ul>
+						 
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+	
+{% endblock %}

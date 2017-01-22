@@ -282,15 +282,19 @@
 									{% endif %}
 								</div>
 								<div class="media-body">
+									{% if acessoBlock  %}
+										<h4>Você não pode responder este fixie. :/</h4>
+									{% else %}
+										<form method="post">
+										{% csrf_token %}
+											
+											{{ form.coment }}
+											
+											
+										
+										<button class="btn btn-success col-xs-4 col-xs-offset-3" type="submit">Responder</button>
+									{% endif %}
 									
-									<form method="post">
-									{% csrf_token %}
-										
-										{{ form.coment }}
-										
-										
-									
-									<button class="btn btn-success col-xs-4 col-xs-offset-3" type="submit">Responder</button>
 								</div>
 							</div>
 						</div>

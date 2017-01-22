@@ -546,8 +546,13 @@ def fix_detail(request, pk, aviso=False):
 		else:
 			chave_fav = 0
 
+		instanciaBlock = Blocked()
+		acessoBlock = False
+		if instanciaBlock.get_dados_esta_block(fixie.user, request.user) == 1:
+			acessoBlock = True
+
 		coments = ComentFixies.objects.filter(fixie=fixie.pk)
-	return render(request, 'core/fixdetail.html', {'eu': eu,'fixie': fixie, 'coments':coments, 'form':form, 'chave':chave, 'chave_fav':chave_fav, 'aviso':aviso, 'chave_de_participacao':chave_de_participacao})
+	return render(request, 'core/fixdetail.html', {'eu': eu,'fixie': fixie, 'coments':coments, 'form':form, 'chave':chave, 'chave_fav':chave_fav, 'aviso':aviso, 'chave_de_participacao':chave_de_participacao, 'acessoBlock':acessoBlock })
 
 def best_answer(request, pk):
 	#ufa! essa view quase me mata kkk :')
@@ -1216,6 +1221,15 @@ def following(request, username):
 		'numerofollowers':followers,
 		'dadoBlock':dadoBlock})
 
+def lista_bloqueados(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		eu = get_object_or_404(Profile, user=request.user)
+		instanciaBlock = Blocked()
+		lista = instanciaBlock.relacao_de_bloqueados_decrescente(request.user)
+		return render(request, 'core/blockedlist.html', {'eu':eu, 'lista':lista})
+
 def bloquear_user(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
@@ -1322,7 +1336,13 @@ def post_detail(request, pk):
 			post.save()
 		coments = ComentPost.objects.filter(post=post)
 
-		return render(request, 'core/postdetail.html', {'post': post, 'coments':coments, 'form':form, 'eu':eu, 'donoDoPost':donoDoPost})
+		instanciaBlock = Blocked()
+
+		acessoBlock = False
+		if instanciaBlock.get_dados_esta_block(post.user, request.user) == 1:
+			acessoBlock = True
+
+		return render(request, 'core/postdetail.html', {'post': post, 'coments':coments, 'form':form, 'eu':eu, 'donoDoPost':donoDoPost, 'acessoBlock':acessoBlock })
 
 def my_posts(request):
 	if not request.user.is_authenticated():

@@ -221,12 +221,16 @@
 										{% endif %}
 									</div>
 									<div class="media-body">
+									{% if acessoBlock  %}
+										<h4>Você não pode responder este post. :/</h4>
+									{% else %}
 										
 										<form method="post">
 										{% csrf_token %}
 											<textarea class="form-control" rows="4" name="{{form.coment.name}}" placeholder="Escreva aqui seu comentário."></textarea>
 											
 											<button class="btn btn-success col-xs-4 col-xs-offset-3 botaoPost" type="submit">Comentar</button>
+									{% endif %}
 
 									</div>
 								</div>
