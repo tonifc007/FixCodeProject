@@ -1563,13 +1563,21 @@ def sala(request, pkreceptor):
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
 		instanciaMessage = Message()
+		instanciaBlock = Blocked()
 		userVisitado = get_object_or_404(User, pk=pkreceptor)
 		profileVisitado = get_object_or_404(Profile, user=userVisitado)
 		if request.user == userVisitado:
 			return render(request, 'core/conversaAlone.html', {'eu':eu})
 		mensagens = instanciaMessage.get_20_messages(request.user, userVisitado)
 
-		return render(request, 'core/conversa.html', {'mensagens':mensagens, 'userVisitado':userVisitado, 'profileVisitado':profileVisitado, 'eu':eu})
+		blockInfo = False
+
+		if instanciaBlock.get_dados_esta_block(userVisitado, request.user) == 1:
+			blockInfo = 1
+		elif instanciaBlock.get_dados_esta_block(request.user, userVisitado) == 1:
+			blockInfo = 2
+
+		return render(request, 'core/conversa.html', {'mensagens':mensagens, 'userVisitado':userVisitado, 'profileVisitado':profileVisitado, 'eu':eu, 'blockInfo':blockInfo})
 
 
 def messages_not_view(request, pkreceptor):
@@ -1599,11 +1607,16 @@ def all_messages(request):
 		return HttpResponse(json.dumps(False), content_type="application/json")
 
 def read_messages(request, pkreceptor):
+	
+
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
 		instanciaMessage = Message()
 		userVisitado = get_object_or_404(User, pk=pkreceptor)
+		instanciaBlock = Blocked()
+		if instanciaBlock.get_dados_esta_block(userVisitado, request.user) == 1 or instanciaBlock.get_dados_esta_block(request.user, userVisitado) == 1:
+			raise Http404
 		if request.user == userVisitado:
 			return render(request, 'core/conversaAlone.html')
 		mensagens = instanciaMessage.set_le_mensagens(request.user, userVisitado)

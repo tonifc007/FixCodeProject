@@ -142,8 +142,12 @@
 
 				  </div>
 				  <div class="panel-footer pfotin">
-
-					  <div class="form-group">
+				  	{% if blockInfo == 1 %}
+				  		<h4>Você não pode enviar mensagens para este usuário.</h4>
+				  	{% elif blockInfo == 2 %}
+				  		<h4>Você bloqueou este usuário. <a href="{% url 'core:blockedlist' %}">Ver lista de bloqueados.</a></h4>
+				  	{% else %}
+				  		<div class="form-group">
 						  <textarea id="campo" class="form-control" rows="2" placeholder="Digite aqui sua mensagem..."></textarea>
 
 						  <button id="benviar" class="btn btn-primary btn-sm pull-right botaomsg" onclick="mandaMensagem()">Enviar mensagem</button>
@@ -152,9 +156,7 @@
 						  </div>
 
 					  </div>
-
-
-
+				  	{% endif %}
 				  </div>
 				</div>
 
