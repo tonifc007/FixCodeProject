@@ -362,6 +362,12 @@ label#lbPost{
 	border-radius: 7px;
 }
 
+/*Espaço para o menu ficar fixo*/
+div#premenu{
+    height: 60px;
+}
+
+
 /*Nano scroller*/
 
 /** initial setup **/

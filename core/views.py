@@ -1607,8 +1607,6 @@ def all_messages(request):
 		return HttpResponse(json.dumps(False), content_type="application/json")
 
 def read_messages(request, pkreceptor):
-	
-
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
 	else:
