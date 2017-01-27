@@ -20,6 +20,8 @@ def index(request):
 		return render(request, 'core/login.html')
 	else:
 		perfil = get_object_or_404(Profile, user=request.user)
+		if perfil.ativo == False:
+			return edit_details_profile(request)
 
 		#todos os fixies e posts mostrados no index ficam guardados nesta variável
 		fixies = []
@@ -203,35 +205,38 @@ def notificaIndexPosts(request):
 
 
 def register(request):
-	form = UserFormRegister(request.POST or None)
-	if form.is_valid():
-		user = form.save(commit=False)
-		name = form.cleaned_data['first_name']
-		lastname = form.cleaned_data['last_name']
-		username = form.cleaned_data['username']
-		password = form.cleaned_data['password']
-		repassword = form.cleaned_data['repassword']
-		if password != repassword:
-			if name == '' or lastname == '':
-				return render(request, 'core/register.html', {'form':form, 'error_de_reg': 'Senhas não conferem', 'error_name':'* Este campo é obrigatório.'})
-			else:
-				return render(request, 'core/register.html', {'form':form, 'error_de_reg': 'Senhas não conferem'})
-		elif name == '' or lastname == '':
-			return render(request, 'core/register.html', {'form':form, 'error_name':'* Este campo é obrigatório.'})
-		user.set_password(password)
-		user.save()
+	if not request.user.is_authenticated():
+		form = UserFormRegister(request.POST or None)
+		if form.is_valid():
+			user = form.save(commit=False)
+			name = form.cleaned_data['first_name']
+			lastname = form.cleaned_data['last_name']
+			username = form.cleaned_data['username']
+			password = form.cleaned_data['password']
+			repassword = form.cleaned_data['repassword']
+			if password != repassword:
+				if name == '' or lastname == '':
+					return render(request, 'core/register.html', {'form':form, 'error_de_reg': 'Senhas não conferem', 'error_name':'* Este campo é obrigatório.'})
+				else:
+					return render(request, 'core/register.html', {'form':form, 'error_de_reg': 'Senhas não conferem'})
+			elif name == '' or lastname == '':
+				return render(request, 'core/register.html', {'form':form, 'error_name':'* Este campo é obrigatório.'})
+			user.set_password(password)
+			user.save()
 
-		print("usuário: {} - senha: {}".format(username, password))
+			print("usuário: {} - senha: {}".format(username, password))
 
-		user = authenticate(username=username, password=password)
-		if user is not None:
-			if user.is_active:
-				login(request, user)
-				newprofile = Profile()
-				newprofile.user = request.user
-				newprofile.saveInstance()
-				return redirect('/editprofile/')
-	return render(request, 'core/register.html', {'form':form})
+			user = authenticate(username=username, password=password)
+			if user is not None:
+				if user.is_active:
+					login(request, user)
+					newprofile = Profile()
+					newprofile.user = request.user
+					newprofile.saveInstance()
+					return redirect('/editprofile/')
+		return render(request, 'core/register.html', {'form':form})
+	else:
+		raise Http404
 
 def settings(request):
 	if not request.user.is_authenticated():
@@ -301,6 +306,7 @@ def edit_details_profile(request):
 				hab = get_object_or_404(Areas,nome_linguagem='Outra linguagem')
 				detalhes.habilidades.add(hab)
 				return render(request, 'core/edit_profile.html', {'form': form, 'user':request.user, 'aviso':'Escolha até 5 habilidades!', 'profile':detalhes})
+			detalhes.ativo = True
 			detalhes.save()
 			return profile(request, request.user.username)
 	return render(request, 'core/edit_profile.html', {'form': form, 'user':request.user, 'profile':detalhes})
@@ -317,6 +323,9 @@ def profile(request, username):
 	dadoBlock = 0
 
 	if request.user.is_authenticated():
+		perfil = get_object_or_404(Profile, user=request.user)
+		if perfil.ativo == False:
+			return edit_details_profile(request)
 		dadosSeguir = instanciaSeguidor.get_dados_seguidor(request.user, use)
 		dadosSDV = instanciaSeguidor.get_dados_seguidor(use, request.user)
 		eu = get_object_or_404(Profile, user=request.user)
@@ -362,6 +371,8 @@ def friendsactivities(request):
 		return render(request, 'core/login.html')
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
 		instanciaFollowers = Followers()
 		dados = instanciaFollowers.get_timeline_friends_activities(instanciaFollowers.relacao_de_seguindo_decrescente(request.user))
 		
@@ -427,6 +438,8 @@ def create_fix(request):
 		return render(request, 'core/login.html')
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
 		fixie = Fixies()
 		fixie.save()
 		form = FixiesForm(request.POST or None, instance=fixie)
@@ -450,6 +463,8 @@ def fix_detail(request, pk, aviso=False):
 
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
 		form = ComentForm(request.POST or None)
 		if form.is_valid():
 			com = form.save(commit=False)
@@ -653,9 +668,11 @@ def to_restore_fixed_code(request, pk):
 def my_fixies(request, delete=False):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
-	else:
-		instanciaFixies = Fixies()
+	else:		
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
+		instanciaFixies = Fixies()
 		fixies = instanciaFixies.get_todos_fixies_sem_notificacao(request.user)
 		paginator = Paginator(fixies, 5)
 
@@ -671,9 +688,11 @@ def my_fixies(request, delete=False):
 def my_fixiesN(request, delete=False):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
-	else:
-		instanciaFixies = Fixies()
+	else:		
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
+		instanciaFixies = Fixies()
 		fixies = instanciaFixies.get_fixies_com_novas_respostas(request.user)
 		paginator = Paginator(fixies, 5)
 
@@ -689,9 +708,11 @@ def my_fixiesN(request, delete=False):
 def participationsSemUser(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
-	else:
-		instanciaParticipation = Participations()
+	else:		
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
+		instanciaParticipation = Participations()
 		participations = instanciaParticipation.get_participations_sem_notificacao(request.user)
 		paginator = Paginator(participations, 5)
 
@@ -707,9 +728,11 @@ def participationsSemUser(request):
 def participationsSemUserN(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
-	else:
-		instanciaParticipation = Participations()
+	else:		
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
+		instanciaParticipation = Participations()
 		participations = instanciaParticipation.get_participations_com_novas_respostas(request.user)
 		paginator = Paginator(participations, 5)
 
@@ -725,9 +748,11 @@ def participationsSemUserN(request):
 def favoritesSemUser(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
-	else:
-		instanciaFavorites = Favorites()
+	else:		
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
+		instanciaFavorites = Favorites()
 		participations = instanciaFavorites.get_favorites_sem_notificacao(request.user)
 		paginator = Paginator(participations, 5)
 
@@ -743,9 +768,11 @@ def favoritesSemUser(request):
 def favoritesSemUserN(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
-	else:
-		instanciaFavorites = Favorites()
+	else:		
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
+		instanciaFavorites = Favorites()
 		participations = instanciaFavorites.get_favorites_com_novas_respostas(request.user)
 		paginator = Paginator(participations, 5)
 
@@ -1226,6 +1253,8 @@ def lista_bloqueados(request):
 		return render(request, 'core/login.html')
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
 		instanciaBlock = Blocked()
 		lista = instanciaBlock.relacao_de_bloqueados_decrescente(request.user)
 		return render(request, 'core/blockedlist.html', {'eu':eu, 'lista':lista})
@@ -1283,6 +1312,8 @@ def create_post(request):
 		return render(request, 'core/login.html')
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
 		post = Post()
 		post.save()
 		form = PostForm(request.POST or None, instance=post)
@@ -1312,6 +1343,8 @@ def post_detail(request, pk):
 		return render(request, 'core/login.html')
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
 
 		form = ComentPostForm(request.POST or None)
 		if form.is_valid():
@@ -1347,9 +1380,11 @@ def post_detail(request, pk):
 def my_posts(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
-	else:
-		posts = Post.objects.filter(user=request.user)
+	else:		
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
+		posts = Post.objects.filter(user=request.user)
 		paginator = Paginator(posts[::-1], 5)
 		page = request.GET.get('page')
 		print(page)
@@ -1367,10 +1402,11 @@ def my_posts(request):
 def my_postsN(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
-	else:
-		instanciaPost = Post()
+	else:		
 		eu = get_object_or_404(Profile, user=request.user)
-
+		if eu.ativo == False:
+			return edit_details_profile(request)
+		instanciaPost = Post()
 		lista = instanciaPost.get_posts_notificados(request.user)
 
 		paginator = Paginator(lista, 5)
@@ -1444,6 +1480,8 @@ def edit_post(request, pk):
 		return render(request, 'core/login.html')
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
 		post = get_object_or_404(Post, pk=pk)
 		if post.user == request.user:
 			form = PostForm(request.POST or None, instance=post)
@@ -1548,11 +1586,8 @@ def report_coment_post(request, pk):
 			if post.user == request.user:
 				print("este fix é deste usuário")
 				coment = get_object_or_404(ComentPost, pk=comentpk)
-				if coment.user == request.user:
-					raise Http404
-				else:
-					coment.delete()
-					response_data = "Comentário reportado com sucesso"
+				coment.delete()
+				response_data = "Comentário reportado com sucesso"
 			return HttpResponse(json.dumps(response_data), content_type="application/json")
 		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
@@ -1562,6 +1597,8 @@ def sala(request, pkreceptor):
 		return render(request, 'core/login.html')
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
 		instanciaMessage = Message()
 		instanciaBlock = Blocked()
 		userVisitado = get_object_or_404(User, pk=pkreceptor)
@@ -1669,6 +1706,8 @@ def my_contacts(request):
 		return render(request, 'core/login.html')
 	else:
 		eu = get_object_or_404(Profile, user=request.user)
+		if eu.ativo == False:
+			return edit_details_profile(request)
 		instanciaMessage = Message()
 		instanciaSeguidor = Followers()
 		quantidade_mensagens = instanciaMessage.count_messages(request.user)

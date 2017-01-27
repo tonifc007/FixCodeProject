@@ -59,9 +59,13 @@
 								</button>
 							{% else %}
 								{% if coments|l != 0 %}
-									<button class="btn btn-success btn-sm" onclick="fixed('{{ fixie.pk }}')" data-toggle="tooltip" data-placement="bottom" title="Fechar fix para novas respostas">
-									<span class="glyphicon glyphicon-ok"></span>
-									 Marcar como resolvido
+									{% for com in coments %}
+										{% if com.melhor_resposta %}
+											<button class="btn btn-success btn-sm" onclick="fixed('{{ fixie.pk }}')" data-toggle="tooltip" data-placement="bottom" title="Fechar fix para novas respostas">
+											<span class="glyphicon glyphicon-ok"></span>
+											 Marcar como resolvido
+									 	{% endif %}
+									 {% endfor %}
 								</button>
 								{% endif %}
 							{% endif %}

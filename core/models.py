@@ -58,6 +58,7 @@ class Profile(models.Model):
 	data_cadastro = models.DateTimeField(default=timezone.now)
 	habilidades = models.ManyToManyField(Areas)
 	visto_por_ultimo = models.DateTimeField(default=timezone.now)
+	ativo = models.BooleanField(default=False)
 
 	def save(self):
 		try:
@@ -566,3 +567,12 @@ class Message(models.Model):
 		Message.objects.filter(emissor=usuarioLogado, receptor=usuarioVisitado).delete()
 		Message.objects.filter(emissor=usuarioVisitado, receptor=usuarioLogado).delete()
 		return True
+
+class AnonFeedback(models.Model):
+	nome = models.CharField(max_length=100)
+	email = models.EmailField(max_length=100)
+	data = models.DateTimeField(default=timezone.now)
+	texto = models.TextField(verbose_name='Texto')
+	
+	def __str__(self):
+		return nome
