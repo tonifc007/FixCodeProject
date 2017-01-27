@@ -6,6 +6,16 @@ import os.path
 import os
 register = template.Library()
 
+@register.filter(name='qfollowers')
+def qfollowers(value):
+	instanciaF = Followers()
+	return len(instanciaF.relacao_de_seguidores_decrescente(value))
+
+@register.filter(name='qfollowing')
+def qfollowing(value):
+	instanciaF = Followers()
+	return len(instanciaF.relacao_de_seguindo_decrescente(value))
+
 @register.filter(name='quant_coment')
 def quant_coment(value):
 	return ComentFixies.objects.filter(fixie=value).count()

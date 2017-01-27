@@ -19,6 +19,39 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+			<div class="panel panel-default">				
+			  <div class="panel-body">
+			  	<div class="col-xs-4 ig" style="margin-left: -15px; margin-bottom: -30px;">
+			  		{% if profile.imagem_perfil %}
+			  		<a href="/editprofile/"><img class="img-circle borda im" src="{{ profile.imagem_perfil.url }}" width="100" height="100"></a>					
+					{% else %}
+						<a href="/editprofile/"><img class="img-circle borda im" src="{% static 'core/imagens/default.png' %}" width="100" height="100"></a>
+					{% endif %}
+					<a href="/editprofile/"><h3><span class="ic glyphicon glyphicon-camera"></span></h3></a>
+			  	</div>
+			  	<div class="col-xs-7 col-xs-offset-1" style="padding-right: 4px;">
+			  		
+			  			<a class="titulopindex" href=""><h4>{{ request.user.first_name|truncatechars:17 }}</h4></a>
+			  			<h4 class="pCinzaUser" style="margin-top: -5px; margin-bottom: -4px;">{{ request.user.username }}</h4>
+			  		
+						<a href="{% url 'core:follower' profile.user.username %}">	
+							<h5 class="pCinzaUser linkSeguidores corliseg">
+								SEGUIDORES:
+								<span class="corlisegindex">{{ request.user|qfollowers }}</span> 
+							</h5>
+						</a>
+						<a href="{% url 'core:following' profile.user.username %}">
+							<h5 class="pCinzaUser linkSeguidores corliseg">
+								SEGUINDO:
+								<span class="corlisegindex">{{ request.user|qfollowing }}</span>
+							</h5>
+						</a>					
+			  		  		
+
+			  	</div>   
+				
+			  </div>
+			</div>
 			<div class="panel panel-default pesqindex">
 				<div class="panel-heading"><h4 class="titp">Fix</h4></div>
 				  <div class="panel-body">

@@ -182,10 +182,32 @@ div#dad{
 /* cor dos link segundo e seguidor do canto direito do index*/
 
 .corlisegindex{
+
 	color: #000000;
 }
 
+.ig .ic{
+	color: white;
+	position: absolute;
+	margin-left: 38px;
+	margin-top: 38px;
+	opacity: 0;
+	transition: 500ms;
+}
+
+.ig:hover .im{
+	-webkit-filter: blur(1px);
+	transition: 1s;
+}
+
+.ig:hover .ic{
+	display: block;
+	transition: 500ms;
+	opacity: 100;
+}
+
 .corliseg:hover{
+	text-decoration: none;
 	color: #000000;
 	transition: 500ms;
 }
