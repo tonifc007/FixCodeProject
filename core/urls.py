@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^deleta_conversa/$', views.deleta_conversa, name='deleta_conversa'),
     url(r'^notificaall/$', views.notificaAll, name='notificaAll'),
     url(r'^timeline/$', views.quantTL, name='quantTL'),
+    url(r'^feedback/$', views.anon_feedback, name='feedback'),
 
     #Páginas de fix
     url(r'^fix/new/$', views.create_fix, name='create_fix'),

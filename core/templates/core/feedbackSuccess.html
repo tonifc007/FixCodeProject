@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+{% load staticfiles %}
+{% block titulo %}Feedback - FixCode{% endblock %}
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li class="active"><a href="{% url 'core:feedback' %}">Feedback</a></li>
+{% endblock %}
+{% block body %}
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<ol class="breadcrumb">
+			  <li><a href="/">Home</a></li>
+			  <li class="active">Feedback</li>
+			</ol>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+				<div class="panel panel-default">
+					<div class="panel-heading"><h3>Como foi sua experiência com a plataforma FixCode?<br> <small>(Sugestões, criticas, avisos, etc.)</small></h3></div>
+					<div class="panel-body">
+						<img src="{% static 'core/imagens/confirma.png' %}" style="margin-left: 330px;">
+						<br>
+						<h3 style="text-align: center;">Obrigado por participar!</h3><br>
+						<h4 style="text-align: center;">Retornaremos um email o mais breve possível. :)</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+{% endblock %}

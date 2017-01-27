@@ -2,7 +2,7 @@
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, ComentPost, Areas, Message, Blocked
 from django.contrib.auth import authenticate, login, logout, get_user
-from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile, PostForm, ComentPostForm
+from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile, PostForm, ComentPostForm, FeedbackForm
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -1846,3 +1846,15 @@ def search_user(request, argumento):
 		except EmptyPagepagina:
 			pagina = paginator.page(paginator.num_pages)
 		return render(request, 'core/searchuser.html', {'eu':eu, 'pagina':pagina, 'argumento':argumento})
+
+
+def anon_feedback(request):
+	if not request.user.is_authenticated():
+		form = FeedbackForm(request.POST or None)
+		if form.is_valid():
+			user = form.save()
+			user.save()
+			return render(request, 'core/feedbackSuccess.html')
+		return render(request, 'core/feedback.html', {'form':form})
+	else:
+		raise Http404

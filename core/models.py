@@ -575,4 +575,4 @@ class AnonFeedback(models.Model):
 	texto = models.TextField(verbose_name='Texto')
 	
 	def __str__(self):
-		return nome
+		return self.nome

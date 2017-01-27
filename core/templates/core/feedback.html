@@ -1,0 +1,56 @@
+{% extends 'core/base.html' %}
+{% load staticfiles %}
+{% block titulo %}Feedback - FixCode{% endblock %}
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="#">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li class="active"><a href="{% url 'core:feedback' %}">Feedback</a></li>
+{% endblock %}
+{% block body %}
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<ol class="breadcrumb">
+			  <li><a href="/">Home</a></li>
+			  <li class="active">Feedback</li>
+			</ol>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+				<div class="panel panel-default">
+				  <div class="panel-heading"><h3>Como foi sua experiência com a plataforma FixCode?<br> <small>(Sugestões, criticas, avisos, etc.)</small></h3></div>
+				  <div class="panel-body">
+					<form action="{% url 'core:feedback' %}" class="form-horizontal" method="post">
+						{% csrf_token %}
+						{% for field in form %}
+						<div class="form-group">
+							<label for="{{field.name}}" class="col-xs-3 control-label">
+									{{ field.label_tag }}
+							</label>
+							<div class="col-xs-8">
+								{% if field.name == 'texto' %}
+									<textarea class="form-control" rows="6" name="{{field.name}}" placeholder=""></textarea>
+								{% else %}
+									<input type="text" class="form-control" id="nomeRegistro"  name="{{field.name}}" placeholder="{{ field.errors.as_text }}">
+								{% endif %}
+							</div>
+						</div>
+						{% endfor %}
+						<div class="col-xs-4 col-xs-offset-5">
+							<button type="submit" class="btn btn-success btn-sm btn-block" id="entrar">Enviar</button>
+						</div>
+						
+
+					</form>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+</body>
+{% endblock %}
