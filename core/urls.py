@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^notificaall/$', views.notificaAll, name='notificaAll'),
     url(r'^timeline/$', views.quantTL, name='quantTL'),
     url(r'^feedback/$', views.anon_feedback, name='feedback'),
+    url(r'^sobre/$', views.sobre, name='sobre'),
 
     #Páginas de fix
     url(r'^fix/new/$', views.create_fix, name='create_fix'),

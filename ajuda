@@ -1,0 +1,40 @@
+Fixcode cummunity
+
+Olá [visitante]! Seja bem vindo ao FixCode. Esta plataforma foi desenvolvida pensada nos desenvolvedores de softwares. O intuito inicial é a interação entre os vários desenvolvedores e programadores que existem mundo a fora e para isso a comunidade leva consigo a ideia do auxilio aos programadores.
+
+[logo marca]
+
+Para se cadastrar, basta clicar <link>aqui</link> e caso já tenha realizado o cadastro basta se logar na barra superior da sua tela.
+Para aprimorar seus conhecimentos na plataforma vá para o tutorial situado em <link>ajuda</link>.
+
+
+
+licença
+
+A plataforma Fixcode é atualmente open-souce e sempre será. Também está aberta para contribuições no endereço [link do github]. 
+
+tecnologias
+
+Fixcode foi primordialmente desenvolvido na linguagem Python embasada na framework web Django. Também foi utilizado módulos para frontend com a framework Bootstrap. Abaixo vai a lista de todas as tecnologias utilizadas no desenvolvimento:
+
+Usado no back-end:
+
+Python 2.7
+Django 1.10.2
+
+
+Usado no front-end:
+
+Bootstrap 3
+JQuery
+nanoScroller.js
+slick
+pace.js
+
+
+equipe FixCode
+
+Diego Fernando - Desenvolvedor Full-stack - GitHub
+Antonio de Carvalho - Desenvolvedor Front-end - GitHub
+
+Para acompanhar de perto o trabalho dos desenvolvedores vá para o blog Fixcode. :)

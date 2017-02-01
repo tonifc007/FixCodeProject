@@ -389,6 +389,19 @@ div#premenu{
     height: 60px;
 }
 
+/*Estilo do figcaption da imagem na página sobre*/
+
+.figsobre{
+	position: absolute;
+	margin-left: 470px;
+	margin-top: 105px;
+
+}
+
+.espacoparah1{
+	margin-top: 120px;
+}
+
 
 /*Nano scroller*/
 

@@ -1,0 +1,150 @@
+{% extends 'core/base.html' %}
+{% load staticfiles %}
+{% block titulo %}Sobre - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li class="active"><a href="{% url 'core:sobre' %}">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="{% url 'core:feedback' %}">Feedback</a></li>
+{% endblock %}
+
+{% block imagemperfil %}
+	
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil" width="50" height="60"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil" width="50" height="60"></a>
+
+	{% endif %}
+{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<ol class="breadcrumb">
+			  <li><a href="/">Home</a></li>
+			  <li class="active">Sobre</li>
+			</ol>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<h1>Sobre o FixCode Community</h1>
+						<hr>
+						
+						<p>
+							Olá [visitante]! Seja bem vindo ao <b>FixCode</b>. Esta plataforma foi desenvolvida pensada nos desenvolvedores de softwares. O intuito inicial é a interação entre os vários desenvolvedores e programadores que existem mundo a fora e para isso a comunidade leva consigo a ideia do auxilio aos programadores.
+						</p>
+						<p>
+							A iniciativa nasceu em meados de agosto do ano de 2016 quando um dos desenvolvedores da plataforma comentou a respeito de uma ferramenta que unisse os desenvolvedores e programadores a fim de que pudessem compartilhar conhecimento. Até aquela altura algo que se aproximasse disso seriam os fóruns já bem conhecidos por diversas comunidades. Porém estes fóruns eram pouco amigáveis e não atraíam os programadores. Muito se via as comunidades dividades por <i>LP's</i> (Linguagens de Programação) e assim foi buscada a inspiração para a criação a plataforma <b>FixCode</b>, uma delas foi a comunidade brasileira que difunde a linguagem <b>Python</b> no Brasil. Grupos como <b>Python Brasil</b>, <b>PyLadies</b>, <b>PUG</b>, entre outras merecem total apoio por parte dos desenvolvedores por difundir o conhecimento. 
+						</p>
+						<p>
+							A primeira versão da plataforma foi apresentada durante um trabalho final acadêmico junto a Universidade Federal do Piauí - Campus de Picos.
+						</p>
+						
+						<ul>
+							<li>Licença</li>
+							<li>Tecnologias</li>
+							<li>Equipe</li>
+							<li>Blog</li>
+						</ul>
+						<div class="col-xs-12">
+							<figure>
+								<img class="col-xs-6 col-xs-offset-3 img-responsive thumbnail" src="{% static 'core/imagens/logo.png' %}" alt="...">
+								<figcaption class="figsobre"><small>Logotipo da plataforma</small></figcaption>
+							</figure>
+						</div>
+						
+						<br>
+						<h3>É novo por aqui?</h3>
+						<p>
+							Para se cadastrar no FixCode, basta clicar <a href="{% url 'core:register' %}">aqui</a> aqui e caso já tenha realizado o cadastro basta se logar na barra superior da sua tela.
+							Para aprimorar seus conhecimentos na plataforma vá para o <b>tutorial</b> situado em <a href="#">ajuda</a>.
+						</p>
+
+						<h2 class="espacoparah1">Licença</h2>
+						<hr>
+						<p>
+							A plataforma Fixcode é atualmente open-souce e sempre será. Também está aberta para contribuições neste <a href="https://github.com/diegofsousa/FixCodeProject/" target="_blank">link</a>.
+							<!-- Place this tag where you want the button to render. -->
+							<div class="col-xs-12">
+								<div class="col-xs-6 col-xs-offset-4">
+									<!-- Place this tag where you want the button to render. -->
+									<a class="github-button" href="https://github.com/diegofsousa/FixCodeProject/fork" data-icon="octicon-repo-forked" data-style="mega" data-count-href="/diegofsousa/FixCodeProject/network" data-count-api="/repos/diegofsousa/FixCodeProject#forks_count" data-count-aria-label="# forks on GitHub" aria-label="Fork diegofsousa/FixCodeProject on GitHub">Fork</a>
+									<!-- Place this tag where you want the button to render. -->
+									<a class="github-button" href="https://github.com/diegofsousa/FixCodeProject" data-icon="octicon-star" data-style="mega" data-count-href="/diegofsousa/FixCodeProject/stargazers" data-count-api="/repos/diegofsousa/FixCodeProject#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star diegofsousa/FixCodeProject on GitHub">Star</a>
+									<!-- Place this tag where you want the button to render. -->
+									<a class="github-button" href="https://github.com/diegofsousa/FixCodeProject/archive/master.zip" data-icon="octicon-cloud-download" data-style="mega" aria-label="Download diegofsousa/FixCodeProject on GitHub">Download</a>
+								</div>
+							</div>
+							
+						</p>
+
+						<h2 class="espacoparah1">Tecnologias</h2>
+						<hr>
+						<p>
+							Fixcode foi primordialmente desenvolvido na linguagem <b>Python</b> embasada na framework web <b>Django</b>. Também foi utilizado módulos para frontend com a framework <b>Bootstrap</b>. Abaixo vai a lista de todas as tecnologias utilizadas no desenvolvimento:
+						</p>
+
+						<div class="col-xs-12">
+							<div class="col-xs-6 col-xs-offset-3">
+							<table class="table table-hover table-bordered">
+							<tr>
+								<td><b>Back-end</b></td>
+								<td><b>Front-end</b></td>					
+							</tr>
+							<tr>
+								<td><a href="https://www.python.org/" target="_blank">Python 2.7</a></td>			
+								<td><a href="http://getbootstrap.com.br/" target="_blank">Bootstrap 3</a></td>
+							</tr>
+							<tr>
+								<td><a href="https://www.djangoproject.com/" target="_blank">Django 1.10.2</a></td>
+								<td><a href="https://jquery.com/" target="_blank">JQuery</a></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><a href="https://jamesflorentino.github.io/nanoScrollerJS/" target="_blank">nanoScroller.js</a></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><a href="http://kenwheeler.github.io/slick/" target="_blank">slick</a></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><a href="http://github.hubspot.com/pace/" target="_blank">pace.js</a></td>
+							</tr>
+						</table>
+						</div>
+						</div>
+
+						<h2 class="espacoparah1">Equipe</h2>
+						<hr>
+						<p>Atualmente a plataforma conta com os mesmos desenvolvedores iniciais:</p>
+
+						<p style="text-align: center;"><b>Diego Fernando</b> - Desenvolvedor Full-stack - <a href="https://github.com/diegofsousa" target="_blank">GitHub</a>
+						<br>
+						<b>Antonio de Carvalho</b> - Desenvolvedor Front-end - <a href="https://github.com/tonifc007" target="_blank">GitHub</a>
+						</p>
+
+						<h2 class="espacoparah1">Blog</h2>
+						<hr>
+						<p>Junto com o desenvolvimento da aplicação, foram registrados varios fatos. Estes estão documentados no Blog FixCode. Para acompanhar o progresso até o atual estado da aplicação clique neste <a href="#">link</a></p>
+						
+						
+					</div>					
+				</div>				
+			</div>
+		</div>
+	</div>
+	<!-- Place this tag in your head or just before your close body tag. -->
+	<script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+
+{% endblock %}

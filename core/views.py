@@ -90,6 +90,13 @@ def index(request):
 
 		return render(request, 'core/index.html', {'relations':relations, 'profile':perfil,'comentariosDosSeguindo':comentariosDosSeguindo[0:10], 'quantidade_mensagens':quantidade_mensagens, 'qposts': len(fixies)})
 
+def sobre(request):
+	if request.user.is_authenticated():
+		eu = get_object_or_404(Profile, user=request.user)
+	else:
+		eu = None
+	return render(request, 'core/sobre.html', {'eu':eu})
+
 def notificaAll(request):
 	if not request.user.is_authenticated():
 		print("foi no if")
