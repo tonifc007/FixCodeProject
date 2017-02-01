@@ -81,7 +81,7 @@ function notificaIndexPosts(){
             if (json != indicePost && json != 0){
                 console.log('muda');
                 indicePost = json;
-                $('#notificaPosts').html("<a class='btn btn-success btn-block' style='margin-bottom: 6px;' href='myposts/'>Você tem "+json+" post(s) com novos comentários.</a>");
+                $('#notificaPosts').html("<a class='btn btn-success btn-block' style='margin-bottom: 6px;' href='/post/myposts/notify/'>Você tem "+json+" post(s) com novos comentários.</a>");
             }
         },
 

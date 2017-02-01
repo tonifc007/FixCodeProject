@@ -87,8 +87,26 @@
 						    <span class="caret"></span>
 						  </button>
 						  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-						    <li><a href="#"><span class="glyphicon glyphicon-trash"></span>   Deletar Fix</a></li>
+						   <li class="hoverLiFix" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-remove"></span> Deletar Fix</li>
 						  </ul>
+						  <!-- Modal -->
+							<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+							  <div class="modal-dialog" role="document">
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							        <h4 class="modal-title" id="myModalLabel">Excluir fix</h4>
+							      </div>
+							      <div class="modal-body">
+							        <small>Deseja deletar este fix?</small>
+							      </div>
+							      <div class="modal-footer">
+							        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+							        <button type="button" class="btn btn-primary" onclick="alertDelete('{{ fixie.pk }}')">Excluir</button>
+							      </div>
+							    </div>
+							  </div>
+							</div>
 						</div>
 
 				   

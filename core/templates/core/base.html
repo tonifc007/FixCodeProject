@@ -1,3 +1,4 @@
+{% load aux_tags %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,6 +22,53 @@
     </head>
    
     <body>
+    <div class="modal fade" tabindex="-1" id="principal" role="dialog" aria-labelledby="gridSystemModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="gridSystemModalLabel">Boas vindas</h4>
+          </div>
+          <div class="modal-body">
+              
+                <div class="row">
+                  <div class="col-xs-12">
+                      <h3 class="col-xs-8 col-xs-offset-2">Bem vindo(a) {{ request.user.first_name }}</h3>
+                  </div>
+                  <div class="col-xs-12">
+                      <div class="col-xs-4 col-xs-offset-4 ig">
+                            {% if request.user|imagemperfil %}
+                            <a href="/editprofile/"><img class="img-circle borda" src="{{ request.user|imagemperfil }}" width="150" height="150"></a>                    
+                            {% else %}
+                                <a href="/editprofile/"><img class="img-circle borda" src="{% static 'core/imagens/default.png' %}" width="150" height="150"></a>
+                            {% endif %}                            
+                        </div>
+                  </div>
+                  <div class="col-xs-12">
+                      <h4>Seu perfil está configurado! De início desejamos boas vindas. Alguns links possívelmente serão úteis para melhor usabilidade da plataforma.</h4>
+                      <p>Para este primeiro contato com a plataforma, preparamos um tour para você! :). Assista ao vídeo abaixo:</p>
+                  </div>
+                  <div class="col-xs-12">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="https://player.vimeo.com/video/201977162" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    </div>                      
+                  </div>
+                  <div class="col-xs-12">
+                      <h4>Ainda não ajudou?</h4>
+                      <p>Preparamos também um menu de ajuda no qual mostra a usabilidade parte a parte da plataforma. Basta acessar este <a href="#">link</a></p>
+                  </div>
+                  <div class="col-xs-12">
+                      <p>Caso não deseje mais ver esta mensagem basta apertar em <b>Começar</b>.</p>
+                  </div>                  
+                </div>                       
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            <button type="button" class="btn btn-primary" onclick="comecar()">Começar <span class="glyphicon glyphicon-triangle-right"></span></button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     
     {% if request.user.is_authenticated %}
         <nav id="menu" class="navbar navbar-default navbar-fixed-top">

@@ -2,13 +2,63 @@ setTimeout("atualizaVisto()", 1);
 setInterval("atualizaVisto()", 10000);
 setTimeout("alterTitle()", 1);
 setInterval("alterTitle()", 5000);
-
-
+setTimeout("vericiaexp()", 1);
 /*
 function search_now(){
   
 }*/
 
+
+function vericiaexp(){
+
+    $.ajax({
+        url : "/verificaexp/", // the endpoint
+        type : "GET", // http method
+
+        success : function(json) {
+            if(json!=false){
+              console.log(json);
+              $('#principal').modal('show'); 
+            }
+            
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+            console.log('offline');
+
+        }
+    });
+
+}
+
+function comecar(){
+
+    $.ajax({
+        url : "/comecar/", // the endpoint
+        type : "GET", // http method
+
+        success : function(json) {
+            if(json==false){
+              console.log("Operação realizada com erros");
+            }
+            else{
+              $('#principal').modal('hide'); 
+            }
+            
+            
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+            console.log('offline');
+
+        }
+    });
+
+}
 
 
 

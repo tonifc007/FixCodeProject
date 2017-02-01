@@ -1865,3 +1865,30 @@ def anon_feedback(request):
 		return render(request, 'core/feedback.html', {'form':form})
 	else:
 		raise Http404
+
+#Verificação de expert
+
+def verifica_exp(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		profile = get_object_or_404(Profile, user=request.user)
+		if profile.expert == True or profile.ativo == False:
+			return False
+		else:
+			lista = list()
+			if profile.imagem_perfil:
+				lista.append(profile.imagem_perfil.url)
+			lista.append(request.user.first_name)
+		return HttpResponse(json.dumps(lista), content_type="application/json")
+	return HttpResponse(json.dumps(False), content_type="application/json")
+
+def comecar(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		profile = get_object_or_404(Profile, user=request.user)
+		profile.expert = True
+		profile.save()	
+		return HttpResponse(json.dumps(True), content_type="application/json")
+	return HttpResponse(json.dumps(False), content_type="application/json")

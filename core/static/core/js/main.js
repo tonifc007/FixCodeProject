@@ -174,8 +174,7 @@ function unfriend(ide) {
 //AJAX para excluir fix
 
 function alertDelete(ide){
-	decisao = confirm("Deseja excluir este fix?");
-	if (decisao) {
+
 		console.log("confirmou");
 		$.ajax({
         url : "delete_confirm/", // the endpoint
@@ -186,7 +185,7 @@ function alertDelete(ide){
 
         // handle a successful response
         success : function(json) {
-           	window.location.replace("/myfixies/");
+           	window.location.replace("/fix/myfixies/");
             console.log(json); // log the returned json to the console
             console.log("success"); // another sanity check
         },
@@ -198,7 +197,7 @@ function alertDelete(ide){
 
         }
     });
-	}
+	
 }
 
 //AJAX para ativar e desativar notificação de fix

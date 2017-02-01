@@ -59,6 +59,7 @@ class Profile(models.Model):
 	habilidades = models.ManyToManyField(Areas)
 	visto_por_ultimo = models.DateTimeField(default=timezone.now)
 	ativo = models.BooleanField(default=False)
+	expert = models.BooleanField(default=False)
 
 	def save(self):
 		try:

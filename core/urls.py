@@ -26,6 +26,11 @@ urlpatterns = [
     url(r'^feedback/$', views.anon_feedback, name='feedback'),
     url(r'^sobre/$', views.sobre, name='sobre'),
 
+    url(r'^verificaexp/$', views.verifica_exp),
+    url(r'^comecar/$', views.comecar),
+    
+    #url(r'^login/$', views.login_user, name='login_user'),
+
     #Páginas de fix
     url(r'^fix/new/$', views.create_fix, name='create_fix'),
     url(r'^fix/(?P<pk>[0-9]+)/$', views.fix_detail, name='fix_detail'),
