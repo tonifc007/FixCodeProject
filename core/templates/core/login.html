@@ -12,7 +12,7 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-		  <img src="{% static 'core/imagens/logothumb.png' %}" class="navbar-brand" alt="logofix">
+		  <img src="{% static 'core/imagens/home.png' %}" width="34" style="margin-top: 7px; margin-left: 10px; margin-right: 10px;">
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
@@ -137,27 +137,31 @@
 			</div>
 		</div>
 	</div>
+  <div class="container-fluid colorRodape" id="container-rodape container-inverse">
+    <div class="col-xs-12" style="height: 40px;"></div>
+    <div class="container text-center">
+      <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2 rodleft">
+          <figure>
+            <img class="img-responsive" src="{% static 'core/imagens/logowhite.png' %}">
+            
+          </figure>         
 
-	<div class="container-fluid" id="container-rodape">
-		<div class="container text-center">
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-					<p>FixCode</p>
-				</div>
-				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 text-">
-					<p>&reg; copyright 2016 FixCode comunity</p><br>
-					<a href="#">Sobre</a> - 
-					<a href="#">Cadastre-se</a> - 
-					<a href="#">Ajuda</a> - 
-					<a href="#">Blog</a>
-					<p></p>
-				</div>
-				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-					<p>Redes sociais: <a href="#">Facebook</a> <a href="#">Youtube</a></p>
-				</div>
-			</div>
-		</div>
-	</div>
-
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-10 col-lg-10 text">
+          <p class="branco"><b>FixCode Community</b> - A comunidade dos desenvolvedores <br>
+          A plataforma é opensouce e aberta para contribuições. Para contribuições acesse o repositório neste <a href="https://github.com/diegofsousa/FixCodeProject" target="_blank" class="linkbranco">link</a>.<br/> Feito com <span><img src="{% static 'core/imagens/coracao.png' %}" width="30"></span> em <span id="fdj"><b>django</b></span>
+          </p>
+          <a href="/" class="linkbranco">Home</a> - 
+          <a href="/sobre/" class="linkbranco">Sobre</a> - 
+          <a href="/register/" class="linkbranco">Cadastre-se</a> - 
+          <a href="#" class="linkbranco">Ajuda</a> - 
+          <a href="/feedback/" class="linkbranco">Feedback</a> - 
+          <a href="/blog/" class="linkbranco">Blog</a>
+          <p></p>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 {% endblock %}

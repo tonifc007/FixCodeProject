@@ -292,7 +292,6 @@ class Followers(models.Model):
 			print i.first_name
 			comentariosDesteSeguindo = ComentFixies.objects.filter(user=i)
 			for a in comentariosDesteSeguindo:
-				print("{} coment in {}".format(i.first_name, a.fixie.titulo))
 				comentariosDosSeguindo.append([a.user, a.fixie, 1, a.data,])
 
 		return sorted(list(comentariosDosSeguindo), key=lambda inst: inst[3], reverse=True)
@@ -303,7 +302,6 @@ class Followers(models.Model):
 			print i.first_name
 			favoritosDesteSeguindo = Favorites.objects.filter(user=i)
 			for a in favoritosDesteSeguindo:
-				print("{} favorite in {}".format(i.first_name, a.fixie.titulo))
 				favoritosDosSeguindo.append([a.user, a.fixie, 2, a.data,])
 
 		return sorted(list(favoritosDosSeguindo), key=lambda inst: inst[3], reverse=True)

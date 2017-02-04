@@ -4,6 +4,7 @@ var indice = 0;
 var indicePart = 0;
 var indicePost = 0;
 
+
 setTimeout("notificaIndex()", 1);
 setInterval("notificaIndex()", 2000);
 setTimeout("notificaIndexParticipation()", 1);

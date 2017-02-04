@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^timeline/$', views.quantTL, name='quantTL'),
     url(r'^feedback/$', views.anon_feedback, name='feedback'),
     url(r'^sobre/$', views.sobre, name='sobre'),
+    url(r'^excluiUser/$', views.excluiUser),
 
     url(r'^verificaexp/$', views.verifica_exp),
     url(r'^comecar/$', views.comecar),

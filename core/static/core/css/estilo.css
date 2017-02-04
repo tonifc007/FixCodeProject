@@ -2,6 +2,27 @@
 /* This is a compiled file, you should be editing the file in the templates directory */
 
 
+@font-face {
+     font-family: django;
+     src: url('../fontes/django.ttf');
+}
+
+span#fdj{
+	font:16px django, Arial, Tahoma, Sans-serif;
+}
+
+.linkbranco:link{
+	color: #cccccc;
+}
+
+.linkbranco:hover{
+	color: #FFFFFF;
+}
+
+.linkbranco:visited{
+	color: #a6a6a6;
+}
+
 .pace {
   -webkit-pointer-events: none;
   pointer-events: none;
@@ -32,6 +53,12 @@ input#user, input#senha{
     width:150px;
     height:30px;
 }
+
+
+.branco{
+	color: #FFFFFF;
+}
+
 /*
 button#entrar{
     height: 30px;
@@ -246,6 +273,16 @@ label#lbPost{
 	border-radius: 5px;
 }
 
+/*Cor rodapé*/
+
+.colorRodape{
+	background-color: #192F3D;
+}
+
+.rodleft{
+	border-right: 1px solid #FFFFFF;
+}
+
 .best_answer{
 	text-align: center;
 	margin-bottom: -20px;
@@ -394,7 +431,7 @@ div#premenu{
 .figsobre{
 	position: absolute;
 	margin-left: 470px;
-	margin-top: 105px;
+	margin-top: 230px;
 
 }
 

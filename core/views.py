@@ -10,9 +10,11 @@ from django.contrib.auth.models import User
 import json
 import PIL
 from django.utils import timezone
+from django.views.decorators.cache import cache_page
 
 FILE_TYPES = ['pdf', 'doc', 'txt', 'zip', 'rar', '7z']
 FILE_TYPES_IMAGE = ['jpg', 'jpeg']
+
 
 def index(request):
 	if not request.user.is_authenticated():
@@ -31,13 +33,13 @@ def index(request):
 			for f1 in f.area.all():
 				for p in perfil.habilidades.all():
 					if f1 == p:
-						print("{} - {}".format(f1, p))
 						fixies.append(f)
 		for p in Post.objects.all():
 			for p1 in p.area.all():
 				for a in perfil.habilidades.all():
 					if p1 == a:
 						fixies.append(p)
+		
 
 		#recolhe fixies e posts das pessoas que o usuário segue
 		for user in Followers.objects.filter(user=request.user):
@@ -70,7 +72,6 @@ def index(request):
 		instanciaMessage = Message()
 		#quantidade de pessoas que mandaram mensagens
 		quantidade_mensagens = instanciaMessage.count_messages(request.user)
-
 
 		#sistema de paginação
 		paginator = Paginator(fixies, 5)
@@ -440,6 +441,7 @@ def logout_user(request):
 	logout(request)
 	return render(request, 'core/login.html')
 
+@cache_page(60 * 15)
 def create_fix(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
@@ -1314,6 +1316,7 @@ def report_coment(request, pk):
 #Sistema de blog
 #################################################################################
 
+@cache_page(60 * 15)
 def create_post(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
@@ -1892,3 +1895,16 @@ def comecar(request):
 		profile.save()	
 		return HttpResponse(json.dumps(True), content_type="application/json")
 	return HttpResponse(json.dumps(False), content_type="application/json")
+
+def excluiUser(request):
+	if not request.user.is_authenticated():
+		return render(request, 'core/login.html')
+	else:
+		if request.method == 'POST':
+			idvi = request.POST.get('id')
+			resultado = False
+			if request.user.check_password(idvi) == True:
+				request.user.delete()
+				resultado = True
+			return HttpResponse(json.dumps(resultado), content_type="application/json")
+		return HttpResponse(json.dumps(False), content_type="application/json")

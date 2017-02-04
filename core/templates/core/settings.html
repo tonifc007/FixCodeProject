@@ -103,11 +103,37 @@
 							{% endif %}			
 						</div>
 						<div class="col-xs-4 col-xs-offset-8 col-sm-4 col-sm-offset-8 col-md-4 col-md-offset-8 col-lg-4 col-lg-offset-8">
+							
 							<button type="submit" class="btn btn-success" id="entrar">Salvar alterações</button>
 						</div>						
 					</form>
+					<div class="col-xs-7 col-xs-offset-5 col-sm-7 col-sm-offset-5 col-md-7 col-md-offset-5 col-lg-7 col-lg-offset-5">
+						<button class="btn btn-danger btn-link" data-toggle="modal" data-target="#exampleModal">Excluir conta</button>
+					</div>
 				</div>
 			</div>
+		</div>
+
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="exampleModalLabel">Deletar conta</h4>
+		      </div>
+		      <div class="modal-body">
+		      	<p>Para excluir sua conta é preciso informar sua senha:</p>
+		          <div class="form-group">
+		            <label for="recipient-name" class="control-label">Senha:</label>
+		            <input type="password" class="form-control" id="recipientsenha">
+		          </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+		        <button type="button" class="btn btn-primary" onclick="excluiConta()">Excluir conta</button>
+		      </div>
+		    </div>
+		  </div>
 		</div>
 
 		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
