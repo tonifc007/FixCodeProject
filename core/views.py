@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
-from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, ComentPost, Areas, Message, Blocked
+from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, ComentPost, Areas, Message, Blocked, Blog
 from django.contrib.auth import authenticate, login, logout, get_user
 from .forms import UserForm, FixiesForm, ComentForm, UserFormRegister, EditProfile, PostForm, ComentPostForm, FeedbackForm
 from django.http import Http404
@@ -1915,3 +1915,33 @@ def excluiUser(request):
 				resultado = True
 			return HttpResponse(json.dumps(resultado), content_type="application/json")
 		return HttpResponse(json.dumps(False), content_type="application/json")
+
+
+def blog(request):
+	if request.user.is_authenticated():
+		eu = get_object_or_404(Profile, user=request.user)
+	else:
+		eu = None
+	posts = Blog.objects.all()[::-1]
+	paginator = Paginator(posts, 10)
+	page = request.GET.get('page')
+	print(page)
+	print("Estou requisitando a {} página" .format(page))
+
+	try:
+		relations = paginator.page(page)
+		print(relations)
+	except PageNotAnInteger:
+		relations = paginator.page(1)
+	except EmptyPage:
+		relations = paginator.page(paginator.num_pages)
+	return render(request, 'core/blog.html', {'eu':eu, 'pagina':relations})
+
+def blog_detail(request, pk):
+	if request.user.is_authenticated():
+		eu = get_object_or_404(Profile, user=request.user)
+	else:
+		eu = None
+	post = get_object_or_404(Blog, pk=pk)
+	donoDoPost = get_object_or_404(Profile, user=post.user)
+	return render(request, 'core/blogdetail.html', {'eu':eu, 'post':post, 'donoDoPost':donoDoPost})

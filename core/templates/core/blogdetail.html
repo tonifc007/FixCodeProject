@@ -1,0 +1,108 @@
+{% extends 'core/base.html' %}
+{% load staticfiles %}
+{% load aux_tags %}
+{% block titulo %}{{ post.titulo }} - Blog - FixCode{% endblock %}
+{% block user %}{{user.first_name}}{% endblock %}
+{% block menu %}
+<li><a href="{% url 'core:register' %}">Cadastre-se!</a></li>
+<li><a href="{% url 'core:sobre' %}">Sobre</a></li>
+<li><a href="#">Ajuda</a></li>
+<li><a href="{% url 'core:feedback' %}">Feedback</a></li>
+{% endblock %}
+
+{% block imagemperfil %}
+	
+	{% if eu.imagem_perfil %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{{ eu.imagem_perfil.url }}" class="navbar-brand img-circle" alt="imgperfil" width="50" height="60"></a>
+	{% else %}
+		<a href="{% url 'core:profile' user.username %}"><img src="{% static 'core/imagens/default.png' %}" class="navbar-brand img-circle" alt="imgperfil" width="50" height="60"></a>
+
+	{% endif %}
+{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<ol class="breadcrumb">
+			  <li><a href="/">Home</a></li>
+			  <li><a href="/blog/">Blog</a></li>
+			  <li class="active">{{ post.titulo }}</li>
+			</ol>
+			</div>
+		</div>
+	</div>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="media-body">
+						<div class="col-xs-10 col-xs-offset-1">
+							<h1>{{ post.titulo }}
+							</h1>
+							
+							{% if post.user|imagemperfil %}
+								<img align="left" class="img-circle media-object" src="{{ post.user|imagemperfil }}" width="40" height="40">
+							{% else %}
+								<img class="img-circle media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+							{% endif %}
+							<a class="titulopindex tituloPost" href="{% url 'core:profile' post.user.username %}">{{ post.user.first_name }}</a>
+							<p class="pCinza"><small><span class="glyphicon glyphicon-calendar"></span> 
+				    	
+						  			{{ post.data|date }}
+
+						  	</small>
+						    </p>
+						    <hr/>
+						    <div class="estiloPostagem">
+						    	{{ post.post|safe }}
+						    </div>
+						    <div>
+						    </div>
+						    <div class="painelAutor">
+						    <div class="panel panel-default">
+						    	<div class="panel-heading">Sobre o autor:</div>
+								<div class="panel-body">
+								<div class="media-left media-top">
+								    {% if post.user|imagemperfil %}
+									<img class="thumbnail media-object" src="{{ post.user|imagemperfil }}" width="80" height="80">
+									{% else %}
+									<img class="thumbnail media-object" src="{% static 'core/imagens/default.png' %}" width="80" height="80">
+									{% endif %}
+								</div>
+								<div class="media-body">
+								    <h4 class="media-heading"><a class="titulopindex" href="{% url 'core:profile' post.user.username %}">{{ post.user.first_name }}</a> - <span class="pCinzaUser">{{post.user.username}}</span></h4>
+								    {% if donoDoPost.bio %}
+								    	<p>{{ donoDoPost.bio }}</p>
+								    {% endif %}
+								    {% if donoDoPost.git %}
+								    	<p><img src="{% static 'core/css/github-logo.png' %}" width="17" height="17"> <a href="http://github.com/{{ donoDoPost.git }}" target="_blank"> {{ donoDoPost.git }} </a></p>
+								    {% endif %}
+								    							    	
+								    
+								</div>
+								</div>
+							</div>
+							</div>
+							<hr/>
+	
+							</div>
+
+							
+					
+
+						</div>						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<!-- Place this tag in your head or just before your close body tag. -->
+	<script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+
+{% endblock %}

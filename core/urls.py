@@ -114,5 +114,9 @@ urlpatterns = [
     url(r'^search=(?P<argumento>.+)$', views.search_fix, name='search_fix'),
     url(r'^posts/search=(?P<argumento>.+)$', views.search_post, name='search_post'),
     url(r'^users/search=(?P<argumento>.+)$', views.search_user, name='search_user'),
-    
+
+    #Blog institucional
+
+    url(r'^blog/$', views.blog, name='blog'),
+    url(r'^blog/(?P<pk>[0-9]+)/$', views.blog_detail, name='blog_detail'),
 ]

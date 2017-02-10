@@ -244,6 +244,7 @@ CKEDITOR_CONFIGS = {
                 'elementspath',
                 'codesnippet',
                 'uploadimage',
+                'smiley',
             ]),
     },
 
@@ -289,6 +290,7 @@ CKEDITOR_CONFIGS = {
                     'dialogui',
                     'elementspath',
                     'codesnippet',
+                    
                 ]),
         }
 
