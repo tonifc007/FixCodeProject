@@ -1,6 +1,6 @@
 # -*- coding: utf 8 -*-
 from django.contrib import admin
-from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, Areas, Message, Blocked, AnonFeedback
+from .models import Fixies, ComentFixies, Participations, Favorites, Profile, Followers, Post, Areas, Message, Blocked, AnonFeedback, Blog
 
 # Register your models here.
 
@@ -15,3 +15,4 @@ admin.site.register(Areas)
 admin.site.register(Message)
 admin.site.register(Blocked)
 admin.site.register(AnonFeedback)
+admin.site.register(Blog)

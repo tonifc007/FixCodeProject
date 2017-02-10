@@ -9,6 +9,7 @@ function search_now(){
 }*/
 
 $('.fcc > p > img').addClass('img-responsive').addClass('thumbnail');
+$('p > img').addClass('img-responsive').addClass('thumbnail');
 
 function vericiaexp(){
 

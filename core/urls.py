@@ -5,6 +5,7 @@ from . import views
 app_name = 'core'
 
 urlpatterns = [
+
     url(r'^$', views.index, name='index'),
     url(r'^register/$', views.register, name='register'),
     url(r'^login/$', views.login_user, name='login_user'),
@@ -113,5 +114,5 @@ urlpatterns = [
     url(r'^search=(?P<argumento>.+)$', views.search_fix, name='search_fix'),
     url(r'^posts/search=(?P<argumento>.+)$', views.search_post, name='search_post'),
     url(r'^users/search=(?P<argumento>.+)$', views.search_user, name='search_user'),
-
+    
 ]

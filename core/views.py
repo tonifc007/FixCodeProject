@@ -16,6 +16,14 @@ FILE_TYPES = ['pdf', 'doc', 'txt', 'zip', 'rar', '7z']
 FILE_TYPES_IMAGE = ['jpg', 'jpeg']
 
 
+def not_found(request):
+	if request.user.is_authenticated():
+		eu = get_object_or_404(Profile, user=request.user)
+	else:
+		eu = None
+	return render(request, 'core/404.html', {'eu':eu})
+
+
 def index(request):
 	if not request.user.is_authenticated():
 		print("foi no if")
@@ -441,7 +449,6 @@ def logout_user(request):
 	logout(request)
 	return render(request, 'core/login.html')
 
-@cache_page(60 * 15)
 def create_fix(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')
@@ -1316,7 +1323,7 @@ def report_coment(request, pk):
 #Sistema de blog
 #################################################################################
 
-@cache_page(60 * 15)
+
 def create_post(request):
 	if not request.user.is_authenticated():
 		return render(request, 'core/login.html')

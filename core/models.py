@@ -575,3 +575,12 @@ class AnonFeedback(models.Model):
 	
 	def __str__(self):
 		return self.nome
+
+class Blog(models.Model):
+	user = models.ForeignKey(User, default=1)
+	titulo = models.CharField(max_length=100)
+	post = RichTextUploadingField(config_name='post')
+	data = models.DateTimeField(default=timezone.now)
+
+	def __str__(self):
+		return self.titulo

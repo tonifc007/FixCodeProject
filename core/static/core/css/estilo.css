@@ -273,6 +273,12 @@ label#lbPost{
 	border-radius: 5px;
 }
 
+p#marcacao{
+	border-left: 1px solid black;
+	padding: 4px;
+	border-right: 1px solid black;
+}
+
 /*Cor rodapé*/
 
 .colorRodape{
