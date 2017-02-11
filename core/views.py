@@ -11,6 +11,8 @@ import json
 import PIL
 from django.utils import timezone
 from django.views.decorators.cache import cache_page
+from django.core.mail import send_mail, EmailMessage
+from .tasks import email_acao_seguir, email_boas_vindas, email_alteracao
 
 FILE_TYPES = ['pdf', 'doc', 'txt', 'zip', 'rar', '7z']
 FILE_TYPES_IMAGE = ['jpg', 'jpeg']
@@ -36,30 +38,34 @@ def index(request):
 		#todos os fixies e posts mostrados no index ficam guardados nesta variável
 		fixies = []
 
+		allFixies = Fixies.objects.all()
+		allPosts = Post.objects.all()
+		allHabilidades = perfil.habilidades.all()
+
 		#recolhe fixies e posts das habilidades
-		for f in Fixies.objects.all():
+		for f in allFixies:
 			for f1 in f.area.all():
-				for p in perfil.habilidades.all():
+				for p in allHabilidades:
 					if f1 == p:
 						fixies.append(f)
-		for p in Post.objects.all():
+		for p in allPosts:
 			for p1 in p.area.all():
-				for a in perfil.habilidades.all():
+				for a in allHabilidades:
 					if p1 == a:
 						fixies.append(p)
 		
 
 		#recolhe fixies e posts das pessoas que o usuário segue
 		for user in Followers.objects.filter(user=request.user):
-			postsdosseguidos = Post.objects.filter(user=user.following)
-			fixesdosseguidos = Fixies.objects.filter(user=user.following)
+			postsdosseguidos = allPosts.filter(user=user.following)
+			fixesdosseguidos = allFixies.filter(user=user.following)
 			fixies.extend(list(postsdosseguidos))
 			fixies.extend(list(fixesdosseguidos))
 
 
 		#recolhe seus próprios fixies e posts
-		myfixies = Fixies.objects.filter(user=request.user)
-		myposts = Post.objects.filter(user=request.user)
+		myfixies = allFixies.filter(user=request.user)
+		myposts = allPosts.filter(user=request.user)
 		fixies.extend(list(myfixies))
 		fixies.extend(list(myposts))
 
@@ -228,14 +234,15 @@ def register(request):
 			name = form.cleaned_data['first_name']
 			lastname = form.cleaned_data['last_name']
 			username = form.cleaned_data['username']
+			email = form.cleaned_data['email']
 			password = form.cleaned_data['password']
 			repassword = form.cleaned_data['repassword']
 			if password != repassword:
-				if name == '' or lastname == '':
+				if name == '' or lastname == '' or email == '':
 					return render(request, 'core/register.html', {'form':form, 'error_de_reg': 'Senhas não conferem', 'error_name':'* Este campo é obrigatório.'})
 				else:
 					return render(request, 'core/register.html', {'form':form, 'error_de_reg': 'Senhas não conferem'})
-			elif name == '' or lastname == '':
+			elif name == '' or lastname == '' or email == '':
 				return render(request, 'core/register.html', {'form':form, 'error_name':'* Este campo é obrigatório.'})
 			user.set_password(password)
 			user.save()
@@ -249,6 +256,7 @@ def register(request):
 					newprofile = Profile()
 					newprofile.user = request.user
 					newprofile.saveInstance()
+					email_boas_vindas.delay(request.user.first_name, request.user.email)
 					return redirect('/editprofile/')
 		return render(request, 'core/register.html', {'form':form})
 	else:
@@ -266,16 +274,18 @@ def settings(request):
 			name = request.POST.get('first_name')
 			lastname = request.POST.get('last_name')
 			#username = request.POST.get('username')
+			email = request.POST.get('email')
 			password = request.POST.get('password')
 			repassword = request.POST.get('repassword')
 			oldpassword = request.POST.get('oldpassword')
 			print name
 			print lastname
 			print password
+			print email
 			print repassword
 			print oldpassword
 
-			if name == '' or lastname == '' or password == '' or repassword == '' or oldpassword == '':
+			if name == '' or lastname == '' or email == '' or password == '' or repassword == '' or oldpassword == '':
 				return render(request, 'core/settings.html', {'error_name':'* Este campo é obrigatório.', 'profile':detalhes})
 
 			if request.user.check_password(oldpassword) == False:
@@ -287,10 +297,12 @@ def settings(request):
 
 			request.user.first_name = name
 			request.user.last_name = lastname
+			request.user.email = email
 			request.user.set_password(password)
 			request.user.save()
 			user = authenticate(username=request.user.username, password=password)
 			login(request, user)
+			email_alteracao.delay(request.user.first_name, request.user.last_name, request.user.username, request.user.email)
 			return redirect('/profile/'+user.username+'/')
 		return render(request, 'core/settings.html', {'profile':detalhes})
 
@@ -1108,6 +1120,7 @@ def followajax(request, username):
 
 					response_data['result'] = 'Usuário seguido com sucesso'
 					print("Registro criado")
+					email_acao_seguir.delay(request.user.first_name, userfollow.email, userfollow.first_name)
 			return HttpResponse(json.dumps(response_data), content_type="application/json")
         return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 

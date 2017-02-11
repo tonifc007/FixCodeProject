@@ -1,0 +1,42 @@
+1. Introdução
+	1.2 Indice
+2. Princípios
+3. Fazendo login
+4. Funcionalidades
+	4.1 Sitemática de comunidade
+		4.1.1 Fix
+		4.1.2 Blog
+		4.1.3 Áreas ou Habilidades
+	4.2 Princípios Social network
+		4.2.1 Sistema de perfis
+		4.2.2 Sistema de bloqueio e princípios de segurança
+		4.2.3 Sistema de notificações
+		4.2.4 Sistema de emails
+		4.2.5 Sistema de upload de imagens
+		4.2.6 Sistema de envio de anexos
+		4.2.7 Editor de texto
+5. Tela inicial
+	5.1 Controles da Tela inicial
+	5.2 Time-Line
+6 Meus Fixies
+	6.1 Criando um novo Fix
+	6.2 Listando meus Fixies
+	6.3 Detalhando um fix
+		6.3.1 Princípios de um fix para o dono
+		6.3.2 Princípios de um fix para um visitante
+7 Blog
+	7.1 Criando uma nova postagem
+	7.2 Listando minhas postagens
+	7.3 Detalhando uma postagem
+		7.3.1 Princípios de uma postagem para o dono
+		7.3.2 Princípios de uma postagem para o visitante
+8 Inbox
+	8.1 Iniciando uma conversa
+	8.2 Listar conversas
+9 Perfil
+	9.1 Controles da página de perfil
+	9.2 Editando seu perfil
+10 Configurações de conta
+	10.1 Deletando conta
+11 Pesquisa
+12 Feedback

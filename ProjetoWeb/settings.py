@@ -93,12 +93,21 @@ DATABASES = {
 }
 
 
+#Celery Config
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
 #         'LOCATION': 'my_cache_table',
 #     }
 # }
+
+from ProjetoWeb.backend_email import *
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

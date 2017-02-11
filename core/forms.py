@@ -16,7 +16,7 @@ class UserFormRegister(forms.ModelForm):
 
 	class Meta:
 		model = User
-		fields = ['first_name','last_name','username', 'password', 'repassword']
+		fields = ['first_name','last_name','email','username', 'password', 'repassword']
 
 
 class FixiesForm(forms.ModelForm):
